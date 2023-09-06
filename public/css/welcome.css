@@ -1,0 +1,8 @@
+#navbarText{
+    font-family: 'Inter', sans-serif;
+}
+#navbarText a{
+    text-decoration: none;
+    margin: 0 10px 0 10px;
+
+}
