@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>SmartIPTU</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
 </head>
 
 <body class="">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src="{{asset("storage/SmartIPTU.png")}}" width="60px" />
@@ -45,6 +45,22 @@
             </div>
         </div>
     </nav>
+
+    <main>
+        <section class="principal"> 
+            <div class="container text-center ">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <img src="{{asset("storage/SmartIPTU.png")}}" width="200px" />
+                    </div>
+                    <div class="col">
+                        <h1>Sistema de gestão IPTU e Financeiro</h1>
+                        <p>Simplifique a Gestão Financeira e de IPTU com o nosso sistema SmartIPTU, descomplicado e eficaz para Imobiliárias e Loteadoras</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
