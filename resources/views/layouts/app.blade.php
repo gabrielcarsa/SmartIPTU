@@ -9,10 +9,11 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -26,33 +27,54 @@
 
 <body class="">
 
-    <div class="min-h-screen bg-gray-100">
-        @livewire('navigation-menu')
+    @livewire('navigation-menu')
 
-        <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-            id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasScrollingLabel"><img src="{{asset("storage/SmartIPTU.png")}}"
-                        width="100px" /></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul>
-                    <li><a href="/empreendimento">Gestão de Inscrições</a></li>
-                    <li><a href="/cliente">Cadastro de clientes</a></li>
-                    <li><a href="/usuario">Cadastro e controle de usuários</a></li>
-                    <li><a href="/">Financeiro</a></li>
-                    <li><a href="/">Configurações</a></li>
-
-                </ul>
-            </div>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+        id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <a href="/dashboard"><img src="{{asset("storage/SmartIPTU.png")}}"
+                    width="100px" /></a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
+        <div class="offcanvas-body-content">
+            <ul class="list-offcanvas">
+                <li><a href="/empreendimento">
+                        <span class="material-symbols-outlined">pie_chart</span>Gestão de Inscrições
+                    </a></li>
+                <li><a href="/cliente"><span class="material-symbols-outlined">
+                            person_add
+                        </span>Cadastro de clientes</a></li>
+                <li><a href="/usuario"><span class="material-symbols-outlined">
+                            group
+                        </span>Cadastro e controle de usuários</a></li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        <span class="material-symbols-outlined">
+                            universal_currency_alt
+                        </span>Financeiro
+                    </a>
+                </li>
+                <div class="collapse" id="collapseExample">
+                    <ul class="sublist-offcanvas">
+                        <li><a href="">Contas a receber</a></li>
+                        <li><a href="">Contas a pagar</a></li>
+                    </ul>
+                </div>
 
-        <!-- Page Content -->
-        <main>
-            @yield('conteudo')
-        </main>
+                <li><a href="/"><span class="material-symbols-outlined">
+                            settings
+                        </span>Configurações</a></li>
+
+            </ul>
+        </div>
     </div>
+
+    <!-- Page Content -->
+    <main>
+
+        @yield('conteudo')
+    </main>
 
     @stack('modals')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"

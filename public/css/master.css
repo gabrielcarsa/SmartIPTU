@@ -1,6 +1,16 @@
+body{
+    background-color: #F3F4F6 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+/*MENU NAVEGAÇÃO*/
+
 .navbar{
     background-color: #FFF;
 }
+
+/*OFFCANVAS*/
+
 .btn-sidebar{
     margin-right: 15px;
     border-radius: 0.5rem;
@@ -9,3 +19,33 @@
 .btn-sidebar span{
     padding: 5px;
 }
+.offcanvas{
+    background-color: #424250 !important;
+}
+.offcanvas-header{
+    background-color: #FFF;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 20px 0;
+
+}
+.offcanvas-header a, img{
+    margin: 0 auto; 
+}
+ul a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #FFFF;
+    display: flex; /* Tornar os links flexíveis para alinhar ícones e texto */
+    align-items: center; /* Alinhar verticalmente ícones e texto */
+}
+.list-offcanvas li{
+    margin: 12px;
+}
+.list-offcanvas span{
+    padding: 0 10px;
+}
+.sublist-offcanvas li{
+    margin: 5px;
+}
+
