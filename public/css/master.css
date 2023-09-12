@@ -49,3 +49,24 @@ ul a {
     margin: 5px;
 }
 
+/*CONTENT*/
+.content{
+    margin: 20px 40px;
+}
+.content h2{
+    font-weight: 800;
+    margin: 20px 0;
+}
+
+/*FORMS*/
+.card-header{
+    background-color: #424250 !important;
+    color: #FFF !important;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/*TABLE RESULTADOS*/
+.card{
+    margin-bottom: 20px;
+}

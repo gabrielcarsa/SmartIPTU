@@ -71,8 +71,7 @@
     </div>
 
     <!-- Page Content -->
-    <main>
-
+    <main class="content">
         @yield('conteudo')
     </main>
 
