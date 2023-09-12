@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts/app')
+@section('conteudo')
     <!--
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -7,4 +8,5 @@
     </x-slot>
     -->
     <h1>Dashboard</h1>
-</x-app-layout>
+
+    @endsection
