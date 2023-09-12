@@ -26,9 +26,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    //ROTAS CLIENTE
+    Route::get('/cliente',[ClienteController::class, 'cliente']);
+    Route::get('/cliente/listar',[ClienteController::class, 'listar']);
+    Route::get('/cliente/novo',[ClienteController::class, 'novo']);
+
 });
-
-//ROTAS CLIENTE
-Route::get('/cliente',[ClienteController::class, 'cliente']);
-Route::get('/cliente/listar',[ClienteController::class, 'listar']);
-

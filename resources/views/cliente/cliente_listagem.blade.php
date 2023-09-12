@@ -16,7 +16,10 @@
                 <input type="text" name="cpf" class="form-control" id="inputPassword4">
             </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Consultar</button>
+                <button type="submit" class="btn-submit">Consultar</button>
+                <a href="/cliente/novo" class="btn-add"><span class="material-symbols-outlined">
+                        add
+                    </span>Novo</a>
             </div>
         </form>
     </div>
@@ -47,8 +50,6 @@
                 </tr>
                 @endforeach
                 @endif
-
-
             </tbody>
         </table>
     </div>

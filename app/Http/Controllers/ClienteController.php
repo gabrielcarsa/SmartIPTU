@@ -18,4 +18,8 @@ class ClienteController extends Controller
         $clientes = DB::table('cliente')->where('nome', 'LIKE', '%' . $nome . '%')->get();
         return view('cliente/cliente_listagem', compact('clientes'));
     }
+
+    function novo(){
+        return view('cliente/cliente_novo');
+    }
 }
