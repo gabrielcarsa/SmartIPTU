@@ -5,17 +5,18 @@
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
     <div class="card-body">
-        <form class="row g-3">
+        <form class="row g-3" action="/cliente/listar" method="get">
+            @csrf
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="inputEmail4">
+                <input type="text" name="nome" class="form-control" id="inputEmail4">
             </div>
             <div class="col-md-6">
                 <label for="inputPassword4" class="form-label">CPF/CNPJ</label>
-                <input type="text" class="form-control" id="inputPassword4">
+                <input type="text" name="cpf" class="form-control" id="inputPassword4">
             </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                <button type="submit" class="btn btn-primary">Consultar</button>
             </div>
         </form>
     </div>
@@ -35,14 +36,19 @@
                 </tr>
             </thead>
             <tbody>
+                @if(isset($clientes))
+                @foreach ($clientes as $cliente)
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <th scope="row">{{$cliente->id}}</th>
+                    <td>{{$cliente->nome}}</td>
+                    <td>{{$cliente->cpf_cnpj}}</td>
+                    <td>{{$cliente->telefone1}}</td>
                     <td><a href="">Ver/Editar</a></td>
                 </tr>
-                
+                @endforeach
+                @endif
+
+
             </tbody>
         </table>
     </div>

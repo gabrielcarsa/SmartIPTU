@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
     function cliente(){
-        $cliente = Cliente::all();
-        return view('cliente/cliente_listagem', compact('cliente'));
+        return view('cliente/cliente_listagem');
+    }
+
+    function listar(ClienteRequest $request){
+        $nome = $request->input('nome');
+        $clientes = DB::table('cliente')->where('nome', 'LIKE', '%' . $nome . '%')->get();
+        return view('cliente/cliente_listagem', compact('clientes'));
     }
 }

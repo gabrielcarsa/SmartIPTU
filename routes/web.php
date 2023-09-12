@@ -30,4 +30,5 @@ Route::middleware([
 
 //ROTAS CLIENTE
 Route::get('/cliente',[ClienteController::class, 'cliente']);
+Route::get('/cliente/listar',[ClienteController::class, 'listar']);
 
