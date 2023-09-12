@@ -6,4 +6,5 @@
         </h2>
     </x-slot>
     -->
+    <h1>Dashboard</h1>
 </x-app-layout>
