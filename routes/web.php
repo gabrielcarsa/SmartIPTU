@@ -31,5 +31,7 @@ Route::middleware([
     Route::get('/cliente',[ClienteController::class, 'cliente']);
     Route::get('/cliente/listar',[ClienteController::class, 'listar']);
     Route::get('/cliente/novo',[ClienteController::class, 'novo']);
+    Route::post('/cliente/cadastrar/{usuario}',[ClienteController::class, 'cadastrar']);
+
 
 });

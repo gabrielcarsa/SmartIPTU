@@ -22,7 +22,16 @@ class ClienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nome' => 'required|min:3',
+            'cpf_cnpj' => 'required|numeric',
+            'rua_end' => 'required',
+            'bairro_end' => 'required',
+            'numero_end' => 'required|numeric',
+            'cidade_end' => 'required',
+            'estado_end' => 'required',
+            'cep_end' => 'required|numeric',
+            'email' => 'required|email',
+            'data_nascimento' => 'nullable|date',
         ];
     }
 }
