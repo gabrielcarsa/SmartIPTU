@@ -5,7 +5,7 @@
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
     <div class="card-body">
-        <form class="row g-3" action="/cliente/listar" method="get">
+        <form class="row g-3" action="/cliente/listar" method="get" autocomplete="off">
             @csrf
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Nome</label>
@@ -35,6 +35,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">CPF/CNPJ</th>
                     <th scope="col">Telefone</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -46,7 +47,8 @@
                     <td>{{$cliente->nome}}</td>
                     <td>{{$cliente->cpf_cnpj}}</td>
                     <td>{{$cliente->telefone1}}</td>
-                    <td><a href="">Ver/Editar</a></td>
+                    <td>{{$cliente->email}}</td>
+                    <td><a href="editar/{{$cliente->id}}">Ver/Editar</a></td>
                 </tr>
                 @endforeach
                 @endif
@@ -54,6 +56,5 @@
         </table>
     </div>
 </div>
-
 
 @endsection
