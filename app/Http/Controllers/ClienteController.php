@@ -71,13 +71,13 @@ class ClienteController extends Controller
         $cliente->data_alteracao = date('d-m-Y h:i:s a', time());
         $cliente->alterado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
+        $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         $cliente->telefone1 = $request->input('telefone1');
         $cliente->telefone2 = $request->input('telefone2');
         $cliente->cep_end = $request->input('cep_end');
         $cliente->estado_civil = $request->input('estado_civil');
         $cliente->profissao = $request->input('profissao');
         $cliente->complemento_end = $request->input('complemento_end');
-        $cliente->tipo_cadastro = $request->input('tipo_cadastro');
         $cliente->save();
     
         return redirect('cliente/editar/'.$id)->with('success', 'Cliente atualizado com sucesso');

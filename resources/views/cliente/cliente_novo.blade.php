@@ -70,28 +70,134 @@
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
-                <label for="inputNome" class="form-label">Nome*</label>
+                <label for="inputNome" id="nome_razao" class="form-label">Nome*</label>
                 <input type="text" name="nome" value="{{isset($cliente) ? $cliente->nome : ''}}"
                     class="form-control @error('nome') is-invalid @enderror" id="inputNome">
             </div>
             <div class="col-md-3">
-                <label for="inputCpf" class="form-label">CPF/CNPJ*</label>
+                <label for="inputCpf" id="cpf_cnpj" class="form-label">CPF*</label>
                 <input type="text" name="cpf_cnpj" value="{{ isset($cliente) ? $cliente->cpf_cnpj : '' }}"
-                    class="form-control @error('cpf_cnpj') is-invalid @enderror" id="inputCpf"
-                    pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}">
+                    class="form-control @error('cpf_cnpj') is-invalid @enderror" id="inputCpf">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" id="inscricaoEstadualCampo" style="display: none;">
+                <label for="inputInscricao_estadual" class="form-label">Inscrição Estadual*</label>
+                <input type="text" name="inscricao_estadual"
+                    value="{{ isset($cliente) ? $cliente->inscricao_estadual : '' }}"
+                    class="form-control @error('inscricao_estadual') is-invalid @enderror" id="inputInscricao_estadual">
+            </div>
+            <div class="col-md-2" id="rgCampo" style="display: block;">
                 <label for="inputRg" class="form-label">RG</label>
                 <input type="text" name="rg" value="{{ isset($cliente) ? $cliente->rg : ''}}" class="form-control"
                     id="inputRg">
             </div>
+
+            @if (!isset($cliente))
             <div class="col-md-3">
                 <label for="inputTipo" class="form-label">Tipo de cadastro*</label>
-                <select id="inputTipo" name="tipo_cadastro" class="form-select">
+                <select id="inputTipo" name="tipo_cadastro" class="form-select" onchange="mostrarOcultarCampo()">
                     <option value="0" selected>Pessoa Física</option>
                     <option value="1">Pessoa Jurídica</option>
                 </select>
+
+                <script>
+                function mostrarOcultarCampo() {
+                    // Obtém o valor da opção selecionada
+                    var opcao = document.getElementById("inputTipo").value;
+
+                    // Obtém referências aos campos de texto que deseja mostrar/ocultar
+                    var rgCampo = document.getElementById("rgCampo");
+                    var estadoCivilCampo = document.getElementById("estadoCivilCampo");
+                    var dataNascimentoCampo = document.getElementById("dataNascimentoCampo");
+                    var profissaoCampo = document.getElementById("profissaoCampo");
+                    var inscricaoEstadualCampo = document.getElementById("inscricaoEstadualCampo");
+
+                    var nomeLabel = document.getElementById("nome_razao");
+                    var cpfCnpjLabel = document.getElementById("cpf_cnpj");
+
+                    // Mostra ou oculta os campos com base na opção selecionada
+                    if (opcao === "0") {
+                        rgCampo.style.display = "block";
+                        estadoCivilCampo.style.display = "block";
+                        dataNascimentoCampo.style.display = "block";
+                        profissaoCampo.style.display = "block";
+                        inscricaoEstadualCampo.style.display = "none";
+
+                        // Atualiza os rótulos dos campos
+                        nomeLabel.textContent = "Nome*";
+                        cpfCnpjLabel.textContent = "CPF*";
+                    } else if (opcao === "1") {
+                        rgCampo.style.display = "none";
+                        estadoCivilCampo.style.display = "none";
+                        dataNascimentoCampo.style.display = "none";
+                        profissaoCampo.style.display = "none";
+                        inscricaoEstadualCampo.style.display = "block";
+
+                        // Atualiza os rótulos dos campos
+                        nomeLabel.textContent = "Razão Social*";
+                        cpfCnpjLabel.textContent = "CNPJ*";
+                    } else {
+                        // Lidar com outras opções, se necessário
+                    }
+                }
+                </script>
+
             </div>
+            @else
+            <div class="col-md-3">
+                <label for="inputTipo" class="form-label">Tipo de cadastro*</label>
+                <input id="inputTipo" disabled name="tipo_cadastro" class="form-control"
+                    value="{{$cliente->tipo_cadastro == 0 ? 'Pessoa Física' : 'Pessoa Jurídica'}}">
+                <input type="hidden" id="inputTipoHidden" name="tipo_cadastro_hidden"
+                    value="{{$cliente->tipo_cadastro}}">
+            </div>
+            <script>
+            // Verifique o valor do campo hidden ao carregar a página
+            document.addEventListener("DOMContentLoaded", function() {
+                mostrarOcultarCampo(); // Chame a função para verificar e mostrar/ocultar campos
+            });
+
+            function mostrarOcultarCampo() {
+                // Obtém o valor do campo hidden
+                var tipoCadastroHidden = document.getElementById("inputTipoHidden").value;
+
+                // Obtém referências aos campos de texto que deseja mostrar/ocultar
+                var rgCampo = document.getElementById("rgCampo");
+                var estadoCivilCampo = document.getElementById("estadoCivilCampo");
+                var dataNascimentoCampo = document.getElementById("dataNascimentoCampo");
+                var profissaoCampo = document.getElementById("profissaoCampo");
+                var inscricaoEstadualCampo = document.getElementById("inscricaoEstadualCampo");
+
+                var nomeLabel = document.getElementById("nome_razao");
+                var cpfCnpjLabel = document.getElementById("cpf_cnpj");
+
+                // Mostra ou oculta os campos com base no valor do campo hidden
+                if (tipoCadastroHidden === "0") {
+                    rgCampo.style.display = "block";
+                    estadoCivilCampo.style.display = "block";
+                    dataNascimentoCampo.style.display = "block";
+                    profissaoCampo.style.display = "block";
+                    inscricaoEstadualCampo.style.display = "none";
+
+                    // Atualiza os rótulos dos campos
+                    nomeLabel.textContent = "Nome*";
+                    cpfCnpjLabel.textContent = "CPF*";
+                } else if (tipoCadastroHidden === "1") {
+                    rgCampo.style.display = "none";
+                    estadoCivilCampo.style.display = "none";
+                    dataNascimentoCampo.style.display = "none";
+                    profissaoCampo.style.display = "none";
+                    inscricaoEstadualCampo.style.display = "block";
+
+                    // Atualiza os rótulos dos campos
+                    nomeLabel.textContent = "Razão Social*";
+                    cpfCnpjLabel.textContent = "CNPJ*";
+                } else {
+                    // Lida com outras opções, se necessário
+                }
+            }
+            </script>
+            @endif
+
             <div class="col-md-3">
                 <label for="inputRua" class="form-label">Rua*</label>
                 <input type="text" name="rua_end" value="{{isset($cliente) ? $cliente->rua_end : '' }}"
@@ -128,18 +234,17 @@
                 <input type="text" name="cep_end" value="{{isset($cliente) ? $cliente->cep_end : '' }}"
                     class="form-control @error('cep_end') is-invalid @enderror" id="inputCep">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" id="dataNascimentoCampo">
                 <label for="inputDataNascimento" class="form-label">Data de nascimento</label>
                 <input type="date" name="data_nascimento" value="{{isset($cliente) ? $cliente->data_nascimento : ''  }}"
-                    class="form-control @error('email') is-invalid @enderror" id="inputDataNascimento"
-                    placeholder="1234 Main St">
+                    class="form-control @error('email') is-invalid @enderror" id="inputDataNascimento">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" id="profissaoCampo">
                 <label for="inputProfissao" class="form-label">Profissão</label>
                 <input type="text" name="profissao" value="{{isset($cliente) ? $cliente->profissao : '' }}"
                     class="form-control" id="inputProfissao">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="estadoCivilCampo">
                 <label for="inputEstadoCivil" class="form-label">Estado Civil</label>
                 <input type="text" name="estado_civil" value="{{isset($cliente) ? $cliente->estado_civil : ''  }}"
                     class="form-control" id="inputEstadoCivil">
@@ -162,7 +267,7 @@
             <div class="col-12">
                 <button type="submit" class="btn-submit">
                     @if (isset($cliente))
-                    Alterar 
+                    Alterar
                     @else
                     Cadastrar
                     @endif
