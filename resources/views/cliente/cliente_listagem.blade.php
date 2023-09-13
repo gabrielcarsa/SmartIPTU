@@ -1,6 +1,13 @@
 @extends('layouts/app')
 
 @section('conteudo')
+
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
 <h2>Clientes</h2>
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>

@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <a href="cliente/excluir/{{$cliente->id}}" class="btn btn-primary">Sim, excluir</a>
+                        <a href="../excluir/{{$cliente->id}}" class="btn btn-danger">Sim, excluir</a>
                     </div>
                 </div>
             </div>

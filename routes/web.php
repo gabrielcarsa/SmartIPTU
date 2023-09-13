@@ -34,4 +34,5 @@ Route::middleware([
     Route::post('/cliente/cadastrar/{usuario}',[ClienteController::class, 'cadastrar']);
     Route::get('/cliente/editar/{id}',[ClienteController::class, 'editar']);
     Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
+    Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
 });

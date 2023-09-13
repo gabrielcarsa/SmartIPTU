@@ -113,7 +113,14 @@ class ClienteController extends Controller
         $cliente->complemento_end = $request->input('complemento_end');
         $cliente->tipo_cadastro = $request->input('tipo_cadastro');
         $cliente->save();
-        return redirect('cliente');
+        return redirect('cliente')->with('success', 'Cliente cadastrado com sucesso');
+    }
+
+    //EXCLUIR CLIENTE
+    function excluir($id){
+        $cliente = Cliente::find($id);
+        $cliente->delete();
+        return redirect("cliente")->with('success', 'Cliente excluido com sucesso');
     }
 
 }
