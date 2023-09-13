@@ -4,9 +4,6 @@
             aria-controls="offcanvasScrolling"><span class="material-symbols-outlined fa-2x">
                 menu
             </span></button>
-        <a class="navbar-brand" href="#">
-            <img src="{{asset("storage/SmartIPTU.png")}}" width="60px" />
-        </a>
         <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarText">
             <span class="navbar-text">
                 <!-- Settings Dropdown -->
@@ -38,11 +35,11 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Configurações da conta') }}
                             </div>
 
                             <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('Conta') }}
                             </x-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -58,7 +55,7 @@
                                 @csrf
 
                                 <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Sair') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>

@@ -32,8 +32,7 @@
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <div class="offcanvas-header">
-            <a href="/dashboard"><img src="{{asset("storage/SmartIPTU.png")}}"
-                    width="100px" /></a>
+            <a href="/dashboard"><img src="{{asset("storage/SmartIPTU.png")}}" width="100px" /></a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body-content">
@@ -71,6 +70,10 @@
     </div>
 
     <!-- Page Content -->
+    @if(Route::is('profile.show'))
+    {{$slot}}
+    @endif
+
     <main class="content">
         @yield('conteudo')
     </main>
