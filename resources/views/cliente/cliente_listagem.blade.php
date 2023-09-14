@@ -66,6 +66,12 @@
                 @endif
             </tbody>
         </table>
+        @if(isset($clientes))
+        <div class="card-footer">
+            <p>Exibindo {{$clientes->count()}} de {{ $total_clientes }} registros</p>
+        </div>
+        @endif
+
     </div>
 </div>
 

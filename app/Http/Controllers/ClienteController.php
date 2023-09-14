@@ -16,6 +16,8 @@ class ClienteController extends Controller
     }
     // LISTAGEM DE CLIENTES
     function listar(Request $request){
+        $clientes = Cliente::all();
+        $total_clientes = $clientes->count();
         $query = Cliente::query();
 
         // Verifique se o campo "nome" está preenchido no formulário
@@ -36,7 +38,7 @@ class ClienteController extends Controller
     
         // Execute a consulta e obtenha os resultados
         $clientes = $query->get();
-        return view('cliente/cliente_listagem', compact('clientes'));
+        return view('cliente/cliente_listagem', compact('clientes', 'total_clientes'));
     }
 
     //RETORNA VIEW PARA ADICIONAR CLIENTES
