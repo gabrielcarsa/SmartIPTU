@@ -86,11 +86,40 @@ class ClienteController extends Controller
     }
 
     //CADASTRO DE CLIENTE
-    function cadastrar($usuario, ClienteRequest $request){
+    function cadastrar($usuario, Request $request):RedirectResponse{
         $cliente = new Cliente();
 
         //Validar todos campos definidos como obrigatório
-        $validated = $request->validated();    
+        //$validated = $request->validated();  
+        if($request->input('tipo_cadastro') == 0){
+            $validated = $request->validate([
+                'nome' => 'required|min:3',
+                'cpf' => 'required|numeric',
+                'rua_end' => 'required',
+                'bairro_end' => 'required',
+                'numero_end' => 'required|numeric',
+                'cidade_end' => 'required',
+                'estado_end' => 'required',
+                'cep_end' => 'required|numeric',
+                'email' => 'required|email',
+                'data_nascimento' => 'nullable|date',
+            ]);
+        } else{
+            $validated = $request->validate([
+                'razao_social' => 'required|min:3',
+                'cnpj' => 'required|numeric',
+                'inscricao_estadual' => 'required|numeric',
+                'rua_end' => 'required',
+                'bairro_end' => 'required',
+                'numero_end' => 'required|numeric',
+                'cidade_end' => 'required',
+                'estado_end' => 'required',
+                'cep_end' => 'required|numeric',
+                'email' => 'required|email',
+                'data_nascimento' => 'nullable|date',
+            ]);
+        }
+        
 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');

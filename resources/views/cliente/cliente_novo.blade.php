@@ -107,11 +107,15 @@
             <div class="col-md-3">
                 <label for="inputTipo" class="form-label">Tipo de cadastro*</label>
                 <select id="inputTipo" name="tipo_cadastro" class="form-select" onchange="mostrarOcultarCampo()">
-                    <option value="0" selected>Pessoa Física</option>
-                    <option value="1">Pessoa Jurídica</option>
+                    <option value="0" {{ old('tipo_cadastro') == 0 ? 'selected' : '' }}>Pessoa Física</option>
+                    <option value="1" {{ old('tipo_cadastro') == 1 ? 'selected' : '' }}>Pessoa Jurídica</option>
                 </select>
 
                 <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    mostrarOcultarCampo();
+                });
+
                 function mostrarOcultarCampo() {
                     // Obtém o valor da opção selecionada
                     var opcao = document.getElementById("inputTipo").value;
@@ -384,6 +388,5 @@ function aplicarMascaraTelefone(inputId) {
 // Aplicar a máscara para os campos de telefone 1 e telefone 2
 aplicarMascaraTelefone('inputTelefone1');
 aplicarMascaraTelefone('inputTelefone2');
-
 </script>
 @endsection

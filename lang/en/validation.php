@@ -182,7 +182,10 @@ return [
 
     'attributes' => [
         'nome' => 'Nome',
-        'cpf_cnpj' => 'CPF/CNPJ',
+        'cpf' => 'CPF',
+        'cnpj' => 'CNPJ',
+        'inscricao_estadual' => 'Inscrição Estadual',
+        'razao_social' => 'Razão Social',
         'rua_end' => 'Rua',
         'bairro_end' => 'Bairro',
         'numero_end' => 'Número',
