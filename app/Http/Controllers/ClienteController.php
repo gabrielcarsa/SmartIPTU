@@ -60,7 +60,9 @@ class ClienteController extends Controller
          date_default_timezone_set('America/Cuiaba');
  
         $cliente->nome = $request->input('nome');
-        $cliente->cpf_cnpj = $request->input('cpf_cnpj');
+        $cliente->razao_social = $request->input('razao_social');
+        $cliente->cnpj = $request->input('cnpj');
+        $cliente->cpf = $request->input('cpf');
         $cliente->rg = $request->input('rg');
         $cliente->rua_end = $request->input('rua_end');
         $cliente->bairro_end = $request->input('bairro_end');
@@ -94,7 +96,9 @@ class ClienteController extends Controller
         date_default_timezone_set('America/Cuiaba');
 
         $cliente->nome = $request->input('nome');
-        $cliente->cpf_cnpj = $request->input('cpf_cnpj');
+        $cliente->razao_social = $request->input('razao_social');
+        $cliente->cnpj = $request->input('cnpj');
+        $cliente->cpf = $request->input('cpf');
         $cliente->rg = $request->input('rg');
         $cliente->rua_end = $request->input('rua_end');
         $cliente->bairro_end = $request->input('bairro_end');
@@ -105,6 +109,7 @@ class ClienteController extends Controller
         $cliente->data_cadastro = date('d-m-Y h:i:s a', time());
         $cliente->cadastrado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
+        $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         $cliente->telefone1 = $request->input('telefone1');
         $cliente->telefone2 = $request->input('telefone2');
         $cliente->cep_end = $request->input('cep_end');

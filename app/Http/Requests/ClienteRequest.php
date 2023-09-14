@@ -22,8 +22,11 @@ class ClienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|min:3',
-            'cpf_cnpj' => 'required|numeric',
+            'nome' => 'nullable|min:3',
+            'razao_social' => 'nullable|min:3',
+            'cpf' => 'nullable|numeric',
+            'cnpj' => 'nullable|numeric',
+            'inscricao_estadual' => 'nullable|numeric',
             'rua_end' => 'required',
             'bairro_end' => 'required',
             'numero_end' => 'required|numeric',

@@ -39,7 +39,7 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Nome</th>
+                    <th scope="col">Nome/Razão Social</th>
                     <th scope="col">CPF/CNPJ</th>
                     <th scope="col">Telefone</th>
                     <th scope="col">Email</th>
@@ -51,8 +51,13 @@
                 @foreach ($clientes as $cliente)
                 <tr>
                     <th scope="row">{{$cliente->id}}</th>
+                    @if($cliente->tipo_cadastro == 0)
                     <td>{{$cliente->nome}}</td>
-                    <td>{{$cliente->cpf_cnpj}}</td>
+                    <td>{{$cliente->cpf}}</td>
+                    @else
+                    <td>{{$cliente->razao_social}}</td>
+                    <td>{{$cliente->cnpj}}</td>
+                    @endif
                     <td>{{$cliente->telefone1}}</td>
                     <td>{{$cliente->email}}</td>
                     <td><a href="editar/{{$cliente->id}}">Ver/Editar</a></td>
