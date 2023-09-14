@@ -46,15 +46,42 @@ class ClienteController extends Controller
         return view('cliente/cliente_novo', compact('cliente', 'alterado_por_user'), compact('cadastrado_por_user'));
     }
 
-    function alterar($id, $usuario, ClienteRequest $request){ 
+    function alterar($id, $usuario, Request $request){ 
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
             return redirect()->back()->with('error', 'Cliente não encontrado');
         }
     
-         //Validar todos campos definidos como obrigatório
-         $validated = $request->validated();    
+        //Validar todos campos definidos como obrigatório
+        if($request->input('tipo_cadastro') == 0){
+            $validated = $request->validate([
+                'nome' => 'required|min:3',
+                'cpf' => 'required|unique:cliente,cpf,'.$id,
+                'rua_end' => 'required',
+                'bairro_end' => 'required',
+                'numero_end' => 'required|numeric',
+                'cidade_end' => 'required',
+                'estado_end' => 'required',
+                'cep_end' => 'required|numeric',
+                'email' => 'required|email',
+                'data_nascimento' => 'nullable|date',
+            ]);
+        } else{
+            $validated = $request->validate([
+                'razao_social' => 'required|min:3',
+                'cnpj' => 'required|unique:cliente,cnpj,'.$id,
+                'inscricao_estadual' => 'required|numeric',
+                'rua_end' => 'required',
+                'bairro_end' => 'required',
+                'numero_end' => 'required|numeric',
+                'cidade_end' => 'required',
+                'estado_end' => 'required',
+                'cep_end' => 'required|numeric',
+                'email' => 'required|email',
+                'data_nascimento' => 'nullable|date',
+            ]);
+        }
 
          //Definindo data para cadastrar
          date_default_timezone_set('America/Cuiaba');
@@ -86,7 +113,7 @@ class ClienteController extends Controller
     }
 
     //CADASTRO DE CLIENTE
-    function cadastrar($usuario, Request $request):RedirectResponse{
+    function cadastrar($usuario, Request $request){
         $cliente = new Cliente();
 
         //Validar todos campos definidos como obrigatório
@@ -94,7 +121,7 @@ class ClienteController extends Controller
         if($request->input('tipo_cadastro') == 0){
             $validated = $request->validate([
                 'nome' => 'required|min:3',
-                'cpf' => 'required|numeric',
+                'cpf' => 'required|unique:cliente',
                 'rua_end' => 'required',
                 'bairro_end' => 'required',
                 'numero_end' => 'required|numeric',
@@ -107,7 +134,7 @@ class ClienteController extends Controller
         } else{
             $validated = $request->validate([
                 'razao_social' => 'required|min:3',
-                'cnpj' => 'required|numeric',
+                'cnpj' => 'required|unique:cliente',
                 'inscricao_estadual' => 'required|numeric',
                 'rua_end' => 'required',
                 'bairro_end' => 'required',
