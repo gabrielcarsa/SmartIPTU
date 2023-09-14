@@ -16,14 +16,26 @@ class ClienteController extends Controller
     }
     // LISTAGEM DE CLIENTES
     function listar(Request $request){
-        $nome = $request->input('nome');
-        $cadastrado_user = null; // Defina como null por padrão
+        $query = Cliente::query();
 
-        if (empty($nome)) {
-            $clientes = Cliente::all();
-        } else {
-            $clientes = DB::table('cliente')->where('nome', 'LIKE', '%' . $nome . '%')->get();
+        // Verifique se o campo "nome" está preenchido no formulário
+        if ($request->filled('nome')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('nome', 'ilike', '%' . $request->input('nome') . '%')
+                    ->orWhere('razao_social', 'ilike', '%' . $request->input('nome') . '%');
+            });
         }
+    
+        // Verifique se o campo "cpf_cnpj" está preenchido no formulário
+        if ($request->filled('cpf_cnpj')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('cpf', 'ilike', '%' . $request->input('cpf_cnpj') . '%')
+                    ->orWhere('cnpj', 'ilike', '%' . $request->input('cpf_cnpj') . '%');
+            });
+        }
+    
+        // Execute a consulta e obtenha os resultados
+        $clientes = $query->get();
         return view('cliente/cliente_listagem', compact('clientes'));
     }
 
@@ -47,6 +59,9 @@ class ClienteController extends Controller
     }
 
     function alterar($id, $usuario, Request $request){ 
+         //Definindo data para cadastrar
+         date_default_timezone_set('America/Cuiaba');
+
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
@@ -54,7 +69,7 @@ class ClienteController extends Controller
         }
     
         //Validar todos campos definidos como obrigatório
-        if($request->input('tipo_cadastro') == 0){
+        if($request->input('tipo_cadastro_hidden') == 0){
             $validated = $request->validate([
                 'nome' => 'required|min:3',
                 'cpf' => 'required|unique:cliente,cpf,'.$id,
@@ -67,6 +82,17 @@ class ClienteController extends Controller
                 'email' => 'required|email',
                 'data_nascimento' => 'nullable|date',
             ]);
+
+            //Campos Pessoa Física
+            $cliente->nome = $request->input('nome');
+            if ($request->input('cpf')) {
+                $cliente->cpf = str_replace(['.', '-'], '', $request->input('cpf'));
+            }
+            $cliente->rg = $request->input('rg');
+            $cliente->data_nascimento = $request->input('data_nascimento');
+            $cliente->estado_civil = $request->input('estado_civil');
+            $cliente->profissao = $request->input('profissao');
+
         } else{
             $validated = $request->validate([
                 'razao_social' => 'required|min:3',
@@ -81,31 +107,26 @@ class ClienteController extends Controller
                 'email' => 'required|email',
                 'data_nascimento' => 'nullable|date',
             ]);
+
+            //Campos Pessoa Jurídica
+            $cliente->razao_social = $request->input('razao_social');
+            if ($request->input('cnpj')) {
+                $cliente->cnpj = str_replace(['.', '-'], '', $request->input('cnpj'));
+            }
+            $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         }
 
-         //Definindo data para cadastrar
-         date_default_timezone_set('America/Cuiaba');
- 
-        $cliente->nome = $request->input('nome');
-        $cliente->razao_social = $request->input('razao_social');
-        $cliente->cnpj = $request->input('cnpj');
-        $cliente->cpf = $request->input('cpf');
-        $cliente->rg = $request->input('rg');
         $cliente->rua_end = $request->input('rua_end');
         $cliente->bairro_end = $request->input('bairro_end');
         $cliente->numero_end = $request->input('numero_end');
         $cliente->cidade_end = $request->input('cidade_end');
         $cliente->estado_end = $request->input('estado_end');
-        $cliente->data_nascimento = $request->input('data_nascimento');
         $cliente->data_alteracao = date('d-m-Y h:i:s a', time());
         $cliente->alterado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
-        $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         $cliente->telefone1 = $request->input('telefone1');
         $cliente->telefone2 = $request->input('telefone2');
         $cliente->cep_end = $request->input('cep_end');
-        $cliente->estado_civil = $request->input('estado_civil');
-        $cliente->profissao = $request->input('profissao');
         $cliente->complemento_end = $request->input('complemento_end');
         $cliente->save();
     
@@ -114,10 +135,13 @@ class ClienteController extends Controller
 
     //CADASTRO DE CLIENTE
     function cadastrar($usuario, Request $request){
+
+        //Definindo data para cadastrar
+        date_default_timezone_set('America/Cuiaba');    
+
         $cliente = new Cliente();
 
         //Validar todos campos definidos como obrigatório
-        //$validated = $request->validated();  
         if($request->input('tipo_cadastro') == 0){
             $validated = $request->validate([
                 'nome' => 'required|min:3',
@@ -131,6 +155,17 @@ class ClienteController extends Controller
                 'email' => 'required|email',
                 'data_nascimento' => 'nullable|date',
             ]);
+
+            //Campos Pessoa Física
+            $cliente->nome = $request->input('nome');
+            if ($request->input('cpf')) {
+                $cliente->cpf = str_replace(['.', '-'], '', $request->input('cpf'));
+            }
+            $cliente->rg = $request->input('rg');
+            $cliente->data_nascimento = $request->input('data_nascimento');
+            $cliente->profissao = $request->input('profissao');
+            $cliente->estado_civil = $request->input('estado_civil');
+
         } else{
             $validated = $request->validate([
                 'razao_social' => 'required|min:3',
@@ -145,32 +180,27 @@ class ClienteController extends Controller
                 'email' => 'required|email',
                 'data_nascimento' => 'nullable|date',
             ]);
+
+            //Campos Pessoa Jurídica
+            $cliente->razao_social = $request->input('razao_social');
+            if ($request->input('cnpj')) {
+                $cliente->cnpj = str_replace(['.', '-'], '', $request->input('cnpj'));
+            }
+            $cliente->inscricao_estadual = $request->input('inscricao_estadual');
+
         }
-        
 
-        //Definindo data para cadastrar
-        date_default_timezone_set('America/Cuiaba');
-
-        $cliente->nome = $request->input('nome');
-        $cliente->razao_social = $request->input('razao_social');
-        $cliente->cnpj = $request->input('cnpj');
-        $cliente->cpf = $request->input('cpf');
-        $cliente->rg = $request->input('rg');
         $cliente->rua_end = $request->input('rua_end');
         $cliente->bairro_end = $request->input('bairro_end');
         $cliente->numero_end = $request->input('numero_end');
         $cliente->cidade_end = $request->input('cidade_end');
         $cliente->estado_end = $request->input('estado_end');
-        $cliente->data_nascimento = $request->input('data_nascimento');
         $cliente->data_cadastro = date('d-m-Y h:i:s a', time());
         $cliente->cadastrado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
-        $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         $cliente->telefone1 = $request->input('telefone1');
         $cliente->telefone2 = $request->input('telefone2');
         $cliente->cep_end = $request->input('cep_end');
-        $cliente->estado_civil = $request->input('estado_civil');
-        $cliente->profissao = $request->input('profissao');
         $cliente->complemento_end = $request->input('complemento_end');
         $cliente->tipo_cadastro = $request->input('tipo_cadastro');
         $cliente->save();

@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-6">
                 <label for="inputPassword4" class="form-label">CPF/CNPJ</label>
-                <input type="text" name="cpf" class="form-control" id="inputPassword4">
+                <input type="text" name="cpf_cnpj" class="form-control" id="inputPassword4">
             </div>
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
