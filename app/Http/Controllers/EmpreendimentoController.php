@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Empreendimento;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\EmpreendimentoRequest;
 
 class EmpreendimentoController extends Controller
 {
@@ -21,7 +22,10 @@ class EmpreendimentoController extends Controller
     }
 
     //CADASTRO DE EMPREENDIMENTO
-    function cadastrar($usuario, Request $request){
+    function cadastrar($usuario, EmpreendimentoRequest $request){
+
+        // Validar campos
+        $validated = $request->validated();
 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
@@ -52,26 +56,29 @@ class EmpreendimentoController extends Controller
 
 
     //ALTERAR EMPREENDIMENTO      
-    function alterar($id, $usuario, Request $request){ 
+    function alterar($id, $usuario, EmpreendimentoRequest $request){ 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');
 
-       $empreendimento = Empreendimento::find($id);
+        // Validar campos
+        $validated = $request->validated();
 
-       if (!$empreendimento) {
-           return redirect()->back()->with('error', 'Empreendimento não encontrado');
-       }
+        $empreendimento = Empreendimento::find($id);
 
-       $empreendimento->nome = $request->input('nome');
-       $empreendimento->matricula = $request->input('matricula');
-       $empreendimento->cidade = $request->input('cidade');
-       $empreendimento->estado = $request->input('estado');      
-       $empreendimento->data_alteracao = date('d-m-Y h:i:s a', time());
-       $empreendimento->alterado_usuario_id = $usuario;
-       $empreendimento->save();
-   
-       return redirect('empreendimento/editar/'.$id)->with('success', 'Cliente atualizado com sucesso');
-   }
+        if (!$empreendimento) {
+            return redirect()->back()->with('error', 'Empreendimento não encontrado');
+        }
+
+        $empreendimento->nome = $request->input('nome');
+        $empreendimento->matricula = $request->input('matricula');
+        $empreendimento->cidade = $request->input('cidade');
+        $empreendimento->estado = $request->input('estado');      
+        $empreendimento->data_alteracao = date('d-m-Y h:i:s a', time());
+        $empreendimento->alterado_usuario_id = $usuario;
+        $empreendimento->save();
+    
+        return redirect('empreendimento/editar/'.$id)->with('success', 'Cliente atualizado com sucesso');
+    }
     
     //EXCLUIR EMPREENDIMENTO
     function excluir($id){

@@ -194,6 +194,9 @@ return [
         'cep_end' => 'CEP',
         'email' => 'E-mail',
         'data_nascimento' => 'Data de Nascimento',
+        'matricula' => 'Matrícula',
+        'cidade' => 'Cidade',
+        'estado' => 'Estado',
     ],
 
 ];
