@@ -13,11 +13,11 @@
     <span class="material-symbols-outlined">
         add
     </span>Nova Quadra</a>
-    <a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" href="../../lote/novo/{{$empreendimento->id}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Novo Lote</a>
-    <a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Nova Venda</a>
@@ -68,7 +68,11 @@
                     <th scope="row">{{$lote->lote_id}}</th>
                     <td>{{$lote->quadra_nome}}</td>
                     <td>{{$lote->lote}}</td>
+                    @if(empty($lote->nome_cliente))
+                    <td>{{$lote->razao_social__cliente}}</td>
+                    @else
                     <td>{{$lote->nome_cliente}}</td>
+                    @endif
                     <td>{{$lote->inscricao_municipal}}</td>
                     <td><a href="editar/{{$lote->lote_id}}" class="btn-acao-listagem">Ver/Editar</a></td>
                 </tr>
