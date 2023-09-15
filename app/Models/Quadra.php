@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Quadra extends Model
 {
     use HasFactory;
+    protected $table = 'quadra';
+    public $timestamps = false;
 }

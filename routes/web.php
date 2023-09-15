@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpreendimentoController;
+use App\Http\Controllers\QuadraController;
+
 
 
 /*
@@ -45,7 +47,11 @@ Route::middleware([
     Route::post('/empreendimento/cadastrar/{usuario}',[EmpreendimentoController::class, 'cadastrar']);
     Route::get('/empreendimento/editar/{id}',[EmpreendimentoController::class, 'editar']);
     Route::post('/empreendimento/alterar/{id}/{usuario}',[EmpreendimentoController::class, 'alterar']);
-    Route::get('/empreendimento/excluir/{id}/',[EmpreendimentoController::class, 'excluir']);
+    Route::get('/empreendimento/excluir/{id}',[EmpreendimentoController::class, 'excluir']);
+    Route::get('/empreendimento/gestao/{id}',[EmpreendimentoController::class, 'gestao']);
+
+    //ROTAS QUADRA
+    Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
 
 
 });

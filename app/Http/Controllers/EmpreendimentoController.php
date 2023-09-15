@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Empreendimento;
 use App\Models\User;
+use App\Models\Quadra;
+use App\Models\Lote;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmpreendimentoRequest;
 
@@ -77,7 +79,7 @@ class EmpreendimentoController extends Controller
         $empreendimento->alterado_usuario_id = $usuario;
         $empreendimento->save();
     
-        return redirect('empreendimento/editar/'.$id)->with('success', 'Cliente atualizado com sucesso');
+        return redirect('empreendimento/editar/'.$id)->with('success', 'Empreendimento atualizado com sucesso');
     }
     
     //EXCLUIR EMPREENDIMENTO
@@ -87,4 +89,29 @@ class EmpreendimentoController extends Controller
         return redirect("empreendimento")->with('success', 'Empreendimento excluido com sucesso');
     }
 
+     // GESTÃO EMPREENDIMENTO
+     function gestao($id, Request $request){
+
+        $empreendimento = Empreendimento::find($id);
+        
+        $resultado = Quadra::select(
+            'quadra.id as quadra_id',
+            'quadra.nome as quadra_nome',
+            'quadra.empreendimento_id as quadra_empreendimento_id',
+            'lote.id as lote_id',
+            'lote.lote as lote',
+            'lote.inscricao_municipal as inscricao_municipal',
+            'lote.quadra_id as lote_quadra_id',
+            'lote.cliente_id as lote_cliente_id',
+            'cliente.nome as nome_cliente'
+        )
+        ->leftJoin('lote', 'quadra.id', '=', 'lote.quadra_id')
+        ->join('cliente', 'cliente.id', '=', 'lote.cliente_id')
+        ->where('quadra.empreendimento_id', '=', $id)
+        ->get();
+
+        $total_lotes = $resultado->count();
+
+        return view('empreendimento/empreendimento_gestao', compact('resultado', 'total_lotes'), compact('empreendimento') );
+    }
 }
