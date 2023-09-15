@@ -41,4 +41,6 @@ Route::middleware([
 
     //ROTAS EMPREENDIMETO
     Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);
+    Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
+    Route::post('/empreendimento/cadastrar/{usuario}',[EmpreendimentoController::class, 'cadastrar']);
 });

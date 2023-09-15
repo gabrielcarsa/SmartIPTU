@@ -9,7 +9,10 @@
 @endif
 
 <h2>Empreendimento</h2>
-
+<a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px"> 
+    <span class="material-symbols-outlined">
+        add
+    </span>Novo</a>
 <div class="card">
     <h5 class="card-header">Empreendimentos cadastrados</h5>
     @if(isset($empreendimentos))
