@@ -9,7 +9,7 @@
 @endif
 
 <h2>Empreendimento</h2>
-<a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px"> 
+<a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Novo</a>
@@ -40,8 +40,10 @@
                     <td>{{$empreendimento->nome}}</td>
                     <td>{{$empreendimento->matricula}}</td>
                     <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
-                    <td><a href="">Lotes/Inscrições</a></td>
-                    <td><a href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a></td>
+                    <td>
+                        <a class="btn-acao-listagem" href="">Lotes</a>
+                        <a class="btn-acao-listagem" href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
+                    </td>
                 </tr>
                 @endforeach
                 @endif

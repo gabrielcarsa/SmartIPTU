@@ -66,7 +66,7 @@
                     @endif
                     <td>{{$cliente->telefone1}}</td>
                     <td>{{$cliente->email}}</td>
-                    <td><a href="editar/{{$cliente->id}}">Ver/Editar</a></td>
+                    <td><a href="editar/{{$cliente->id}}" class="btn-acao-listagem">Ver/Editar</a></td>
                 </tr>
                 @endforeach
                 @endif
