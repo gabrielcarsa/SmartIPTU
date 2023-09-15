@@ -38,7 +38,7 @@
         <div class="offcanvas-body-content">
             <ul class="list-offcanvas">
                 <li><a href="/empreendimento">
-                        <span class="material-symbols-outlined">pie_chart</span>Gestão de Inscrições
+                        <span class="material-symbols-outlined">pie_chart</span>Gestão de Lotes/Inscrições
                     </a></li>
                 <li><a href="/cliente"><span class="material-symbols-outlined">
                             person_add

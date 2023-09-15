@@ -36,8 +36,8 @@
     <h5 class="card-header">Lista de cadastros</h5>
     @if(isset($clientes))
     <div class="card-footer">
-        <a href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
-        <a href="">Excel</a>
+        <a class="btn btn-add" href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
+        <a class="btn btn-add" href="">Excel</a>
     </div>
     @endif
     <div class="card-body">

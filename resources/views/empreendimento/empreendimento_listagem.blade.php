@@ -1,0 +1,56 @@
+@extends('layouts/app')
+
+@section('conteudo')
+
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
+<h2>Empreendimento</h2>
+
+<div class="card">
+    <h5 class="card-header">Empreendimentos cadastrados</h5>
+    @if(isset($empreendimentos))
+    <div class="card-footer">
+        <a class="btn btn-add" href="">PDF</a>
+        <a class="btn btn-add" href="">Excel</a>
+    </div>
+    @endif
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Empreendimento</th>
+                    <th scope="col">Matrícula</th>
+                    <th scope="col">Localização</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(isset($empreendimentos))
+                @foreach ($empreendimentos as $empreendimento)
+                <tr>
+                    <th scope="row">{{$empreendimento->id}}</th>
+                    <td>{{$empreendimento->nome}}</td>
+                    <td>{{$empreendimento->matricula}}</td>
+                    <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
+                    <td><a href="">Contratos</a></td>
+                    <td><a href="editar/{{$empreendimento->id}}">Ver/Editar</a></td>
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+        @if(isset($empreendimentos))
+        <div class="card-footer">
+            <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+        </div>
+        @endif
+
+    </div>
+</div>
+
+@endsection

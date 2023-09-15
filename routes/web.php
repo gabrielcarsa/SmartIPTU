@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EmpreendimentoController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +38,7 @@ Route::middleware([
     Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
     Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
     Route::get('/cliente/relatorio_pdf',[ClienteController::class, 'relatorio_pdf']);
+
+    //ROTAS EMPREENDIMETO
+    Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);
 });
