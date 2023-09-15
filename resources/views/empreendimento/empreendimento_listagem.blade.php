@@ -40,8 +40,8 @@
                     <td>{{$empreendimento->nome}}</td>
                     <td>{{$empreendimento->matricula}}</td>
                     <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
-                    <td><a href="">Contratos</a></td>
-                    <td><a href="editar/{{$empreendimento->id}}">Ver/Editar</a></td>
+                    <td><a href="">Lotes/Inscrições</a></td>
+                    <td><a href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a></td>
                 </tr>
                 @endforeach
                 @endif

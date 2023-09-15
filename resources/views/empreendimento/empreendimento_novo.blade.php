@@ -36,7 +36,7 @@
         @if (isset($alterado_por_user))
         <p>
             Última alteração feita por <strong>{{$alterado_por_user->name}}</strong> em
-            {{ \Carbon\Carbon::parse($empreendimentos->data_alteracao)->format('d/m/Y') }}
+            {{ \Carbon\Carbon::parse($empreendimento->data_alteracao)->format('d/m/Y') }}
         </p>
         @endif
         <!-- Button trigger modal -->
@@ -69,24 +69,24 @@
             action="{{ isset($empreendimento) ? '/empreendimento/alterar/' . $empreendimento->id . '/' . Auth::user()->id : '/empreendimento/cadastrar/' . Auth::user()->id }}"
             method="post" autocomplete="off">
             @csrf
-            <div class="col-md-4" id="campoNome">
+            <div class="col-md-3" id="campoNome">
                 <label for="inputNome" id="nome" class="form-label">Nome*</label>
                 <input type="text" name="nome" value="{{isset($empreendimento) ? $empreendimento->nome : old('empreendimento')}}"
                     class="form-control @error('nome') is-invalid @enderror" id="inputNome">
             </div>
-            <div class="col-md-4" id="campoMatricula">
+            <div class="col-md-3" id="campoMatricula">
                 <label for="inputMatricula" id="matricula" class="form-label">Matrícula*</label>
                 <input type="text" name="matricula"
                     value="{{isset($empreendimento) ? $empreendimento->matricula : old('matricula')}}"
                     class="form-control @error('matricula') is-invalid @enderror" id="inputMatricula">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="inputCidade" class="form-label">Cidade*</label>
                 <input type="text" name="cidade"
                     value="{{isset($empreendimento) ? $empreendimento->cidade: old('cidade') }}"
                     class="form-control @error('cidade') is-invalid @enderror" id="inputCidade">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="inputEstado" class="form-label">Estado*</label>
                 <input type="text" name="estado"
                     value="{{isset($empreendimento) ? $empreendimento->estado : old('estado') }}"

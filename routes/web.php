@@ -43,4 +43,9 @@ Route::middleware([
     Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);
     Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
     Route::post('/empreendimento/cadastrar/{usuario}',[EmpreendimentoController::class, 'cadastrar']);
+    Route::get('/empreendimento/editar/{id}',[EmpreendimentoController::class, 'editar']);
+    Route::post('/empreendimento/alterar/{id}/{usuario}',[EmpreendimentoController::class, 'alterar']);
+    Route::get('/empreendimento/excluir/{id}/',[EmpreendimentoController::class, 'excluir']);
+
+
 });
