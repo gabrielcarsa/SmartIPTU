@@ -1,11 +1,6 @@
 @extends('layouts/app')
 
 @section('conteudo')
-@if(session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
 
 <h2>
     @if (isset($cliente))
@@ -17,6 +12,11 @@
 
 <div class="card">
     <h5 class="card-header">Preencha os campos requisitados *</h5>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

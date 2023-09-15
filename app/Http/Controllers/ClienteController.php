@@ -14,6 +14,8 @@ class ClienteController extends Controller
     function cliente(){
         return view('cliente/cliente_listagem');
     }
+
+
     // LISTAGEM DE CLIENTES
     function listar(Request $request){
         $clientes = Cliente::all();
@@ -41,10 +43,12 @@ class ClienteController extends Controller
         return view('cliente/cliente_listagem', compact('clientes', 'total_clientes'));
     }
 
+
     //RETORNA VIEW PARA ADICIONAR CLIENTES
     function novo(){
         return view('cliente/cliente_novo');
     }
+
 
     //RETORNA VIEW ALTERAR CLIENTE  
     function editar($id){
@@ -60,6 +64,8 @@ class ClienteController extends Controller
         return view('cliente/cliente_novo', compact('cliente', 'alterado_por_user'), compact('cadastrado_por_user'));
     }
 
+
+    //ALTERAR CLIENTE  
     function alterar($id, $usuario, Request $request){ 
          //Definindo data para cadastrar
          date_default_timezone_set('America/Cuiaba');
@@ -113,7 +119,7 @@ class ClienteController extends Controller
             //Campos Pessoa Jurídica
             $cliente->razao_social = $request->input('razao_social');
             if ($request->input('cnpj')) {
-                $cliente->cnpj = str_replace(['.', '-'], '', $request->input('cnpj'));
+                $cliente->cnpj = str_replace(['.', '-','/'], '', $request->input('cnpj'));
             }
             $cliente->inscricao_estadual = $request->input('inscricao_estadual');
         }
@@ -134,6 +140,7 @@ class ClienteController extends Controller
     
         return redirect('cliente/editar/'.$id)->with('success', 'Cliente atualizado com sucesso');
     }
+
 
     //CADASTRO DE CLIENTE
     function cadastrar($usuario, Request $request){
@@ -186,7 +193,7 @@ class ClienteController extends Controller
             //Campos Pessoa Jurídica
             $cliente->razao_social = $request->input('razao_social');
             if ($request->input('cnpj')) {
-                $cliente->cnpj = str_replace(['.', '-'], '', $request->input('cnpj'));
+                $cliente->cnpj = str_replace(['.', '-','/'], '', $request->input('cnpj'));
             }
             $cliente->inscricao_estadual = $request->input('inscricao_estadual');
 
