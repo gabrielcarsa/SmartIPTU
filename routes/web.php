@@ -35,4 +35,5 @@ Route::middleware([
     Route::get('/cliente/editar/{id}',[ClienteController::class, 'editar']);
     Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
     Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
+    Route::get('/cliente/relatorio_pdf',[ClienteController::class, 'relatorio_pdf']);
 });

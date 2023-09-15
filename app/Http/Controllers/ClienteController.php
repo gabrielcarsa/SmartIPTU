@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClienteController extends Controller
 {
@@ -40,7 +41,8 @@ class ClienteController extends Controller
     
         // Execute a consulta e obtenha os resultados
         $clientes = $query->get();
-        return view('cliente/cliente_listagem', compact('clientes', 'total_clientes'));
+
+        return view('cliente/cliente_listagem', compact('clientes', 'total_clientes') );
     }
 
 
@@ -221,6 +223,36 @@ class ClienteController extends Controller
         $cliente = Cliente::find($id);
         $cliente->delete();
         return redirect("cliente")->with('success', 'Cliente excluido com sucesso');
+    }
+
+
+    //EXPORTANDO TABELA PARA PDF
+    function relatorio_pdf(Request $request){
+        $clientes = Cliente::all();
+        $total_clientes = $clientes->count();
+        $query = Cliente::query();
+
+        // Verifique se o campo "nome" está preenchido no formulário
+        if ($request->filled('nome')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('nome', 'ilike', '%' . $request->input('nome') . '%')
+                    ->orWhere('razao_social', 'ilike', '%' . $request->input('nome') . '%');
+            });
+        }
+    
+        // Verifique se o campo "cpf_cnpj" está preenchido no formulário
+        if ($request->filled('cpf_cnpj')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('cpf', 'ilike', '%' . $request->input('cpf_cnpj') . '%')
+                    ->orWhere('cnpj', 'ilike', '%' . $request->input('cpf_cnpj') . '%');
+            });
+        }
+    
+        // Execute a consulta e obtenha os resultados
+        $clientes = $query->get();
+        $pdf = PDF::loadView('cliente.cliente_relatorio_pdf', ['clientes' => $clientes]);
+        return $pdf->download('cliente_relatorio.pdf');
+
     }
 
 }

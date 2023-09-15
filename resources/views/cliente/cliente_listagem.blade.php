@@ -16,11 +16,11 @@
             @csrf
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Nome</label>
-                <input type="text" name="nome" class="form-control" id="inputEmail4">
+                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
             </div>
             <div class="col-md-6">
                 <label for="inputPassword4" class="form-label">CPF/CNPJ</label>
-                <input type="text" name="cpf_cnpj" class="form-control" id="inputPassword4">
+                <input type="text" name="cpf_cnpj" value="{{request('cpf_cnpj')}}" class="form-control" id="inputPassword4">
             </div>
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
@@ -34,6 +34,12 @@
 
 <div class="card">
     <h5 class="card-header">Lista de cadastros</h5>
+    @if(isset($clientes))
+    <div class="card-footer">
+        <a href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
+        <a href="">Excel</a>
+    </div>
+    @endif
     <div class="card-body">
         <table class="table table-striped">
             <thead>
