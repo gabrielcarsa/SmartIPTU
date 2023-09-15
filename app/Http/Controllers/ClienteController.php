@@ -252,7 +252,6 @@ class ClienteController extends Controller
         $clientes = $query->get();
         $pdf = PDF::loadView('cliente.cliente_relatorio_pdf', ['clientes' => $clientes]);
         return $pdf->download('cliente_relatorio.pdf');
-
     }
 
 }
