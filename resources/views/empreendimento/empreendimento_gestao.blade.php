@@ -9,7 +9,7 @@
 @endif
 
 <h2>{{$empreendimento->nome}}</h2>
-<a class="btn btn-primary btn-add" href="../../quadra/novo" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" href="../../quadra/novo/{{$empreendimento->id}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Nova Quadra</a>

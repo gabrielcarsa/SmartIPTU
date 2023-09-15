@@ -5,8 +5,6 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpreendimentoController;
 use App\Http\Controllers\QuadraController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,7 +49,7 @@ Route::middleware([
     Route::get('/empreendimento/gestao/{id}',[EmpreendimentoController::class, 'gestao']);
 
     //ROTAS QUADRA
-    Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
-
+    Route::get('/quadra/novo/{empreendimento_id}',[QuadraController::class, 'novo']);
+    Route::post('/quadra/cadastrar/{usuario}/{empreendimento_id}',[QuadraController::class, 'cadastrar']);
 
 });
