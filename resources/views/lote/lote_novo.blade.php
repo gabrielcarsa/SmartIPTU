@@ -71,10 +71,14 @@
             @csrf
             <div class="col-md-3">
                 <label for="inputQuadra" class="form-label">Quadra*</label>
-                <select id="inputQuadra" name="quadra" class="form-select">
-                    <option value="0">-- Selecione --</option>
+                <select id="inputQuadra" name="quadra_id"
+                    class="form-select form-control @error('quadra_id') is-invalid @enderror">
+                    <option value="0" {{ old('quadra_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($quadras as $quadra)
-                    <option value="{{$quadra->quadra_id}}">{{$quadra->quadra_nome}}</option>
+                    <option value="{{$quadra->quadra_id}}"
+                        {{ old('quadra_id') == $quadra->quadra_id ? 'selected' : '' }}>
+                        {{$quadra->quadra_nome}}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -85,10 +89,11 @@
             </div>
             <div class="col-md-3">
                 <label for="inputReponsabilidade" class="form-label">Responsabilidade*</label>
-                <select id="inputReponsabilidade" name="responsabilidade" class="form-select">
-                    <option value="0">-- Selecione --</option>
+                <select id="inputReponsabilidade" name="cliente_id"
+                    class="form-select form-control @error('cliente_id') is-invalid @enderror">
+                    <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($clientes as $cliente)
-                    <option value="{{$cliente->id}}">
+                    <option value="{{$cliente->id}}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
                         @if(empty($cliente->nome))
                         {{$cliente->razao_social}}
                         @else
@@ -98,6 +103,95 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-md-3">
+                <label for="inputMatricula" id="matricula" class="form-label">Matrícula*</label>
+                <input type="text" name="matricula" value="{{isset($lote) ? $lote->matricula : old('matricula')}}"
+                    class="form-control @error('matricula') is-invalid @enderror" id="inputMatricula">
+            </div>
+            <div class="col-md-3">
+                <label for="inputInscricaoMunicipal" id="inscricao_municipal" class="form-label">Inscrição
+                    Municipal*</label>
+                <input type="text" name="inscricao_municipal"
+                    value="{{isset($lote) ? $lote->inscricao_municipal : old('inscricao_municipal')}}"
+                    class="form-control @error('inscricao_municipal') is-invalid @enderror"
+                    id="inputInscricaoMunicipal">
+            </div>
+            <div class="col-md-3">
+                <label for="inputValor" id="valor" class="form-label">Valor</label>
+                <input type="text" name="valor" value="{{isset($lote) ? $lote->valor : old('valor')}}"
+                    class="form-control @error('valor') is-invalid @enderror" id="inputValor">
+            </div>
+            <div class="col-md-3">
+                <label for="inputMetrosQuadrados" id="metros_quadrados" class="form-label">Metros quadrados</label>
+                <input type="text" name="metros_quadrados"
+                    value="{{isset($lote) ? $lote->metros_quadrados : old('metros_quadrados')}}"
+                    class="form-control @error('metros_quadrados') is-invalid @enderror" id="inputMetrosQuadrados">
+            </div>
+            <div class="col-md-3">
+                <label for="inputEndereco" id="endereco" class="form-label">Endereço</label>
+                <input type="text" name="endereco" value="{{isset($lote) ? $lote->endereco : old('endereco')}}"
+                    class="form-control @error('endereco') is-invalid @enderror" id="inputEndereco">
+            </div>
+            <div class="col-md-2">
+                <label for="inputMetragemFrente" id="metragem_frente" class="form-label">Metragem Frente</label>
+                <input type="text" name="metragem_frente"
+                    value="{{isset($lote) ? $lote->metragem_frente : old('metragem_frente')}}"
+                    class="form-control @error('metragem_frente') is-invalid @enderror" id="inputMetragemFrente">
+            </div>
+            <div class="col-md-2">
+                <label for="inputMetragemFundo" id="metragem_fundo" class="form-label">Metragem Fundo</label>
+                <input type="text" name="metragem_fundo"
+                    value="{{isset($lote) ? $lote->metragem_fundo : old('metragem_fundo')}}"
+                    class="form-control @error('metragem_fundo') is-invalid @enderror" id="inputMetragemFundo">
+            </div>
+            <div class="col-md-2">
+                <label for="inputMetragemDireita" id="metragem_direita" class="form-label">Metragem Direita</label>
+                <input type="text" name="metragem_direita"
+                    value="{{isset($lote) ? $lote->metragem_direita : old('metragem_direita')}}"
+                    class="form-control @error('metragem_direita') is-invalid @enderror" id="inputMetragemDireita">
+            </div>
+            <div class="col-md-2">
+                <label for="inputMetragemEsquerda" id="metragem_esquerda" class="form-label">Metragem Esquerda</label>
+                <input type="text" name="metragem_esquerda"
+                    value="{{isset($lote) ? $lote->metragem_esquerda : old('metragem_esquerda')}}"
+                    class="form-control @error('metragem_esquerda') is-invalid @enderror" id="inputMetragemEsquerda">
+            </div>
+            <div class="col-md-2">
+                <label for="inputMetragemEsquina" id="metragem_esquina" class="form-label">Metragem Esquina</label>
+                <input type="text" name="metragem_esquina"
+                    value="{{isset($lote) ? $lote->metragem_esquina : old('metragem_esquina')}}"
+                    class="form-control @error('metragem_esquina') is-invalid @enderror" id="inputMetragemEsquina">
+            </div>
+            <div class="col-md-3">
+                <label for="inputConfrontacaoFrente" id="confrontacao_frente" class="form-label">Confrontação
+                    Frente</label>
+                <input type="text" name="confrontacao_frente"
+                    value="{{isset($lote) ? $lote->confrontacao_frente : old('confrontacao_frente')}}"
+                    class="form-control @error('confrontacao_frente') is-invalid @enderror"
+                    id="inputConfrontacaoFrente">
+            </div>
+            <div class="col-md-3">
+                <label for="inputConfrontacaoFundo" id="confrontacao_frente" class="form-label">Confrontação
+                    Fundo</label>
+                <input type="text" name="confrontacao_frente"
+                    value="{{isset($lote) ? $lote->confrontacao_frente : old('confrontacao_frente')}}"
+                    class="form-control @error('confrontacao_frente') is-invalid @enderror" id="inputConfrontacaoFundo">
+            </div>
+            <div class="col-md-3">
+                <label for="inputConfrontacaoDireita" id="confrontacao_direita" class="form-label">Confrontação
+                    Direita</label>
+                <input type="text" name="confrontacao_direita"
+                    value="{{isset($lote) ? $lote->confrontacao_direita : old('confrontacao_direita')}}"
+                    class="form-control @error('confrontacao_direita') is-invalid @enderror"
+                    id="inputConfrontacaoDireita">
+            </div>
+            <div class="col-md-3">
+                <label for="inputEsquerda" id="confrontacao_esquerda" class="form-label">Confrontação Esquerda</label>
+                <input type="text" name="confrontacao_esquerda"
+                    value="{{isset($lote) ? $lote->confrontacao_esquerda : old('confrontacao_esquerda')}}"
+                    class="form-control @error('confrontacao_esquerda') is-invalid @enderror" id="inputEsquerda">
+            </div>
+
             <div class="col-12">
                 <button type="submit" class="btn-submit">
                     @if (isset($lote))

@@ -7,6 +7,7 @@ use App\Models\Lote;
 use App\Models\Quadra;
 use App\Models\User;
 use App\Models\Cliente;
+use App\Http\Requests\LoteRequest;
 
 
 class LoteController extends Controller
@@ -22,7 +23,7 @@ class LoteController extends Controller
     }
 
      //CADASTRO DE LOTE
-     function cadastrar($usuario, $empreendimento_id, Request $request){
+     function cadastrar($usuario, $empreendimento_id, loteRequest $request){
         // Validar campos
         //$validated = $request->validated();
 
@@ -31,8 +32,22 @@ class LoteController extends Controller
 
         $lote = new Lote();
         $lote->lote = $request->input('lote');
-        $lote->quadra_id = $request->input('quadra');
-        $lote->cliente_id = $request->input('responsabilidade');
+        $lote->quadra_id = $request->input('quadra_id');
+        $lote->cliente_id = $request->input('cliente_id');
+        $lote->matricula = $request->input('matricula');
+        $lote->inscricao_municipal = $request->input('inscricao_municipal');
+        $lote->valor = $request->input('valor');
+        $lote->endereco = $request->input('endereco');
+        $lote->metros_quadrados = $request->input('metros_quadrados');
+        $lote->metragem_frente = $request->input('metragem_frente');
+        $lote->metragem_fundo = $request->input('metragem_fundo');
+        $lote->metragem_direita = $request->input('metragem_direita');
+        $lote->metragem_esquerda = $request->input('metragem_esquerda');
+        $lote->metragem_fundo = $request->input('metragem_fundo');
+        $lote->confrontacao_frente = $request->input('confrontacao_frente');
+        $lote->confrontacao_fundo = $request->input('confrontacao_fundo');
+        $lote->confrontacao_direita = $request->input('confrontacao_direita');
+        $lote->confrontacao_esquerda = $request->input('confrontacao_esquerda');
         $lote->data_cadastro = date('d-m-Y h:i:s a', time());
         $lote->cadastrado_usuario_id = $usuario;
         $lote->save();

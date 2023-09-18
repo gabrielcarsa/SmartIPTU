@@ -22,7 +22,12 @@ class LoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'lote' => 'required',
+            'quadra_id' => 'required|numeric|min:1',
+            'cliente_id' => 'required|numeric|min:1',
+            'matricula' => 'required|numeric',
+            'inscricao_municipal' => 'required|numeric',
+
         ];
     }
 }
