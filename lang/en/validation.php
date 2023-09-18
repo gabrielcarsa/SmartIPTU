@@ -185,6 +185,7 @@ return [
         'cpf' => 'CPF',
         'cnpj' => 'CNPJ',
         'inscricao_estadual' => 'Inscrição Estadual',
+        'inscricao_municipal' => 'Inscrição Municipal',
         'razao_social' => 'Razão Social',
         'rua_end' => 'Rua',
         'bairro_end' => 'Bairro',
@@ -197,6 +198,10 @@ return [
         'matricula' => 'Matrícula',
         'cidade' => 'Cidade',
         'estado' => 'Estado',
+        'cliente_id' => 'Responsabilidade',
+        'lote' => 'Lote',
+        'quadra_id' => 'Quadra',
+
     ],
 
 ];

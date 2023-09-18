@@ -30,4 +30,13 @@ class LoteRequest extends FormRequest
 
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'min' => [
+                'numeric' => 'O campo :attribute é obrigatório.',
+            ],
+        ];
+    }
 }

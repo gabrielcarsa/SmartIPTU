@@ -114,4 +114,25 @@ class LoteController extends Controller
 
     }
 
+    //EXCLUIR LOTE
+    function excluir($id){
+        $lote = Lote::find($id);
+    
+        if (!$lote) {
+            return redirect()->back()->with('error', 'Lote não encontrado');
+        }
+    
+        $quadra = Quadra::find($lote->quadra_id);
+    
+        if (!$quadra) {
+            return redirect()->back()->with('error', 'Quadra não encontrada');
+        }
+    
+        $empreendimento_id = $quadra->empreendimento_id;
+    
+        $lote->delete();
+    
+        return redirect("empreendimento/gestao/".$empreendimento_id)->with('success', 'Lote excluído com sucesso');
+    }
+
 }

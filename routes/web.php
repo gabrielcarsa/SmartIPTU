@@ -60,6 +60,7 @@ Route::middleware([
     Route::post('/lote/cadastrar/{usuario}/{empreendimento_id}',[LoteController::class, 'cadastrar']);
     Route::get('/lote/editar/{id}',[LoteController::class, 'editar']);
     Route::post('/lote/alterar/{id}/{usuario}',[LoteController::class, 'alterar']);
+    Route::get('/lote/excluir/{id}',[LoteController::class, 'excluir']);
 
 
 });
