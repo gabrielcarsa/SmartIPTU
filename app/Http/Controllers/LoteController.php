@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Lote;
 use App\Models\Quadra;
 use App\Models\User;
+use App\Models\Debito;
 use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
+use Illuminate\Support\Facades\DB;
 
 
 class LoteController extends Controller
@@ -135,4 +137,44 @@ class LoteController extends Controller
         return redirect("empreendimento/gestao/".$empreendimento_id)->with('success', 'Lote excluído com sucesso');
     }
 
+    //RETORNA VIEW PARA GESTÃO DO LOTE
+    function gestao($id){
+        //$lote = Lote::find($id);
+        //$quadra = Quadra::find($lote->quadra_id);
+
+        $resultados = DB::table('lote AS l')
+        ->select(
+            'l.id AS lote_id',
+            'l.lote',
+            'l.inscricao_municipal',
+            'q.id AS quadra_id',
+            'q.nome AS quadra_nome',
+            'd.id AS debito_id',
+            'd.valor_parcela AS valor_parcela_debito',
+            'e.id AS empreendimento_id',
+            'e.nome AS empreendimento_nome',
+            'td.id AS tipo_debito_id',
+            'td.descricao AS tipo_debito_descricao',
+            'dd.id AS descricao_debito_id',
+            'dd.descricao AS descricao_debito_descricao',
+            'p.id AS parcela_id',
+            'p.valor_parcela AS valor_parcela_parcela',
+            'p.data_recebimento AS data_recebimento_parcela',
+            'p.data_vencimento AS data_vencimento_parcela',
+            'cliente.nome AS nome_cliente',
+            'cliente.razao_social AS razao_social_cliente'
+        )
+        ->join('quadra AS q', 'l.quadra_id', '=', 'q.id')
+        ->join('empreendimento AS e', 'q.empreendimento_id', '=', 'e.id')
+        ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
+        ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
+        ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
+        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+        ->leftJoin('parcela AS p', 'd.id', '=', 'p.debito_id')
+        ->where('l.id', $id)
+        ->get();
+
+        return view('lote/lote_gestao', compact('resultados'));
+
+    }
 }
