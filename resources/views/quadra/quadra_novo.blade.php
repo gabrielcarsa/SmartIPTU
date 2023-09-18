@@ -22,47 +22,14 @@
         </ul>
     </div>
     @endif
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
     <div class="card-body">
-        @if (isset($quadra))
-        <p>
-            Cadastrado por <strong>{{$cadastrado_por_user->name}}</strong> em
-            {{ \Carbon\Carbon::parse($quadra->data_cadastro)->format('d/m/Y') }}
-        </p>
-        @if (isset($alterado_por_user))
-        <p>
-            Última alteração feita por <strong>{{$alterado_por_user->name}}</strong> em
-            {{ \Carbon\Carbon::parse($quadra->data_alteracao)->format('d/m/Y') }}
-        </p>
-        @endif
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Excluir quadra
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir {{$quadra->nome}}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Deseja mesmo excluir essa quadra? </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                        <a href="../excluir/{{$quadra->id}}" class="btn btn-danger">Sim, excluir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <hr>
-        @endif
-
-        <form class="row g-3"
-            action="{{ '/quadra/cadastrar/' . Auth::user()->id . '/' . $empreendimento_id}}"
+        <form class="row g-3" action="{{ '/quadra/cadastrar/' . Auth::user()->id . '/' . $empreendimento_id}}"
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-3" id="campoNome">
@@ -98,7 +65,7 @@
                 <tr>
                     <th>{{$quadra->id}}</th>
                     <td scope="row">{{$quadra->nome}}</td>
-                    <td><a href="editar/{{$quadra->id}}" class="btn-acao-listagem">Ver/Editar</a></td>
+                    <td><a class="btn-acao-listagem-danger" href="../../quadra/excluir/{{$quadra->id}}/{{$empreendimento_id}}">Excluir</a></td>
                 </tr>
                 @endforeach
                 @endif

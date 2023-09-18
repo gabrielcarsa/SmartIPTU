@@ -53,9 +53,9 @@ Route::middleware([
     //ROTAS QUADRA
     Route::get('/quadra/novo/{empreendimento_id}',[QuadraController::class, 'novo']);
     Route::post('/quadra/cadastrar/{usuario}/{empreendimento_id}',[QuadraController::class, 'cadastrar']);
+    Route::get('/quadra/excluir/{id}/{empreendimento_id}',[QuadraController::class, 'excluir']);
 
     //ROTAS LOTE
     Route::get('/lote/novo/{empreendimento_id}',[LoteController::class, 'novo']);
     Route::post('/lote/cadastrar/{usuario}/{empreendimento_id}',[LoteController::class, 'cadastrar']);
-
 });
