@@ -30,12 +30,12 @@
     <div class="card-body">
         @if (isset($lote))
         <p>
-            Cadastrado por <strong>{{$cadastrado_por_user->name}}</strong> em
+            Cadastrado por <strong>{{$data['cadastrado_por_user']->name}}</strong> em
             {{ \Carbon\Carbon::parse($lote->data_cadastro)->format('d/m/Y') }}
         </p>
         @if (isset($alterado_por_user))
         <p>
-            Última alteração feita por <strong>{{$alterado_por_user->name}}</strong> em
+            Última alteração feita por <strong>{{$data['alterado_por_user']->name}}</strong> em
             {{ \Carbon\Carbon::parse($lote->data_alteracao)->format('d/m/Y') }}
         </p>
         @endif
@@ -69,8 +69,14 @@
             action="{{ isset($lote) ? '/lote/alterar/' . $lote->id . '/' . Auth::user()->id : '/lote/cadastrar/' . Auth::user()->id . '/' . $empreendimento_id}}"
             method="post" autocomplete="off">
             @csrf
+
             <div class="col-md-3">
                 <label for="inputQuadra" class="form-label">Quadra*</label>
+                @if(isset($lote))
+                <input type="text" readonly name="" id="inputLote" value="{{ $data['quadra_nome']->nome }}"
+                    class="form-control @error('quadra_id') is-invalid @enderror">
+                <input type="hidden" name="quadra_id" value="{{ $lote->quadra_id }}">
+                @else
                 <select id="inputQuadra" name="quadra_id"
                     class="form-select form-control @error('quadra_id') is-invalid @enderror">
                     <option value="0" {{ old('quadra_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
@@ -81,14 +87,23 @@
                     </option>
                     @endforeach
                 </select>
+                @endif
             </div>
             <div class="col-md-3">
                 <label for="inputLote" id="lote" class="form-label">Lote*</label>
                 <input type="text" name="lote" value="{{isset($lote) ? $lote->lote : old('lote')}}"
                     class="form-control @error('lote') is-invalid @enderror" id="inputLote">
             </div>
+
+
             <div class="col-md-3">
                 <label for="inputReponsabilidade" class="form-label">Responsabilidade*</label>
+                @if(isset($lote))
+                <input type="text" readonly class="form-control @error('cliente_id') is-invalid @enderror"
+                    id="inputLote" name=""
+                    value="{{ empty($data['cliente_nome']->nome_cliente) ? $data['cliente_nome']->razao_social_cliente : $data['cliente_nome']->nome_cliente }}">
+                <input type="hidden" name="cliente_id" value="{{ $lote->cliente_id }}">
+                @else
                 <select id="inputReponsabilidade" name="cliente_id"
                     class="form-select form-control @error('cliente_id') is-invalid @enderror">
                     <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
@@ -102,7 +117,9 @@
                     </option>
                     @endforeach
                 </select>
+                @endif
             </div>
+
             <div class="col-md-3">
                 <label for="inputMatricula" id="matricula" class="form-label">Matrícula*</label>
                 <input type="text" name="matricula" value="{{isset($lote) ? $lote->matricula : old('matricula')}}"

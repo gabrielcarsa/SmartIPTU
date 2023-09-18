@@ -58,4 +58,8 @@ Route::middleware([
     //ROTAS LOTE
     Route::get('/lote/novo/{empreendimento_id}',[LoteController::class, 'novo']);
     Route::post('/lote/cadastrar/{usuario}/{empreendimento_id}',[LoteController::class, 'cadastrar']);
+    Route::get('/lote/editar/{id}',[LoteController::class, 'editar']);
+    Route::post('/lote/alterar/{id}/{usuario}',[LoteController::class, 'alterar']);
+
+
 });

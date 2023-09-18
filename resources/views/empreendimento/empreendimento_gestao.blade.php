@@ -73,8 +73,8 @@
                     @else
                     <td>{{$lote->nome_cliente}}</td>
                     @endif
-                    <td>{{$lote->inscricao_municipal}}</td>
-                    <td><a href="editar/{{$lote->lote_id}}" class="btn-acao-listagem">Ver/Editar</a></td>
+                    <td><a href="" class="btn-acao-listagem-light">{{$lote->inscricao_municipal}}</a></td>
+                    <td><a href="../../lote/editar/{{$lote->lote_id}}" class="btn-acao-listagem">Ver/Editar</a></td>
                 </tr>
                 @endforeach
                 @endif
