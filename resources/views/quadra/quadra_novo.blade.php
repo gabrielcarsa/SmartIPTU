@@ -78,4 +78,38 @@
         </form>
     </div>
 </div>
+
+
+<div class="card">
+    <h5 class="card-header">Lista de Quadras do Empreendimento</h5>
+
+    <div class="card-body">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Quadra</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(isset($quadras))
+                @foreach ($quadras as $quadra)
+                <tr>
+                    <th>{{$quadra->id}}</th>
+                    <td scope="row">{{$quadra->nome}}</td>
+                    <td><a href="editar/{{$quadra->id}}" class="btn-acao-listagem">Ver/Editar</a></td>
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+        @if(isset($quadras))
+        <div class="card-footer">
+            <p>Exibindo {{$quadras->count()}} de {{ $total_quadras }} registros</p>
+        </div>
+        @endif
+
+    </div>
+</div>
 @endsection

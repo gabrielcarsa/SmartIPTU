@@ -22,7 +22,7 @@
     </div>
     @endif
     <div class="card-body">
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
