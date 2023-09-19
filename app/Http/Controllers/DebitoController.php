@@ -9,6 +9,8 @@ use App\Models\Parcela;
 use App\Models\Descricao_Debito;
 use App\Models\Tipo_Debito;
 use Carbon\Carbon;
+use App\Http\Requests\DebitoRequest;
+
 
 class DebitoController extends Controller
 {
@@ -27,7 +29,7 @@ class DebitoController extends Controller
     }
 
     //CADASTRO DE DÉBITO
-    function cadastrar($usuario, $lote_id, Request $request){
+    function cadastrar($usuario, $lote_id, DebitoRequest $request){
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
