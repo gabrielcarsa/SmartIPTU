@@ -36,7 +36,13 @@
         </div>
     </div>
 </div>
-
+<a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        add
+    </span>
+    Adicionar Parcelas
+</a>
 <div class="card">
     <h5 class="card-header">{{ $resultados[0]->tipo_debito_descricao }}</h5>
     @if(isset($resultados))
@@ -46,32 +52,61 @@
     </div>
     @endif
     <div class="card-footer">
-        <p></p>
+        @if (isset($resultados))
+        <p>
+            Cadastrado por <strong>{{ $resultados[0]->cadastrado_usuario_nome }}</strong> em
+            {{ \Carbon\Carbon::parse( $resultados[0]->debito_data_cadastro)->format('d/m/Y') }}
+        </p>
+        @if (isset($alterado_por_user))
+        <p>
+            Última alteração feita por <strong>{{ $resultados[0]->alterado_usuario_nome }}</strong> em
+            {{ \Carbon\Carbon::parse( $resultados[0]->debito_data_alteracao)->format('d/m/Y') }}
+        </p>
+        @endif
+        @endif
     </div>
     <div class="card-body">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th scope="col"></th>
                     <th scope="col">ID</th>
-                    <th scope="col">Empreendimento</th>
-                    <th scope="col">Matrícula</th>
-                    <th scope="col">Localização</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col">Número Parcela</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Data Vencimento</th>
+                    <th scope="col">Valor Parcela</th>
+                    <th scope="col">Valor Pago</th>
+                    <th scope="col">Data Recebimento</th>
+                    <th scope="col">Situação</th>
                 </tr>
             </thead>
             <tbody>
-                @if(isset($empreendimentos))
-                @foreach ($empreendimentos as $empreendimento)
+                @if(isset($resultados))
+                @foreach ($resultados as $resultado)
                 <tr>
-                    <th scope="row">{{$empreendimento->id}}</th>
-                    <td>{{$empreendimento->nome}}</td>
-                    <td>{{$empreendimento->matricula}}</td>
-                    <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
-                    <td>
-                        <a class="btn-acao-listagem" href="empreendimento/gestao/{{$empreendimento->id}}">Gestão</a>
-                        <a class="btn-acao-listagem-yellow"
-                            href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
-                    </td>
+                    <th scope="row"><input type="checkbox" id="" name="{{ $resultado->parcela_id }}" /></th>
+                    <th scope="row">{{$resultado->parcela_id}}</th>
+                    <th scope="row">{{$resultado->numero_parcela}}</th>
+                    <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
+                    @if(empty($resultado->data_vencimento_parcela))
+                    <th scope="row"></th>
+                    @else
+                    <th scope="row">{{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
+                    </th>
+                    @endif
+                    <th scope="row">R$ {{ $resultado->valor_parcela }}</th>
+                    <th scope="row">R$ {{ $resultado->valor_pago_parcela }}</th>
+                    @if(empty($resultado->data_recebimento_parcela))
+                    <th scope="row"></th>
+                    @else
+                    <th scope="row">{{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
+                    </th>
+                    @endif
+                    @if($resultado->situacao_parcela == 0)
+                    <th scope="row">Em Aberto</th>
+                    @else
+                    <th scope="row">Pago</th>
+                    @endif
                 </tr>
                 @endforeach
                 @endif

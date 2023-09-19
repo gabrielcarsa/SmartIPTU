@@ -5,6 +5,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpreendimentoController;
 use App\Http\Controllers\QuadraController;
 use App\Http\Controllers\LoteController;
+use App\Http\Controllers\DebitoController;
 
 
 /*
@@ -63,5 +64,8 @@ Route::middleware([
     Route::get('/lote/excluir/{id}',[LoteController::class, 'excluir']);
     Route::get('/lote/gestao/{id}',[LoteController::class, 'gestao']);
 
+   //ROTAS DEBITO
+   Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
+   Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
 
 });

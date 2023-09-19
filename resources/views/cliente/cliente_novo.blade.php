@@ -33,12 +33,12 @@
             Cadastrado por <strong>{{$cadastrado_por_user->name}}</strong> em
             {{ \Carbon\Carbon::parse($cliente->data_cadastro)->format('d/m/Y') }}
         </p>
-        @if (isset($alterado_por_user))
-        <p>
-            Última alteração feita por <strong>{{$alterado_por_user->name}}</strong> em
-            {{ \Carbon\Carbon::parse($cliente->data_alteracao)->format('d/m/Y') }}
-        </p>
-        @endif
+            @if (isset($alterado_por_user))
+            <p>
+                Última alteração feita por <strong>{{$alterado_por_user->name}}</strong> em
+                {{ \Carbon\Carbon::parse($cliente->data_alteracao)->format('d/m/Y') }}
+            </p>
+            @endif
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Excluir cliente

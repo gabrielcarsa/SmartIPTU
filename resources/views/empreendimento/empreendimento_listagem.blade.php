@@ -42,7 +42,7 @@
                     <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
                     <td>
                         <a class="btn-acao-listagem" href="empreendimento/gestao/{{$empreendimento->id}}">Gestão</a>
-                        <a class="btn-acao-listagem-yellow" href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
+                        <a class="btn-acao-listagem-secundary" href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
                     </td>
                 </tr>
                 @endforeach
