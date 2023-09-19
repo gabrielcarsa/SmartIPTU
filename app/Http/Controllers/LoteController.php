@@ -182,7 +182,6 @@ class LoteController extends Controller
         ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
         ->where('l.id', $id)
         ->get();
-
         return view('lote/lote_gestao', compact('resultados'));
 
     }

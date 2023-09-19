@@ -43,8 +43,18 @@
     </span>
     Adicionar Parcelas
 </a>
+
+@if($resultados[0]->tipo_debito_descricao)
+
+@php
+$displayedDebitoDescricao = [];
+@endphp
+
+@foreach($resultados as $i)
+@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao))
+
 <div class="card">
-    <h5 class="card-header">{{ $resultados[0]->tipo_debito_descricao }}</h5>
+    <h5 class="card-header">{{ $i->tipo_debito_descricao }}</h5>
     @if(isset($resultados))
     <div class="card-footer">
         <a class="btn btn-add" href="">PDF</a>
@@ -83,6 +93,7 @@
             <tbody>
                 @if(isset($resultados))
                 @foreach ($resultados as $resultado)
+                @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
                 <tr>
                     <th scope="row"><input type="checkbox" id="" name="{{ $resultado->parcela_id }}" /></th>
                     <th scope="row">{{$resultado->parcela_id}}</th>
@@ -108,6 +119,7 @@
                     <th scope="row">Pago</th>
                     @endif
                 </tr>
+                @endif
                 @endforeach
                 @endif
             </tbody>
@@ -120,5 +132,20 @@
 
     </div>
 </div>
+
+
+@php
+$displayedDebitoDescricao[] = $i->tipo_debito_descricao;
+@endphp
+
+@endif
+
+@endforeach
+
+@else
+
+<p></p>
+
+@endif
 
 @endsection
