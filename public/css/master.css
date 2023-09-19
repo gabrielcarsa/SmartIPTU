@@ -127,3 +127,9 @@ ul a {
     color: #fff;
     margin-right: 5px;
 }
+.resultados-table th{
+    font-weight: 300 !important;
+}
+.id_table{
+    font-size: 14px;
+}

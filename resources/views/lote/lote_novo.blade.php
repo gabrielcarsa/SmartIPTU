@@ -188,11 +188,11 @@
                     id="inputConfrontacaoFrente">
             </div>
             <div class="col-md-3">
-                <label for="inputConfrontacaoFundo" id="confrontacao_frente" class="form-label">Confrontação
+                <label for="inputConfrontacaoFundo" id="confrontacao_fundo" class="form-label">Confrontação
                     Fundo</label>
-                <input type="text" name="confrontacao_frente"
-                    value="{{isset($lote) ? $lote->confrontacao_frente : old('confrontacao_frente')}}"
-                    class="form-control @error('confrontacao_frente') is-invalid @enderror" id="inputConfrontacaoFundo">
+                <input type="text" name="confrontacao_fundo"
+                    value="{{isset($lote) ? $lote->confrontacao_fundo : old('confrontacao_fundo')}}"
+                    class="form-control @error('confrontacao_fundo') is-invalid @enderror" id="inputConfrontacaoFundo">
             </div>
             <div class="col-md-3">
                 <label for="inputConfrontacaoDireita" id="confrontacao_direita" class="form-label">Confrontação

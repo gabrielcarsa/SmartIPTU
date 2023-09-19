@@ -44,6 +44,30 @@
     Adicionar Parcelas
 </a>
 
+<a class="btn btn-primary btn-add" id="reajustar_parcelas" href="{{route('parcela_reajustar')}}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        attach_money
+    </span>
+    Reajustar Valores
+</a>
+
+<a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        edit_calendar
+    </span>
+    Alterar data de vencimento
+</a>
+
+<a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        payments
+    </span>
+    Baixar parcelas
+</a>
+
 @if($resultados[0]->tipo_debito_descricao)
 
 @php
@@ -77,52 +101,59 @@ $displayedDebitoDescricao = [];
     </div>
     <div class="card-body">
         <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Número Parcela</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Data Vencimento</th>
-                    <th scope="col">Valor Parcela</th>
-                    <th scope="col">Valor Pago</th>
-                    <th scope="col">Data Recebimento</th>
-                    <th scope="col">Situação</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if(isset($resultados))
-                @foreach ($resultados as $resultado)
-                @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
-                <tr>
-                    <th scope="row"><input type="checkbox" id="" name="{{ $resultado->parcela_id }}" /></th>
-                    <th scope="row">{{$resultado->parcela_id}}</th>
-                    <th scope="row">{{$resultado->numero_parcela}}</th>
-                    <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
-                    @if(empty($resultado->data_vencimento_parcela))
-                    <th scope="row"></th>
-                    @else
-                    <th scope="row">{{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
-                    </th>
+            <form action="" method="post">
+                @csrf
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Número Parcela</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Data Vencimento</th>
+                        <th scope="col">Valor Parcela</th>
+                        <th scope="col">Valor Pago</th>
+                        <th scope="col">Data Recebimento</th>
+                        <th scope="col">Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(isset($resultados))
+                    @foreach ($resultados as $resultado)
+                    @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
+                    <tr class="resultados-table">
+                        <th scope="row"><input type="checkbox" id="" name="checkboxes[]"
+                                value="{{ $resultado->parcela_id }}" /></th>
+                        <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
+                        <th scope="row">{{$resultado->numero_parcela}} / {{ $resultado->quantidade_parcela_debito }}
+                        </th>
+                        <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
+                        @if(empty($resultado->data_vencimento_parcela))
+                        <th scope="row"></th>
+                        @else
+                        <th scope="row">
+                            {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
+                        </th>
+                        @endif
+                        <th scope="row">R$ {{ $resultado->valor_parcela }}</th>
+                        <th scope="row">R$ {{ $resultado->valor_pago_parcela }}</th>
+                        @if(empty($resultado->data_recebimento_parcela))
+                        <th scope="row"></th>
+                        @else
+                        <th scope="row">
+                            {{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
+                        </th>
+                        @endif
+                        @if($resultado->situacao_parcela == 0)
+                        <th scope="row">Em Aberto</th>
+                        @else
+                        <th scope="row">Pago</th>
+                        @endif
+                    </tr>
                     @endif
-                    <th scope="row">R$ {{ $resultado->valor_parcela }}</th>
-                    <th scope="row">R$ {{ $resultado->valor_pago_parcela }}</th>
-                    @if(empty($resultado->data_recebimento_parcela))
-                    <th scope="row"></th>
-                    @else
-                    <th scope="row">{{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
-                    </th>
+                    @endforeach
                     @endif
-                    @if($resultado->situacao_parcela == 0)
-                    <th scope="row">Em Aberto</th>
-                    @else
-                    <th scope="row">Pago</th>
-                    @endif
-                </tr>
-                @endif
-                @endforeach
-                @endif
-            </tbody>
+                </tbody>
+            </form>
         </table>
         @if(isset($empreendimentos))
         <div class="card-footer">
@@ -149,3 +180,27 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 @endif
 
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Captura o clique no Parcelas Reajustar
+    $("#reajustar_parcelas").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+        
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',');
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+
+});
+</script>

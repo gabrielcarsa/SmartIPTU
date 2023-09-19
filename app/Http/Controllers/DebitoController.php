@@ -51,6 +51,8 @@ class DebitoController extends Controller
         $debito_id = $debito->id;
         $data_vencimento = $debito->data_vencimento; 
         $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+        $valor_entrada = $debito->valor_entrada;
+
         for($i = 1; $i <= $qtd_parcelas; $i++){
             $parcela = new Parcela();
             $parcela->debito_id = $debito_id;
@@ -60,6 +62,9 @@ class DebitoController extends Controller
             if($i > 1){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
+                if($valor_entrada != 0){
+                    $parcela->valor_parcela = $valor_entrada;
+                }
                 $parcela->data_vencimento = $data_vencimento;
             }
             $parcela->save();

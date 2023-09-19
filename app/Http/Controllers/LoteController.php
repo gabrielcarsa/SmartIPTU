@@ -45,7 +45,7 @@ class LoteController extends Controller
         $lote->metragem_fundo = $request->input('metragem_fundo');
         $lote->metragem_direita = $request->input('metragem_direita');
         $lote->metragem_esquerda = $request->input('metragem_esquerda');
-        $lote->metragem_fundo = $request->input('metragem_fundo');
+        $lote->metragem_esquina = $request->input('metragem_esquina');
         $lote->confrontacao_frente = $request->input('confrontacao_frente');
         $lote->confrontacao_fundo = $request->input('confrontacao_fundo');
         $lote->confrontacao_direita = $request->input('confrontacao_direita');
@@ -103,7 +103,7 @@ class LoteController extends Controller
         $lote->metragem_fundo = $request->input('metragem_fundo');
         $lote->metragem_direita = $request->input('metragem_direita');
         $lote->metragem_esquerda = $request->input('metragem_esquerda');
-        $lote->metragem_fundo = $request->input('metragem_fundo');
+        $lote->metragem_esquina = $request->input('metragem_esquina');
         $lote->confrontacao_frente = $request->input('confrontacao_frente');
         $lote->confrontacao_fundo = $request->input('confrontacao_fundo');
         $lote->confrontacao_direita = $request->input('confrontacao_direita');
@@ -153,6 +153,7 @@ class LoteController extends Controller
             'd.data_cadastro AS debito_data_cadastro',
             'd.data_alteracao AS debito_data_alteracao',
             'd.valor_parcela AS valor_parcela_debito',
+            'd.quantidade_parcela AS quantidade_parcela_debito',
             'e.id AS empreendimento_id',
             'e.nome AS empreendimento_nome',
             'td.id AS tipo_debito_id',

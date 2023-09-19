@@ -78,11 +78,7 @@
             </div>
             <div class="col-12">
                 <button type="submit" class="btn-submit">
-                    @if (isset($lote))
-                    Alterar
-                    @else
                     Cadastrar
-                    @endif
                 </button>
             </div>
         </form>

@@ -6,6 +6,7 @@ use App\Http\Controllers\EmpreendimentoController;
 use App\Http\Controllers\QuadraController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\DebitoController;
+use App\Http\Controllers\ParcelaController;
 
 
 /*
@@ -67,5 +68,9 @@ Route::middleware([
    //ROTAS DEBITO
    Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
    Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
+
+   //ROTAS PARCELA
+   Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');
+
 
 });
