@@ -71,6 +71,7 @@ Route::middleware([
 
    //ROTAS PARCELA
    Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');
+   Route::post('/parcela/definir_reajuste/{usuario}',[ParcelaController::class, 'reajustar']);
 
 
 });

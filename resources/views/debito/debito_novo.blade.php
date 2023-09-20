@@ -24,8 +24,8 @@
     @endif
 
     <div class="card-body">
-        <form class="row g-3" action="{{ '/debito/cadastrar/' . Auth::user()->id . '/' . $data['lote_id'] }}" method="post"
-            autocomplete="off">
+        <form class="row g-3" action="{{ '/debito/cadastrar/' . Auth::user()->id . '/' . $data['lote_id'] }}"
+            method="post" autocomplete="off">
             @csrf
             <div class="col-md-3">
                 <label for="inputTipoDebito" class="form-label">Tipo de débito*</label>
@@ -40,12 +40,14 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label for="inputQtndParcelas" id="quantidade_parcela" class="form-label">Quantidade de parcelas*</label>
+                <label for="inputQtndParcelas" id="quantidade_parcela" class="form-label">Quantidade de
+                    parcelas*</label>
                 <input type="text" name="quantidade_parcela" value="{{ old('quantidade_parcela') }}"
                     class="form-control @error('quantidade_parcela') is-invalid @enderror" id="inputQtndParcelas">
             </div>
             <div class="col-md-3">
-                    <label for="inputVencimento1Parcela" id="data_vencimento" class="form-label">Vencimento da 1 parcela*</label>
+                <label for="inputVencimento1Parcela" id="data_vencimento" class="form-label">Vencimento da 1
+                    parcela*</label>
                 <input type="date" name="data_vencimento" value="{{ old('data_vencimento') }}"
                     class="form-control @error('data_vencimento') is-invalid @enderror" id="inputVencimento1Parcela">
             </div>
@@ -55,7 +57,8 @@
                     class="form-select form-control @error('descricao_debito_id') is-invalid @enderror">
                     <option value="0" {{ old('descricao_debito_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['descricao_debito'] as $descricao)
-                    <option value="{{ $descricao->id }}" {{ old('descricao_debito_id') == $descricao->id ? 'selected' : '' }}>
+                    <option value="{{ $descricao->id }}"
+                        {{ old('descricao_debito_id') == $descricao->id ? 'selected' : '' }}>
                         {{ $descricao->descricao }}
                     </option>
                     @endforeach
@@ -63,8 +66,9 @@
             </div>
             <div class="col-md-3">
                 <label for="inputValorParcela" id="valor_parcela" class="form-label">Valor da parcela*</label>
-                <input type="text" name="valor_parcela" value="{{ old('valor_parcela') }}"
-                    class="form-control @error('valor_parcela') is-invalid @enderror" id="inputValorParcela">
+                <input type="text" name="valor_parcela"
+                    value="{{ old('valor_parcela') }}" class="form-control @error('valor_parcela') is-invalid @enderror"
+                    id="inputValorParcela">
             </div>
             <div class="col-md-3">
                 <label for="inputValorEntrada" id="valor_entrada" class="form-label">Valor da Entrada</label>

@@ -2,12 +2,6 @@
 
 @section('conteudo')
 
-@if(session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
-
 <div class="container-md text-center">
     <div class="row">
         <div class="col">
@@ -36,6 +30,28 @@
         </div>
     </div>
 </div>
+
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+
 <a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
     style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
@@ -107,7 +123,7 @@ $displayedDebitoDescricao = [];
                     <tr>
                         <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                         <th scope="col">ID</th>
-                        <th scope="col">Número Parcela</th>
+                        <th scope="col">Nº Parcela</th>
                         <th scope="col">Descrição</th>
                         <th scope="col">Data Vencimento</th>
                         <th scope="col">Valor Parcela</th>
@@ -190,7 +206,7 @@ $(document).ready(function() {
 
         // Obtenha os valores dos checkboxes selecionados
         var checkboxesSelecionados = [];
-        
+
         $("input[name='checkboxes[]']:checked").each(function() {
             checkboxesSelecionados.push($(this).val());
         });

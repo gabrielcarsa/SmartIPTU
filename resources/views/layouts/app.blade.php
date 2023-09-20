@@ -53,6 +53,9 @@
                         <span class="material-symbols-outlined">
                             universal_currency_alt
                         </span>Financeiro
+                        <span class="material-symbols-outlined">
+                            arrow_drop_down
+                        </span>
                     </a>
                 </li>
                 <div class="collapse" id="collapseExample">

@@ -73,7 +73,7 @@
             <div class="col-md-3">
                 <label for="inputQuadra" class="form-label">Quadra*</label>
                 @if(isset($lote))
-                <input type="text" readonly name="" id="inputLote" value="{{ $data['quadra_nome']->nome }}"
+                <input type="text" readonly disabled name="" id="inputLote" value="{{ $data['quadra_nome']->nome }}"
                     class="form-control @error('quadra_id') is-invalid @enderror">
                 <input type="hidden" name="quadra_id" value="{{ $lote->quadra_id }}">
                 @else
@@ -99,7 +99,7 @@
             <div class="col-md-3">
                 <label for="inputReponsabilidade" class="form-label">Responsabilidade*</label>
                 @if(isset($lote))
-                <input type="text" readonly class="form-control @error('cliente_id') is-invalid @enderror"
+                <input type="text" readonly disabled class="form-control @error('cliente_id') is-invalid @enderror"
                     id="inputLote" name=""
                     value="{{ empty($data['cliente_nome']->nome_cliente) ? $data['cliente_nome']->razao_social_cliente : $data['cliente_nome']->nome_cliente }}">
                 <input type="hidden" name="cliente_id" value="{{ $lote->cliente_id }}">
