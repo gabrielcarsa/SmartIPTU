@@ -208,6 +208,7 @@ return [
         'valor_parcela' => 'Valor da Parcela',
         'valor_entrada' => 'Valor da Entrada',
         'observacao' => 'Observação',
+        'valor_unico' => 'Definir Valor',
     ],
 
 ];

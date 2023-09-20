@@ -37,9 +37,9 @@
 </div>
 @endif
 @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
 @endif
 @if ($errors->any())
 <div class="alert alert-danger">
@@ -68,7 +68,7 @@
     Reajustar Valores
 </a>
 
-<a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
+<a class="btn btn-primary btn-add" id="alterar_vencimento" href="{{route('alterar_vencimento')}}"
     style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         edit_calendar
@@ -95,12 +95,6 @@ $displayedDebitoDescricao = [];
 
 <div class="card">
     <h5 class="card-header">{{ $i->tipo_debito_descricao }}</h5>
-    @if(isset($resultados))
-    <div class="card-footer">
-        <a class="btn btn-add" href="">PDF</a>
-        <a class="btn btn-add" href="">Excel</a>
-    </div>
-    @endif
     <div class="card-footer">
         @if (isset($resultados))
         <p>
@@ -213,6 +207,23 @@ $(document).ready(function() {
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
         var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',');
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+    // Captura o clique no Parcelas Reajustar
+    $("#alterar_vencimento").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',');
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;

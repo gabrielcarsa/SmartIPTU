@@ -22,7 +22,8 @@ class ParcelaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'valor_unico' => 'nullable|numeric|min:0.1',
+            'data_vencimento' => 'nullable|date',
         ];
     }
 }
