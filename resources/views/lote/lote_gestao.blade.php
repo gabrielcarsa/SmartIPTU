@@ -76,7 +76,7 @@
     Alterar data de vencimento
 </a>
 
-<a class="btn btn-primary btn-add" href="{{ route('debito_novo', ['lote_id' => $resultados[0]->lote_id]) }}"
+<a class="btn btn-primary btn-add" id="baixar_parcela" href="{{route('baixar_parcela')}}"
     style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         payments
@@ -211,7 +211,7 @@ $(document).ready(function() {
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
     });
-    // Captura o clique no Parcelas Reajustar
+    // Captura o clique no Alterar Data Vencimento
     $("#alterar_vencimento").click(function(event) {
         event.preventDefault();
 
@@ -224,6 +224,22 @@ $(document).ready(function() {
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
         var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',');
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+    $("#baixar_parcela").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',');
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;

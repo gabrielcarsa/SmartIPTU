@@ -74,6 +74,9 @@ Route::middleware([
    Route::post('/parcela/definir_reajuste/{usuario}',[ParcelaController::class, 'reajustar']);
    Route::get('/parcela/alterar_vencimento',[ParcelaController::class, 'alterar_vencimento'])->name('alterar_vencimento');
    Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
+   Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
+   Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
+
 
 
 });

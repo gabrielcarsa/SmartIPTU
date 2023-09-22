@@ -25,7 +25,7 @@
 
     <div class="card-body">
         <form class="row g-3"
-            action="{{ '/parcela/definir_data_vencimento/' . Auth::user()->id . '?' . 'checkboxes=' . $_GET['checkboxes'] }}"
+            action="{{ '/parcela/definir_data_vencimento/' . Auth::user()->id }}"
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
@@ -41,9 +41,10 @@
             <hr>
             @foreach($parcelas as $parcela)
             <div class="col-md-1">
-                <label for="inputIdParcelas" id="id_parcela" class="form-label">ID</label>
-                <input type="text" name="id_parcela" value="{{ $parcela[0]->id }}" readonly disabled
+                <label for="inputIdParcelas" id="" class="form-label">ID</label>
+                <input type="text" name="" value="{{ $parcela[0]->id }}" readonly disabled
                     class="form-control @error('id_parcela') is-invalid @enderror" id="inputIdParcelas">
+                    <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
             </div>
             <div class="col-md-1">
                 <label for="inputIdParcelas" id="numero_parcela" class="form-label">Nº parcela</label>
