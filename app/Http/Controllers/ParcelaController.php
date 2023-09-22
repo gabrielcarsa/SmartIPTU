@@ -201,4 +201,9 @@ class ParcelaController extends Controller
 
    
     }
+
+    //VIEW PARA RETORNAR FINANCEIRO CONTAS A RECEBER
+    function contas_receber(){
+        return view('parcela/parcela_contas_receber');
+    }
 }

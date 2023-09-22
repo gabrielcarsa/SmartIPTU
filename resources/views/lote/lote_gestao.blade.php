@@ -93,6 +93,13 @@
     </span>
     Baixar parcelas
 </a>
+<a class="btn btn-primary btn-add" id="baixar_parcela"
+    href="{{route('prescricao', ['lote_id' => $resultados[0]->lote_id])}}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        gavel
+    </span>
+    Prescrições
+</a>
 
 @if($resultados[0]->tipo_debito_descricao)
 

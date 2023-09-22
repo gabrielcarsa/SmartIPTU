@@ -60,14 +60,24 @@
                 </li>
                 <div class="collapse" id="collapseExample">
                     <ul class="sublist-offcanvas">
-                        <li><a href="">Contas a receber</a></li>
-                        <li><a href="">Contas a pagar</a></li>
+                        <li><a href=""><span class="material-symbols-outlined">
+                                    calendar_month
+                                </span>Calendário Financeiro</a></li>
+                        <li><a href="{{ route('contas_receber') }}"><span class="material-symbols-outlined">
+                                    attach_money
+                                </span>Contas a receber</a></li>
+                        <li><a href=""><span class="material-symbols-outlined">
+                                    money_off
+                                </span>Contas a pagar</a></li>
                     </ul>
                 </div>
 
                 <li><a href="/"><span class="material-symbols-outlined">
                             settings
-                        </span>Configurações</a></li>
+                        </span>Configurações
+                        <span class="material-symbols-outlined">
+                            arrow_drop_down
+                        </span></a></li>
 
             </ul>
         </div>

@@ -7,6 +7,8 @@ use App\Http\Controllers\QuadraController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\DebitoController;
 use App\Http\Controllers\ParcelaController;
+use App\Http\Controllers\PrescricaoController;
+
 
 
 /*
@@ -29,53 +31,59 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
-    //ROTAS CLIENTE
-    Route::get('/cliente',[ClienteController::class, 'cliente']);
-    Route::get('/cliente/listar',[ClienteController::class, 'listar']);
-    Route::get('/cliente/novo',[ClienteController::class, 'novo']);
-    Route::post('/cliente/cadastrar/{usuario}',[ClienteController::class, 'cadastrar']);
-    Route::get('/cliente/editar/{id}',[ClienteController::class, 'editar']);
-    Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
-    Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
-    Route::get('/cliente/relatorio_pdf',[ClienteController::class, 'relatorio_pdf']);
+        //DASHBOARD
+        Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
-    //ROTAS EMPREENDIMETO
-    Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);
-    Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
-    Route::post('/empreendimento/cadastrar/{usuario}',[EmpreendimentoController::class, 'cadastrar']);
-    Route::get('/empreendimento/editar/{id}',[EmpreendimentoController::class, 'editar']);
-    Route::post('/empreendimento/alterar/{id}/{usuario}',[EmpreendimentoController::class, 'alterar']);
-    Route::get('/empreendimento/excluir/{id}',[EmpreendimentoController::class, 'excluir']);
-    Route::get('/empreendimento/gestao/{id}',[EmpreendimentoController::class, 'gestao']);
+        //ROTAS CLIENTE
+        Route::get('/cliente',[ClienteController::class, 'cliente']);
+        Route::get('/cliente/listar',[ClienteController::class, 'listar']);
+        Route::get('/cliente/novo',[ClienteController::class, 'novo']);
+        Route::post('/cliente/cadastrar/{usuario}',[ClienteController::class, 'cadastrar']);
+        Route::get('/cliente/editar/{id}',[ClienteController::class, 'editar']);
+        Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
+        Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
+        Route::get('/cliente/relatorio_pdf',[ClienteController::class, 'relatorio_pdf']);
 
-    //ROTAS QUADRA
-    Route::get('/quadra/novo/{empreendimento_id}',[QuadraController::class, 'novo']);
-    Route::post('/quadra/cadastrar/{usuario}/{empreendimento_id}',[QuadraController::class, 'cadastrar']);
-    Route::get('/quadra/excluir/{id}/{empreendimento_id}',[QuadraController::class, 'excluir']);
+        //ROTAS EMPREENDIMETO
+        Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);
+        Route::get('/empreendimento/novo',[EmpreendimentoController::class, 'novo']);
+        Route::post('/empreendimento/cadastrar/{usuario}',[EmpreendimentoController::class, 'cadastrar']);
+        Route::get('/empreendimento/editar/{id}',[EmpreendimentoController::class, 'editar']);
+        Route::post('/empreendimento/alterar/{id}/{usuario}',[EmpreendimentoController::class, 'alterar']);
+        Route::get('/empreendimento/excluir/{id}',[EmpreendimentoController::class, 'excluir']);
+        Route::get('/empreendimento/gestao/{id}',[EmpreendimentoController::class, 'gestao']);
 
-    //ROTAS LOTE
-    Route::get('/lote/novo/{empreendimento_id}',[LoteController::class, 'novo']);
-    Route::post('/lote/cadastrar/{usuario}/{empreendimento_id}',[LoteController::class, 'cadastrar']);
-    Route::get('/lote/editar/{id}',[LoteController::class, 'editar']);
-    Route::post('/lote/alterar/{id}/{usuario}',[LoteController::class, 'alterar']);
-    Route::get('/lote/excluir/{id}',[LoteController::class, 'excluir']);
-    Route::get('/lote/gestao/{id}',[LoteController::class, 'gestao']);
+        //ROTAS QUADRA
+        Route::get('/quadra/novo/{empreendimento_id}',[QuadraController::class, 'novo']);
+        Route::post('/quadra/cadastrar/{usuario}/{empreendimento_id}',[QuadraController::class, 'cadastrar']);
+        Route::get('/quadra/excluir/{id}/{empreendimento_id}',[QuadraController::class, 'excluir']);
 
-   //ROTAS DEBITO
-   Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
-   Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
+        //ROTAS LOTE
+        Route::get('/lote/novo/{empreendimento_id}',[LoteController::class, 'novo']);
+        Route::post('/lote/cadastrar/{usuario}/{empreendimento_id}',[LoteController::class, 'cadastrar']);
+        Route::get('/lote/editar/{id}',[LoteController::class, 'editar']);
+        Route::post('/lote/alterar/{id}/{usuario}',[LoteController::class, 'alterar']);
+        Route::get('/lote/excluir/{id}',[LoteController::class, 'excluir']);
+        Route::get('/lote/gestao/{id}',[LoteController::class, 'gestao']);
 
-   //ROTAS PARCELA
-   Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');
-   Route::post('/parcela/definir_reajuste/{usuario}',[ParcelaController::class, 'reajustar']);
-   Route::get('/parcela/alterar_vencimento',[ParcelaController::class, 'alterar_vencimento'])->name('alterar_vencimento');
-   Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
-   Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
-   Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
+        //ROTAS DEBITO
+        Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
+        Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
+
+        //ROTAS PARCELA
+        Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');
+        Route::post('/parcela/definir_reajuste/{usuario}',[ParcelaController::class, 'reajustar']);
+        Route::get('/parcela/alterar_vencimento',[ParcelaController::class, 'alterar_vencimento'])->name('alterar_vencimento');
+        Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
+        Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
+        Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
+        Route::get('/parcela/contas_receber',[ParcelaController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
+
+        //ROTAS PRESCRIÇÃO
+        Route::get('/prescricao/{lote_id}',[PrescricaoController::class, 'prescricao'])->name('prescricao');
+        Route::get('/prescricao/novo/{lote_id}',function ($lote_id) {return view('prescricao/prescricao_novo', ['lote_id' => $lote_id]);})->name('prescricao_novo');
+
 
 
 
