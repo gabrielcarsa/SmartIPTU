@@ -129,7 +129,39 @@ ul a {
 }
 .resultados-table th{
     font-weight: 300 !important;
+    padding: 15px !important;
+    font-size: 15px;
+}
+.parcela_paga th{
+    background-color: #8cd0fd !important;
+}
+.parcela_atrasada th{
+    background-color: #ff9084 !important;
 }
 .id_table{
     font-size: 14px;
+}
+
+.card-info{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    padding: 15px 0;
+    background-color: #fff;
+    border-radius: 1em;
+    margin: 15px;
+    
+}
+.card-info h4{
+    padding: 0;
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+}
+.card-info p{
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Adicione esta linha */
+    text-align: center;
+}
+.card-info span{
+    padding-right: 5px;
 }

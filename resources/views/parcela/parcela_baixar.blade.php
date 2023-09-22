@@ -39,7 +39,7 @@
                 </thead>
                 <tbody>
                     @if(isset($parcelas))
-                    @foreach($parcelas as $parcela)
+                    @foreach($parcelas as $index => $parcela)
 
                     <tr class="resultados-table">
                         <th scope="row">
@@ -60,14 +60,14 @@
                                 id="inputDataVencimentoParcelas">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor_pago[]" value="{{ old('valor_pago') != null ?  old('valor_pago') : '' }}"
-                                class="form-control @error('valor_pago') is-invalid @enderror"
+                            <input type="text" name="valor_pago[]" value="{{ old('valor_pago.' . $index) != null ?  old('valor_pago.' . $index) : '' }}"
+                                class="form-control @error('valor_pago.' . $index) is-invalid @enderror"
                                 id="inputValorParcelas">
                         </th>
                         <th scope="row">
                             <input type="date" name="data_recebimento[]"
-                                value="{{ old('data_recebimento') != null ?  old('data_recebimento') : '' }}"
-                                class="form-control @error('data_recebimento') is-invalid @enderror" id="inputValorPago">
+                                value="{{ old('data_recebimento.' . $index) != null ?  old('data_recebimento.' . $index) : '' }}"
+                                class="form-control @error('data_recebimento.' . $index) is-invalid @enderror" id="inputValorPago">
                         </th>
                         <th scope="row">
 

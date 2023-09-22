@@ -209,6 +209,10 @@ return [
         'valor_entrada' => 'Valor da Entrada',
         'observacao' => 'Observação',
         'valor_unico' => 'Definir Valor',
+        'data_recebimento.*' => 'Data Recebimento',
+        'valor_pago.*' => 'Valor Pago',
+
+
     ],
 
 ];

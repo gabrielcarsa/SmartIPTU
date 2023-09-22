@@ -3,33 +3,44 @@
 @section('conteudo')
 
 <div class="container-md text-center">
-    <div class="row">
-        <div class="col">
-            <h4>Quadra</h4>
-            <p>{{ $resultados[0]->quadra_nome }}</p>
+    <div class="row align-items-center">
+        <div class="col card-info">
+            <p><span class="material-symbols-outlined">
+                    home_work
+                </span> Quadra</p>
+            <h4>{{ $resultados[0]->quadra_nome }}</h4>
         </div>
-        <div class="col">
-            <h4>Lote</h4>
-            <p>{{ $resultados[0]->lote }}</p>
+        <div class="col card-info">
+            <p><span class="material-symbols-outlined">
+                    home_work
+                </span> Lote</p>
+            <h4>{{ $resultados[0]->lote }}</h4>
         </div>
-        <div class="col">
-            <h4>Responsabilidade</h4>
+        <div class="col card-info">
+            <p> <span class="material-symbols-outlined">
+                    person_pin
+                </span>Responsabilidade</p>
             @if (!empty($resultados[0]->nome_cliente))
-            <p>{{ $resultados[0]->nome_cliente }}</p>
+            <h4>{{ $resultados[0]->nome_cliente }}</h4>
             @elseif (!empty($resultados[0]->razao_social_cliente))
-            <p>{{ $resultados[0]->razao_social_cliente }}</p>
+            <h4>{{ $resultados[0]->razao_social_cliente }}</h4>
             @endif
         </div>
-        <div class="col">
-            <h4>Inscrição Municipal</h4>
-            <p>{{ $resultados[0]->inscricao_municipal }}</p>
+        <div class="col card-info">
+            <p> <span class="material-symbols-outlined">
+                    domain
+                </span> Inscrição Municipal</p>
+            <h4>{{ $resultados[0]->inscricao_municipal }}</h4>
         </div>
-        <div class="col">
-            <h4>Total Débitos</h4>
-            <p>R$ 500</p>
+        <div class="col card-info">
+            <p> <span class="material-symbols-outlined">
+                    receipt_long
+                </span> Total Débitos</p>
+            <h4>R$ {{$totalValorParcelas}}</h4>
         </div>
     </div>
 </div>
+
 
 @if(session('success'))
 <div class="alert alert-success">
@@ -76,8 +87,7 @@
     Alterar data de vencimento
 </a>
 
-<a class="btn btn-primary btn-add" id="baixar_parcela" href="{{route('baixar_parcela')}}"
-    style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="baixar_parcela" href="{{route('baixar_parcela')}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         payments
     </span>
@@ -110,11 +120,11 @@ $displayedDebitoDescricao = [];
         @endif
     </div>
     <div class="card-body">
-        <table class="table table-striped table-bordered">
+        <table class="table">
             <form action="" method="post">
                 @csrf
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                         <th scope="col">ID</th>
                         <th scope="col">Nº Parcela</th>
@@ -130,9 +140,14 @@ $displayedDebitoDescricao = [];
                     @if(isset($resultados))
                     @foreach ($resultados as $resultado)
                     @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
-                    <tr class="resultados-table">
+                    <tr
+                        class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
+                        @if($resultado->situacao_parcela == 0)
                         <th scope="row"><input type="checkbox" id="" name="checkboxes[]"
                                 value="{{ $resultado->parcela_id }}" /></th>
+                        @else
+                        <th scope="row"></th>
+                        @endif
                         <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
                         <th scope="row">{{$resultado->numero_parcela}} / {{ $resultado->quantidade_parcela_debito }}
                         </th>
@@ -192,6 +207,7 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 $(document).ready(function() {
     // Captura o clique no Parcelas Reajustar
@@ -211,6 +227,7 @@ $(document).ready(function() {
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
     });
+
     // Captura o clique no Alterar Data Vencimento
     $("#alterar_vencimento").click(function(event) {
         event.preventDefault();
@@ -228,6 +245,7 @@ $(document).ready(function() {
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
     });
+
     $("#baixar_parcela").click(function(event) {
         event.preventDefault();
 
@@ -244,6 +262,17 @@ $(document).ready(function() {
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
     });
+
+    // Selecionar todos checkboxes
+    $("#selecionar_todos").click(function() {
+        // Obtém o estado atual do "Selecionar Todos" dentro da tabela atual
+        var selecionarTodos = $(this).prop('checked');
+
+        // Encontra os checkboxes individuais dentro da tabela atual e marca ou desmarca com base no estado do "Selecionar Todos"
+        $(this).closest('table').find("input[name='checkboxes[]']").prop('checked', selecionarTodos);
+    });
+
+    // Restante do seu código JavaScript...
 
 });
 </script>

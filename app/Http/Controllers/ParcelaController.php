@@ -31,6 +31,7 @@ class ParcelaController extends Controller
                     'p.numero_parcela as numero_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
                     'd.id as debito_id',
                     'd.quantidade_parcela as debito_quantidade_parcela',
                     'd.descricao_debito_id as debito_descricao_debito_id',  
@@ -49,10 +50,14 @@ class ParcelaController extends Controller
     }
 
     //REAJUSTAR PARCELAS
-    function reajustar($user_id, ParcelaRequest $request){
+    function reajustar($user_id, Request $request){
+
+        $validated = $request->validate([
+            'valor_unico' => 'required|numeric|min:0.1',
+        ]);
 
         $idParcelas = $request->get('id_parcela', []);
-        
+
         foreach($idParcelas as $p){
             $parcela = Parcela::find($p);
             $parcela->valor_parcela = $request->input('valor_unico');
@@ -84,6 +89,7 @@ class ParcelaController extends Controller
                     'p.numero_parcela as numero_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
                     'd.id as debito_id',
                     'd.quantidade_parcela as debito_quantidade_parcela',
                     'd.descricao_debito_id as debito_descricao_debito_id',  
@@ -103,6 +109,10 @@ class ParcelaController extends Controller
 
     //ALTERAR DATA DE VENCIMENTO
     function definir_alteracao_data($user_id, ParcelaRequest $request){
+
+        $validated = $request->validate([
+            'data_vencimento' => 'required|date',
+        ]);
 
         $idParcelas = $request->get('id_parcela', []);
 
@@ -144,6 +154,7 @@ class ParcelaController extends Controller
                     'p.numero_parcela as numero_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
                     'd.id as debito_id',
                     'd.quantidade_parcela as debito_quantidade_parcela',
                     'd.descricao_debito_id as debito_descricao_debito_id',  
@@ -163,6 +174,11 @@ class ParcelaController extends Controller
 
     //BAIXAR PARCELAS
     function definir_baixar_parcela($user_id, Request $request){
+        $validated = $request->validate([
+            'data_recebimento.*' => 'required|date',
+            'valor_pago.*' => 'required|numeric|min:0.1',
+        ]);
+
         $idParcelas = $request->get('id_parcela', []);
         $valorPago = $request->get('valor_pago', []);
         $dataRecebimento = $request->get('data_recebimento', []);

@@ -7,6 +7,7 @@ use App\Models\Lote;
 use App\Models\Quadra;
 use App\Models\User;
 use App\Models\Debito;
+use App\Models\Parcela;
 use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
@@ -139,9 +140,6 @@ class LoteController extends Controller
 
     //RETORNA VIEW PARA GESTÃO DO LOTE
     function gestao($id){
-        //$lote = Lote::find($id);
-        //$quadra = Quadra::find($lote->quadra_id);
-
         $resultados = DB::table('lote AS l')
         ->select(
             'l.id AS lote_id',
@@ -184,7 +182,20 @@ class LoteController extends Controller
         ->where('l.id', $id)
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
-        return view('lote/lote_gestao', compact('resultados'));
+
+        // Inicialize uma variável para armazenar o valor total
+        $totalValorParcelas = 0;
+
+        // Percorra a coleção de resultados
+        foreach ($resultados as $resultado) {
+            // Verifique se a situação da parcela é igual a 0
+            if ($resultado->situacao_parcela == 0) {
+                // Adicione o valor da parcela ao valor total
+                $totalValorParcelas += $resultado->valor_parcela;
+            }
+        }
+
+        return view('lote/lote_gestao', compact('resultados', 'totalValorParcelas'));
 
     }
 }
