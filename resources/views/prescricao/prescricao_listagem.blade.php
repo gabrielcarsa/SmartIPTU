@@ -15,7 +15,7 @@
     </span>Novo</a>
 <div class="card">
     <h5 class="card-header">Prescrições</h5>
-    @if(isset($empreendimentos))
+    @if(isset($prescricoes))
     <div class="card-footer">
         <a class="btn btn-add" href="">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
@@ -30,28 +30,29 @@
                     <th scope="col">Data de entrada do pedido</th>
                     <th scope="col">Ano(s) Refência</th>
                     <th scope="col">Observação</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-                @if(isset($empreendimentos))
-                @foreach ($empreendimentos as $empreendimento)
+                @if(isset($prescricoes))
+                @foreach ($prescricoes as $prescricao)
                 <tr>
-                    <th scope="row">{{$empreendimento->id}}</th>
-                    <td>{{$empreendimento->nome}}</td>
-                    <td>{{$empreendimento->matricula}}</td>
-                    <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
+                    <th scope="row">{{$prescricao->id}}</th>
+                    <td>{{$prescricao->processo}}</td>
+                    <td>{{ \Carbon\Carbon::parse($prescricao->entrada_pedido)->format('d/m/Y') }}</td>
+                    <td>{{$prescricao->anos_referencia}}</td>
+                    <td>{{$prescricao->observacao}}</td>
                     <td>
-                        <a class="btn-acao-listagem" href="empreendimento/gestao/{{$empreendimento->id}}">Gestão</a>
-                        <a class="btn-acao-listagem-secundary" href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
+                        <a class="btn-acao-listagem-secundary" href="editar/{{$prescricao->id}}">Ver/Editar</a>
                     </td>
                 </tr>
                 @endforeach
                 @endif
             </tbody>
         </table>
-        @if(isset($empreendimentos))
+        @if(isset($prescricoes))
         <div class="card-footer">
-            <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+            <p>Exibindo {{$prescricoes->count()}} de {{ $total_prescricoes }} registros</p>
         </div>
         @endif
 

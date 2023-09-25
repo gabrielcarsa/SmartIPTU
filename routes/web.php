@@ -83,7 +83,10 @@ Route::middleware([
         //ROTAS PRESCRIÇÃO
         Route::get('/prescricao/{lote_id}',[PrescricaoController::class, 'prescricao'])->name('prescricao');
         Route::get('/prescricao/novo/{lote_id}',function ($lote_id) {return view('prescricao/prescricao_novo', ['lote_id' => $lote_id]);})->name('prescricao_novo');
-
+        Route::post('/prescricao/cadastrar/{usuario}/{lote_id}',[PrescricaoController::class, 'cadastrar']);
+        Route::get('/prescricao/editar/{id}',[PrescricaoController::class, 'editar']);
+        Route::post('/prescricao/alterar/{id}/{usuario}',[PrescricaoController::class, 'alterar']);
+ 
 
 
 
