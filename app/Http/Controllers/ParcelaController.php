@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Parcela;
 use App\Models\Debito;
+use App\Models\TitularDebito;
 use App\Http\Requests\ParcelaRequest;
 use Carbon\Carbon;
 
@@ -204,6 +205,40 @@ class ParcelaController extends Controller
 
     //VIEW PARA RETORNAR FINANCEIRO CONTAS A RECEBER
     function contas_receber(){
-        return view('parcela/parcela_contas_receber');
+        $titular_debito = DB::table('titular_debito as t')
+        ->select(
+            't.id as id_titular_debito',
+            't.cliente_id as cliente_id',
+            'c.nome as nome',
+            'c.razao_social as razao_social',
+        )
+        ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+        ->get();
+
+        return view('parcela/parcela_contas_receber', compact('titular_debito'));
+    }
+
+    function contas_receber_listagem(Request $request){
+
+        if ($request->input('titular_debito_id') == 0) {
+            $titular_debito = DB::table('parcela as p')
+            ->select(
+                'p.id as id',
+                'p.numero_parcela as numero_parcela',
+                'p.data_vencimento as data_vencimento',
+                'p.valor_parcela as valor_parcela',
+                'p.situacao as situacao_parcela',
+                'd.id as debito_id',
+                'd.quantidade_parcela as debito_quantidade_parcela',
+                'd.descricao_debito_id as debito_descricao_debito_id',  
+                'dd.descricao as descricao',       
+            )
+            ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+            ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->get();
+            dd($titular_debito);
+        }else{
+
+        }
     }
 }

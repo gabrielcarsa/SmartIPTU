@@ -78,7 +78,9 @@ Route::middleware([
         Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
         Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
         Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
-        Route::get('/parcela/contas_receber',[ParcelaController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
+        Route::get('/contas_receber',[ParcelaController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
+        Route::get('/contas_receber/listar',[ParcelaController::class, 'contas_receber_listagem']);
+
 
         //ROTAS PRESCRIÇÃO
         Route::get('/prescricao/{lote_id}',[PrescricaoController::class, 'prescricao'])->name('prescricao');

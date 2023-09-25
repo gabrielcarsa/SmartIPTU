@@ -37,6 +37,7 @@ class DebitoController extends Controller
         $debito->tipo_debito_id = $request->input('tipo_debito_id');
         $debito->lote_id = $lote_id;
         $debito->quantidade_parcela = $request->input('quantidade_parcela');
+        $debito->titular_debito_id = 1;
         $debito->data_vencimento = $request->input('data_vencimento');
         $debito->descricao_debito_id = $request->input('descricao_debito_id');
         $debito->valor_parcela = $request->input('valor_parcela');
