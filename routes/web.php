@@ -86,6 +86,7 @@ Route::middleware([
         Route::post('/prescricao/cadastrar/{usuario}/{lote_id}',[PrescricaoController::class, 'cadastrar']);
         Route::get('/prescricao/editar/{id}',[PrescricaoController::class, 'editar']);
         Route::post('/prescricao/alterar/{id}/{usuario}',[PrescricaoController::class, 'alterar']);
+        Route::get('/prescricao/excluir/{id}',[PrescricaoController::class, 'excluir']);
  
 
 

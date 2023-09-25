@@ -67,4 +67,19 @@ class PrescricaoController extends Controller
         $prescricao->save();
         return redirect('prescricao/'.$prescricao->lote_id)->with('success', 'Prescrição alterado com sucesso');
     }
+
+      //EXCLUIR PRESCRIÇÃO
+      function excluir($id){
+        $prescricao = Prescricao::find($id);
+        $lote_id = $prescricao->lote_id;
+
+    
+        if (!$prescricao) {
+            return redirect()->back()->with('error', 'Processo de prescrição não encontrado');
+        }
+    
+        $prescricao->delete();
+    
+        return redirect("prescricao/".$lote_id)->with('success', 'Prescrição excluída com sucesso');
+    }
 }
