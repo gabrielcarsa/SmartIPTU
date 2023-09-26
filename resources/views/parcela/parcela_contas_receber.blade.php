@@ -111,7 +111,7 @@
 
 <div class="card">
     <h5 class="card-header">Lista de cadastros</h5>
-    @if(isset($clientes))
+    @if(isset($data['resultados']))
     <div class="card-footer">
         <a class="btn btn-add"
             href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
@@ -137,28 +137,36 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($clientes))
-                @foreach ($clientes as $cliente)
+                @if(isset($data['resultados']))
+                @foreach ($data['resultados'] as $resultado)
                 <tr>
-                    <th scope="row">{{$cliente->id}}</th>
-                    @if($cliente->tipo_cadastro == 0)
-                    <td>{{$cliente->nome}}</td>
-                    <td>{{$cliente->cpf}}</td>
+                    <td scope="row">{{$resultado->id}}</td>
+                    <td>{{$resultado->tipo_debito_descricao}}</td>
+                    <td>{{$resultado->descricao}}</td>
+                    <td>{{$resultado->empreendimento}}</td>
+                    <td>{{$resultado->quadra}} / {{$resultado->lote}}</td>
+                    <td>{{$resultado->inscricao}}</td>
+                    @if($resultado->cliente_tipo_cadastro == 0)
+                    <td>{{$resultado->nome}}</td>
                     @else
-                    <td>{{$cliente->razao_social}}</td>
-                    <td>{{$cliente->cnpj}}</td>
+                    <td>{{$resultado->razao_social}}</td>
                     @endif
-                    <td>{{$cliente->telefone1}}</td>
-                    <td>{{$cliente->email}}</td>
-                    <td><a href="editar/{{$cliente->id}}" class="btn-acao-listagem-secundary">Ver/Editar</a></td>
+                    <td>{{$resultado->data_vencimento}}</td>
+                    <td>{{$resultado->valor_parcela}}</td>
+                    @if($resultado->situacao_parcela == 0)
+                    <td>Em aberto</td>
+                    @else
+                    <td>Pago</td>
+                    @endif
+            
                 </tr>
                 @endforeach
                 @endif
             </tbody>
         </table>
-        @if(isset($clientes))
+        @if(isset($data['resultados']))
         <div class="card-footer">
-            <p>Exibindo {{$clientes->count()}} de {{ $total_clientes }} registros</p>
+            <p>Exibindo {{$data['resultados']->count()}} de {{ $data['total'] }} registros</p>
         </div>
         @endif
 

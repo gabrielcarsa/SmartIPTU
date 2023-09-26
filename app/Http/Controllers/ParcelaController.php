@@ -219,9 +219,12 @@ class ParcelaController extends Controller
     }
 
     function contas_receber_listagem(Request $request){
+        $titular_debito_id = $request->input('titular_debito_id');
+        $resultados = Parcela::all();
+        $total = $resultados->count();
 
-        if ($request->input('titular_debito_id') == 0) {
-            $titular_debito = DB::table('parcela as p')
+        if ($titular_debito_id == 0) {
+            $resultados = DB::table('parcela as p')
             ->select(
                 'p.id as id',
                 'p.numero_parcela as numero_parcela',
@@ -229,16 +232,89 @@ class ParcelaController extends Controller
                 'p.valor_parcela as valor_parcela',
                 'p.situacao as situacao_parcela',
                 'd.id as debito_id',
+                'd.tipo_debito_id as tipo_debito_id',
                 'd.quantidade_parcela as debito_quantidade_parcela',
                 'd.descricao_debito_id as debito_descricao_debito_id',  
-                'dd.descricao as descricao',       
+                'dd.descricao as descricao',  
+                'td.id as id_titular_debito',
+                'td.cliente_id as titular_debito_cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+                'c.tipo_cadastro as cliente_tipo_cadastro',
+                'c.id as id_cliente',     
+                'tpd.id as id_tipo_debito',
+                'tpd.descricao as tipo_debito_descricao', 
+                'l.id as id_lote',
+                'l.lote as lote',
+                'l.inscricao_municipal as inscricao',
+                'e.nome as empreendimento',
+                'q.nome as quadra'
             )
-            ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-            ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->join('debito as d', 'p.debito_id', '=', 'd.id')
+            ->join('lote as l', 'd.lote_id', '=', 'l.id')
+            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
+            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->join('titular_debito as td', 'd.titular_debito_id', '=', 'td.id')
+            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
             ->get();
-            dd($titular_debito);
-        }else{
+        }else if($titular_debito_id == 1) {
+            $resultados = DB::table('parcela as p')
+            ->select(
+                'p.id as id',
+                'p.numero_parcela as numero_parcela',
+                'p.data_vencimento as data_vencimento',
+                'p.valor_parcela as valor_parcela',
+                'p.situacao as situacao_parcela',
+                'd.id as debito_id',
+                'd.tipo_debito_id as tipo_debito_id',
+                'd.quantidade_parcela as debito_quantidade_parcela',
+                'd.descricao_debito_id as debito_descricao_debito_id',  
+                'dd.descricao as descricao',  
+                'td.id as id_titular_debito',
+                'td.cliente_id as titular_debito_cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+                'c.tipo_cadastro as cliente_tipo_cadastro',
+                'c.id as id_cliente',     
+                'tpd.id as id_tipo_debito',
+                'tpd.descricao as tipo_debito_descricao', 
+                'l.id as id_lote',
+                'l.lote as lote',
+                'l.inscricao_municipal as inscricao',
+                'e.nome as empreendimento',
+                'q.nome as quadra'
 
+            )
+            ->join('debito as d', 'p.debito_id', '=', 'd.id')
+            ->join('lote as l', 'd.lote_id', '=', 'l.id')
+            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
+            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->join('titular_debito as td', 'd.titular_debito_id', '=', 'td.id')
+            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
+            ->where('d.titular_debito_id', $titular_debito_id)
+            ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
+            ->get();
         }
+
+        $titular_debito = DB::table('titular_debito as t')
+        ->select(
+            't.id as id_titular_debito',
+            't.cliente_id as cliente_id',
+            'c.nome as nome',
+            'c.razao_social as razao_social',
+        )
+        ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+        ->get();
+
+        $data = [
+            'resultados' => $resultados,
+            'total' => $total,
+        ];
+
+        return view('parcela/parcela_contas_receber', compact('titular_debito', 'data'));
     }
 }
