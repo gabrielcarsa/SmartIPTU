@@ -70,6 +70,8 @@ Route::middleware([
         //ROTAS DEBITO
         Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
         Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
+        Route::get('/contas_receber/nova_receita',[DebitoController::class, 'nova_receita'])->name('nova_receita');//FINANCEIRO
+
 
         //ROTAS PARCELA
         Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');

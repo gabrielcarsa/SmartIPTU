@@ -73,4 +73,6 @@ class DebitoController extends Controller
 
         return redirect('lote/gestao/'.$lote_id)->with('success', 'Débito cadastrado com sucesso');
     }
+
+    //NOVA RECEITA
 }

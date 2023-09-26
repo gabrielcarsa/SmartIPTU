@@ -165,3 +165,11 @@ ul a {
 .card-info span{
     padding-right: 5px;
 }
+
+.accordion-body{
+    text-align: left;
+}
+.accordion-body p {
+    padding: 0;
+    margin: 0;
+}

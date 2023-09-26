@@ -81,7 +81,7 @@
             </table>
             <div class="col-12">
                 <button type="submit" class="btn-submit">
-                    Reajustar
+                    Baixar parcelas
                 </button>
             </div>
         </form>

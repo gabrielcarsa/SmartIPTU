@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TitularDebito extends Model
 {
     use HasFactory;
-    protected $table = 'titular_debito';
+    protected $table = 'titular_conta';
     public $timestamps = false;
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Parcela;
 use App\Models\Debito;
-use App\Models\TitularDebito;
+use App\Models\TitularConta;
 use App\Http\Requests\ParcelaRequest;
 use Carbon\Carbon;
 
@@ -190,6 +190,8 @@ class ParcelaController extends Controller
             $parcela = Parcela::find($id);
             $parcela->valor_pago = $valorPago[$i];
             $parcela->data_recebimento = $dataRecebimento[$i];
+            $parcela->data_baixa = date('d-m-Y h:i:s a', time());
+            $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
             $parcela->save();
             $i++;
@@ -205,9 +207,9 @@ class ParcelaController extends Controller
 
     //VIEW PARA RETORNAR FINANCEIRO CONTAS A RECEBER
     function contas_receber(){
-        $titular_debito = DB::table('titular_debito as t')
+        $titular_conta = DB::table('titular_conta as t')
         ->select(
-            't.id as id_titular_debito',
+            't.id as id_titular_conta',
             't.cliente_id as cliente_id',
             'c.nome as nome',
             'c.razao_social as razao_social',
@@ -215,15 +217,15 @@ class ParcelaController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        return view('parcela/parcela_contas_receber', compact('titular_debito'));
+        return view('parcela/parcela_contas_receber', compact('titular_conta'));
     }
 
     function contas_receber_listagem(Request $request){
-        $titular_debito_id = $request->input('titular_debito_id');
+        $titular_conta_id = $request->input('titular_conta_id');
         $resultados = Parcela::all();
         $total = $resultados->count();
 
-        if ($titular_debito_id == 0) {
+        if ($titular_conta_id == 0) {
             $resultados = DB::table('parcela as p')
             ->select(
                 'p.id as id',
@@ -231,13 +233,20 @@ class ParcelaController extends Controller
                 'p.data_vencimento as data_vencimento',
                 'p.valor_parcela as valor_parcela',
                 'p.situacao as situacao_parcela',
+                'p.valor_pago as parcela_valor_pago',
+                'p.data_recebimento as data_recebimento',
+                'p.data_baixa as data_baixa',
+                'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
+                'p.alterado_usuario_id as parcela_alterado_usuario_id',
+                'p.usuario_baixa_id as parcela_usuario_baixa_id',
+                'p.data_alteracao as parcela_data_alteracao',
                 'd.id as debito_id',
                 'd.tipo_debito_id as tipo_debito_id',
                 'd.quantidade_parcela as debito_quantidade_parcela',
                 'd.descricao_debito_id as debito_descricao_debito_id',  
                 'dd.descricao as descricao',  
-                'td.id as id_titular_debito',
-                'td.cliente_id as titular_debito_cliente_id',
+                'td.id as id_titular_conta',
+                'td.cliente_id as titular_conta_cliente_id',
                 'c.nome as nome',
                 'c.razao_social as razao_social',
                 'c.tipo_cadastro as cliente_tipo_cadastro',
@@ -248,7 +257,10 @@ class ParcelaController extends Controller
                 'l.lote as lote',
                 'l.inscricao_municipal as inscricao',
                 'e.nome as empreendimento',
-                'q.nome as quadra'
+                'q.nome as quadra',
+                'uc.name as cadastrado_por',
+                DB::raw('COALESCE(ua.name) as alterado_por'),
+                DB::raw('COALESCE(ub.name) as baixado_por')
             )
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
             ->join('lote as l', 'd.lote_id', '=', 'l.id')
@@ -256,53 +268,71 @@ class ParcelaController extends Controller
             ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
             ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
             ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
-            ->join('titular_debito as td', 'd.titular_debito_id', '=', 'td.id')
+            ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
             ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
-            ->get();
-        }else if($titular_debito_id == 1) {
-            $resultados = DB::table('parcela as p')
-            ->select(
-                'p.id as id',
-                'p.numero_parcela as numero_parcela',
-                'p.data_vencimento as data_vencimento',
-                'p.valor_parcela as valor_parcela',
-                'p.situacao as situacao_parcela',
-                'd.id as debito_id',
-                'd.tipo_debito_id as tipo_debito_id',
-                'd.quantidade_parcela as debito_quantidade_parcela',
-                'd.descricao_debito_id as debito_descricao_debito_id',  
-                'dd.descricao as descricao',  
-                'td.id as id_titular_debito',
-                'td.cliente_id as titular_debito_cliente_id',
-                'c.nome as nome',
-                'c.razao_social as razao_social',
-                'c.tipo_cadastro as cliente_tipo_cadastro',
-                'c.id as id_cliente',     
-                'tpd.id as id_tipo_debito',
-                'tpd.descricao as tipo_debito_descricao', 
-                'l.id as id_lote',
-                'l.lote as lote',
-                'l.inscricao_municipal as inscricao',
-                'e.nome as empreendimento',
-                'q.nome as quadra'
-
-            )
-            ->join('debito as d', 'p.debito_id', '=', 'd.id')
-            ->join('lote as l', 'd.lote_id', '=', 'l.id')
-            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
-            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
-            ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
-            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
-            ->join('titular_debito as td', 'd.titular_debito_id', '=', 'td.id')
-            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
-            ->where('d.titular_debito_id', $titular_debito_id)
+            ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
+            ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
+            ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
             ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
+            ->orderBy('data_vencimento', 'ASC') 
+            ->get();
+        }else {
+            $resultados = DB::table('parcela as p')
+            ->select(
+                'p.id as id',
+                'p.numero_parcela as numero_parcela',
+                'p.data_vencimento as data_vencimento',
+                'p.valor_parcela as valor_parcela',
+                'p.situacao as situacao_parcela',
+                'p.valor_pago as parcela_valor_pago',
+                'p.data_recebimento as data_recebimento',
+                'p.data_baixa as data_baixa',
+                'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
+                'p.alterado_usuario_id as parcela_alterado_usuario_id',
+                'p.usuario_baixa_id as parcela_usuario_baixa_id',
+                'p.data_alteracao as parcela_data_alteracao',
+                'd.id as debito_id',
+                'd.tipo_debito_id as tipo_debito_id',
+                'd.quantidade_parcela as debito_quantidade_parcela',
+                'd.descricao_debito_id as debito_descricao_debito_id',  
+                'dd.descricao as descricao',  
+                'td.id as id_titular_conta',
+                'td.cliente_id as titular_conta_cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+                'c.tipo_cadastro as cliente_tipo_cadastro',
+                'c.id as id_cliente',     
+                'tpd.id as id_tipo_debito',
+                'tpd.descricao as tipo_debito_descricao', 
+                'l.id as id_lote',
+                'l.lote as lote',
+                'l.inscricao_municipal as inscricao',
+                'e.nome as empreendimento',
+                'q.nome as quadra',
+                'uc.name as cadastrado_por',
+                DB::raw('COALESCE(ua.name) as alterado_por'),
+                DB::raw('COALESCE(ub.name) as baixado_por')
+            )
+            ->join('debito as d', 'p.debito_id', '=', 'd.id')
+            ->join('lote as l', 'd.lote_id', '=', 'l.id')
+            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
+            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
+            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
+            ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
+            ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
+            ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
+            ->where('d.titular_conta_id', $titular_conta_id)
+            ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
+            ->orderBy('data_vencimento', 'ASC') 
             ->get();
         }
 
-        $titular_debito = DB::table('titular_debito as t')
+        $titular_conta = DB::table('titular_conta as t')
         ->select(
-            't.id as id_titular_debito',
+            't.id as id_titular_conta',
             't.cliente_id as cliente_id',
             'c.nome as nome',
             'c.razao_social as razao_social',
@@ -315,6 +345,6 @@ class ParcelaController extends Controller
             'total' => $total,
         ];
 
-        return view('parcela/parcela_contas_receber', compact('titular_debito', 'data'));
+        return view('parcela/parcela_contas_receber', compact('titular_conta', 'data'));
     }
 }

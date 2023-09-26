@@ -24,10 +24,10 @@
             </div>
             <div class="col-md-4">
                 <label for="inputTitularReceber" class="form-label">Titular a receber</label>
-                <select id="inputTitularReceber" name="titular_debito_id" class="form-select form-control">
+                <select id="inputTitularReceber" name="titular_conta_id" class="form-select form-control">
                     <option value="0" select>-- Todos --</option>
-                    @foreach ($titular_debito as $t)
-                    <option value="{{$t->id_titular_debito}}">
+                    @foreach ($titular_conta as $t)
+                    <option value="{{$t->id_titular_conta}}">
                         @if(empty($t->nome))
                         {{$t->razao_social}}
                         @else
@@ -103,7 +103,7 @@
                 <button type="submit" class="btn-submit">Consultar</button>
                 <a href="/cliente/novo" class="btn-add"><span class="material-symbols-outlined">
                         add
-                    </span>Novo</a>
+                    </span>Nova receita</a>
             </div>
         </form>
     </div>
@@ -119,10 +119,12 @@
     </div>
     @endif
     <div class="card-body">
-        <table class="table table-striped table-bordered">
+        <table class="table table-bordered table-striped text-center">
             <thead>
                 <tr>
+                    <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
+                    <th scope="col">Nº parcela</th>
                     <th scope="col">Tipo Débito</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Empreendimento</th>
@@ -132,38 +134,73 @@
                     <th scope="col">Vencimento</th>
                     <th scope="col">Valor</th>
                     <th scope="col">Situação</th>
-
-
                 </tr>
             </thead>
             <tbody>
                 @if(isset($data['resultados']))
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
+                    <td>
+                        <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{$resultado->id}}" aria-expanded="false"
+                            aria-controls="collapse{{$resultado->id}}">
+                            <span class="material-symbols-outlined">
+                                expand
+                            </span>
+                        </button>
+                    </td>
                     <td scope="row">{{$resultado->id}}</td>
+                    <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->debito_quantidade_parcela}}</td>
                     <td>{{$resultado->tipo_debito_descricao}}</td>
                     <td>{{$resultado->descricao}}</td>
                     <td>{{$resultado->empreendimento}}</td>
                     <td>{{$resultado->quadra}} / {{$resultado->lote}}</td>
                     <td>{{$resultado->inscricao}}</td>
-                    @if($resultado->cliente_tipo_cadastro == 0)
-                    <td>{{$resultado->nome}}</td>
-                    @else
-                    <td>{{$resultado->razao_social}}</td>
-                    @endif
-                    <td>{{$resultado->data_vencimento}}</td>
+                    <td>
+                        @if($resultado->cliente_tipo_cadastro == 0)
+                        {{$resultado->nome}}
+                        @else
+                        {{$resultado->razao_social}}
+                        @endif
+                    </td>
+                    <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
                     <td>{{$resultado->valor_parcela}}</td>
-                    @if($resultado->situacao_parcela == 0)
-                    <td>Em aberto</td>
-                    @else
-                    <td>Pago</td>
-                    @endif
-            
+                    <td>
+                        @if($resultado->situacao_parcela == 0)
+                        Em aberto
+                        @else
+                        Pago
+                        @endif
+                    </td>
+                </tr>
+                <tr class="accordion-row">
+                    <td colspan="12">
+                        <!-- Colspan igual ao número de colunas na tabela -->
+                        <div class="accordion" id="accordion{{$resultado->id}}">
+                            <div class="accordion-item">
+                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
+                                    aria-labelledby="heading{{$resultado->id}}"
+                                    data-bs-parent="#accordion{{$resultado->id}}">
+                                    <div class="accordion-body">
+                                        <p>Recebimento em:
+                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                        </p>
+                                        <p>Valor recebido: R$ {{$resultado->parcela_valor_pago}}</p>
+                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
+                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
                 @endif
             </tbody>
         </table>
+
+
         @if(isset($data['resultados']))
         <div class="card-footer">
             <p>Exibindo {{$data['resultados']->count()}} de {{ $data['total'] }} registros</p>
