@@ -101,7 +101,7 @@
 
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
-                <a href="/cliente/novo" class="btn-add"><span class="material-symbols-outlined">
+                <a href="{{ route('nova_receita') }}" class="btn-add"><span class="material-symbols-outlined">
                         add
                     </span>Nova receita</a>
             </div>
@@ -137,8 +137,8 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($data['resultados']))
-                @foreach ($data['resultados'] as $resultado)
+                @if(isset($data['resultadosDebitos']))
+                @foreach ($data['resultadosDebitos'] as $resultado)
                 <tr>
                     <td>
                         <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
@@ -201,9 +201,9 @@
         </table>
 
 
-        @if(isset($data['resultados']))
+        @if(isset($data['resultadosDebitos']))
         <div class="card-footer">
-            <p>Exibindo {{$data['resultados']->count()}} de {{ $data['total'] }} registros</p>
+            <p>Exibindo {{$data['resultadosDebitos']->count()}} de {{ $data['total'] }} registros</p>
         </div>
         @endif
 

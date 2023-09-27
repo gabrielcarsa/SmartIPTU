@@ -8,6 +8,7 @@ use App\Http\Controllers\LoteController;
 use App\Http\Controllers\DebitoController;
 use App\Http\Controllers\ParcelaController;
 use App\Http\Controllers\PrescricaoController;
+use App\Http\Controllers\ContaReceberController;
 
 
 
@@ -80,8 +81,6 @@ Route::middleware([
         Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
         Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
         Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
-        Route::get('/contas_receber',[ParcelaController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
-        Route::get('/contas_receber/listar',[ParcelaController::class, 'contas_receber_listagem']);
 
 
         //ROTAS PRESCRIÇÃO
@@ -92,7 +91,12 @@ Route::middleware([
         Route::post('/prescricao/alterar/{id}/{usuario}',[PrescricaoController::class, 'alterar']);
         Route::get('/prescricao/excluir/{id}',[PrescricaoController::class, 'excluir']);
  
-
+        //ROTAS CONTAS RECEBER
+        Route::get('/contas_receber/nova_receita',[ContaReceberController::class, 'conta_receber_novo'])->name('nova_receita');
+        Route::post('/contas_receber/cadastrar/{usuario}',[ContaReceberController::class, 'cadastrar']);
+        Route::get('/contas_receber',[ContaReceberController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
+        Route::get('/contas_receber/listar',[ContaReceberController::class, 'contas_receber_listagem']);
+        
 
 
 });
