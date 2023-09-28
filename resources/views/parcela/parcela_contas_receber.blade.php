@@ -2,16 +2,25 @@
 
 @section('conteudo')
 
-@if(session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
-
 <h2>Contas a receber</h2>
 
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <div class="card-body">
         <form class="row g-3" action="/contas_receber/listar" method="get" autocomplete="off">
             @csrf
@@ -103,13 +112,13 @@
                 <label for="" class="form-label">A Receber refente</label><br>
 
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="refenteLotes" name="refenteLotes"
-                      >
+                    <input class="form-check-input @error('refenteLotes') is-invalid @enderror" type="checkbox"
+                        id="refenteLotes" name="refenteLotes" {{ old('refenteLotes') ? 'checked' : '' }}>
                     <label class="form-check-label" for="refenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="refenteOutros" name="refenteOutros"
-                        >
+                    <input class="form-check-input @error('refenteOutros') is-invalid @enderror" type="checkbox"
+                        id="refenteOutros" name="refenteOutros" {{ old('refenteOutros') ? 'checked' : '' }}>
                     <label class="form-check-label" for="refenteOutros">Outros</label>
                 </div>
             </div>
@@ -124,6 +133,7 @@
     </div>
 </div>
 
+@if(isset($data['resultados']))
 <div class="card">
     <h5 class="card-header">Lista de cadastros</h5>
     @if(isset($data['resultados']))
@@ -134,7 +144,6 @@
     </div>
     @endif
     <div class="card-body">
-        @if(isset($data['resultados']))
         <table class="table table-bordered table-striped text-center">
             @if($data['isReferenteLotes'])
             <thead>
@@ -283,8 +292,6 @@
             @endif
 
         </table>
-        @endif
-
         @if(isset($data['resultados']))
         <div class="card-footer">
             <p>Exibindo {{$data['resultados']->count()}} registros</p>
@@ -293,5 +300,7 @@
 
     </div>
 </div>
+@endif
+
 
 @endsection

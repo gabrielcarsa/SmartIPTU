@@ -211,6 +211,9 @@ return [
         'valor_unico' => 'Definir Valor',
         'data_recebimento.*' => 'Data Recebimento',
         'valor_pago.*' => 'Valor Pago',
+        'refenteLotes' => 'Referente a Lotes',
+        'refenteOutros' => 'Referente a Outros',
+
 
 
     ],
