@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\CategoriaPagar;
+use App\Models\Cliente;
+
 
 class ContaPagarController extends Controller
 {
@@ -21,6 +24,31 @@ class ContaPagarController extends Controller
 
         return view('conta_pagar/contas_pagar', compact('titular_conta'));
     }
+
+    //RETORNA VIEW PARA CADASTRO DE NOVA DESPESA
+    function conta_pagar_novo(){
+        $titular_conta = DB::table('titular_conta as t')
+        ->select(
+            't.id as id_titular_conta',
+            't.cliente_id as cliente_id',
+            'c.nome as nome',
+            'c.razao_social as razao_social',
+        )
+        ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+        ->get();
+
+        $categorias = CategoriaPagar::all();
+
+        $clientes = Cliente::all();
+
+        $data = [
+            'titular_conta' => $titular_conta,
+            'categorias' =>$categorias,
+            'clientes' => $clientes,
+        ];
+        return view('conta_pagar/conta_pagar_novo', compact('data'));
+    }
+
       
     //LISTAGEM E FILTRO CONTAS A PAGAR
     function contas_pagar_listagem(Request $request){

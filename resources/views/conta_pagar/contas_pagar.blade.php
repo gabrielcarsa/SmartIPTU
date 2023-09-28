@@ -128,7 +128,7 @@
 
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
-                <a href="{{ route('nova_receita') }}" class="btn-add"><span class="material-symbols-outlined">
+                <a href="{{ route('nova_despesa') }}" class="btn-add"><span class="material-symbols-outlined">
                         add
                     </span>Nova conta a Pagar (Outros)</a>
             </div>
