@@ -3,21 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\TitularConta;
-use App\Models\ContaReceber;
-use App\Models\ParcelaContaReceber;
-use App\Models\Cliente;
-use App\Models\Parcela;
-use Carbon\Carbon;
-use App\Models\CategoriaReceber;
-use App\Http\Requests\ContaReceberRequest;
 use Illuminate\Support\Facades\DB;
 
-
-class ContaReceberController extends Controller
+class ContaPagarController extends Controller
 {
-    //RETORNA VIEW PARA CADASTRO DE NOVA CONTA A RECEBER
-    function conta_receber_novo(){
+    //VIEW PARA RETORNAR FINANCEIRO CONTAS A PAGAR
+    function contas_pagar(){
         $titular_conta = DB::table('titular_conta as t')
         ->select(
             't.id as id_titular_conta',
@@ -28,80 +19,11 @@ class ContaReceberController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        $categorias = CategoriaReceber::all();
-
-        $clientes = Cliente::all();
-
-        $data = [
-            'titular_conta' => $titular_conta,
-            'categorias' =>$categorias,
-            'clientes' => $clientes,
-        ];
-        return view('conta_receber/conta_receber_novo', compact('data'));
+        return view('conta_pagar/contas_pagar', compact('titular_conta'));
     }
-
-     //CADASTRO DE CONTA A RECEBER
-     function cadastrar($usuario, Request $request){
-        //Definindo data para cadastrar
-        date_default_timezone_set('America/Cuiaba');    
-
-        $contaReceber = new ContaReceber();
-        $contaReceber->titular_conta_id = $request->input('titular_conta_id');
-        $contaReceber->cliente_id = $request->input('cliente_id');
-        $contaReceber->categoria_receber_id = $request->input('categoria_receber_id');
-        $contaReceber->quantidade_parcela = $request->input('quantidade_parcela');
-        $contaReceber->data_vencimento = $request->input('data_vencimento');
-        $contaReceber->valor_parcela = $request->input('valor_parcela');
-        $contaReceber->valor_entrada = $request->input('valor_entrada');
-        $contaReceber->observacao = $request->input('observacao');
-        $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
-        $contaReceber->cadastrado_usuario_id = $usuario;
-        $contaReceber->save();
-
-        // Cadastrar Parcelas
-        $qtd_parcelas = $request->input('quantidade_parcela');
-        $contaReceber_id = $contaReceber->id;
-        $data_vencimento = $contaReceber->data_vencimento; 
-        $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
-        $valor_entrada = $contaReceber->valor_entrada;
-
-        for($i = 1; $i <= $qtd_parcelas; $i++){
-            $parcela = new ParcelaContaReceber();
-            $parcela->conta_receber_id = $contaReceber_id;
-            $parcela->numero_parcela = $i;
-            $parcela->valor_parcela = $contaReceber->valor_parcela;
-            $parcela->cadastrado_usuario_id = $usuario;
-            if($i > 1){
-                $parcela->data_vencimento = $dataCarbon->addMonth();
-            }else{
-                if($valor_entrada != 0){
-                    $parcela->valor_parcela = $valor_entrada;
-                }
-                $parcela->data_vencimento = $data_vencimento;
-            }
-            $parcela->save();
-        }
-
-        return redirect('contas_receber')->with('success', 'Nova receita cadastrada com sucesso');
-    }
-
-    //VIEW PARA RETORNAR FINANCEIRO CONTAS A RECEBER
-    function contas_receber(){
-        $titular_conta = DB::table('titular_conta as t')
-        ->select(
-            't.id as id_titular_conta',
-            't.cliente_id as cliente_id',
-            'c.nome as nome',
-            'c.razao_social as razao_social',
-        )
-        ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
-        ->get();
-
-        return view('conta_receber/contas_receber', compact('titular_conta'));
-    }
-
-    //LISTAGEM E FILTRO CONTAS A RECEBER
-    function contas_receber_listagem(ContaReceberRequest $request){
+      
+    //LISTAGEM E FILTRO CONTAS A PAGAR
+    function contas_pagar_listagem(Request $request){
 
         //Campos
         $titular_conta_id = $request->input('titular_conta_id');
@@ -116,7 +38,7 @@ class ContaReceberController extends Controller
 
     
 
-        //select referente a parcelas de contas a receber de lotes
+        //select referente a parcelas de contas a pagar de lotes
         $queryReferenteLotes = DB::table('parcela as p')
         ->select( 
             'p.id as id',
@@ -157,10 +79,10 @@ class ContaReceberController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-        ->whereColumn('l.cliente_id', '<>', 'td.cliente_id');
+        ->whereColumn('l.cliente_id', '=', 'td.cliente_id');
 
-        //select referente a parcelas de outras contas a receber
-        $queryReferenteOutros = DB::table('parcela_conta_receber as p')
+        //select referente a parcelas de outras contas a pagar
+        $queryReferenteOutros = DB::table('parcela_conta_pagar as p')
         ->select(
             'p.id as id',
             'p.numero_parcela as numero_parcela',
@@ -174,8 +96,8 @@ class ContaReceberController extends Controller
             'p.alterado_usuario_id as parcela_alterado_usuario_id',
             'p.usuario_baixa_id as parcela_usuario_baixa_id',
             'p.data_alteracao as parcela_data_alteracao',
-            'cr.quantidade_parcela as quantidade_parcela',
-            'ctr.descricao as descricao',
+            'cp.quantidade_parcela as quantidade_parcela',
+            'ctp.descricao as descricao',
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
@@ -184,10 +106,10 @@ class ContaReceberController extends Controller
             DB::raw('COALESCE(ub.name) as baixado_por'),
         )
         ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
-        ->join('conta_receber as cr', 'p.conta_receber_id', '=', 'cr.id')
-        ->join('cliente as c', 'cr.cliente_id', '=', 'c.id')
-        ->join('categoria_receber as ctr', 'cr.categoria_receber_id', '=', 'ctr.id')
-        ->join('titular_conta as td', 'cr.titular_conta_id', '=', 'td.id')
+        ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+        ->join('cliente as c', 'cp.cliente_id', '=', 'c.id')
+        ->join('categoria_pagar as ctp', 'cp.categoria_pagar_id', '=', 'ctp.id')
+        ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id')
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id')
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id')
@@ -255,12 +177,25 @@ class ContaReceberController extends Controller
         )
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
+
+          // Inicialize uma variável para armazenar o valor total
+          $totalValorParcelas = 0;
+
+          // Percorra a coleção de resultados
+          foreach ($resultados as $resultado) {
+              // Verifique se a situação da parcela é igual a 0
+              if ($resultado->situacao_parcela == 0) {
+                  // Adicione o valor da parcela ao valor total
+                  $totalValorParcelas += $resultado->valor_parcela;
+              }
+          }
     
         $data = [
             'resultados' => $resultados,
             'isReferenteLotes' => $isReferenteLotes, 
         ];
+        
     
-        return view('conta_receber/contas_receber', compact('titular_conta', 'data'));
+        return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'));
     }
 }

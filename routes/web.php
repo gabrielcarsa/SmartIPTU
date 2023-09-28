@@ -9,6 +9,7 @@ use App\Http\Controllers\DebitoController;
 use App\Http\Controllers\ParcelaController;
 use App\Http\Controllers\PrescricaoController;
 use App\Http\Controllers\ContaReceberController;
+use App\Http\Controllers\ContaPagarController;
 
 
 
@@ -97,6 +98,8 @@ Route::middleware([
         Route::get('/contas_receber',[ContaReceberController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
         Route::get('/contas_receber/listar',[ContaReceberController::class, 'contas_receber_listagem']);
         
-
+        //ROTAS CONTAS PAGAR
+        Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
+        Route::get('/contas_pagar/listar',[ContaPagarController::class, 'contas_pagar_listagem']);
 
 });

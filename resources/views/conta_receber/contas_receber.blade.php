@@ -25,12 +25,12 @@
         <form class="row g-3" action="/contas_receber/listar" method="get" autocomplete="off">
             @csrf
             <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Cliente</label>
-                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
+                <label for="inputCliente" class="form-label">Cliente</label>
+                <input type="text" name="cliente" value="{{request('cliente')}}" class="form-control" id="inputCliente">
             </div>
             <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Empreendimento</label>
-                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
+                <label for="inputEmpreendimento" class="form-label">Empreendimento</label>
+                <input type="text" name="empreendimento" value="{{request('empreendimento')}}" class="form-control" id="inputEmpreendimento">
             </div>
             <div class="col-md-4">
                 <label for="inputTitularReceber" class="form-label">Titular a receber</label>
@@ -49,76 +49,79 @@
             </div>
 
             <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Quadra</label>
-                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
+                <label for="inputQuadra" class="form-label">Quadra</label>
+                <input type="text" name="quadra" value="{{request('quadra')}}" class="form-control" id="inputQuadra">
             </div>
             <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Lote</label>
-                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
+                <label for="inputLote" class="form-label">Lote</label>
+                <input type="text" name="lote" value="{{request('lote')}}" class="form-control" id="inputLote">
             </div>
             <div class="col-md-4">
-                <label for="inputPassword4" class="form-label">Origem</label>
-                <input type="text" name="cpf_cnpj" value="{{request('cpf_cnpj')}}" class="form-control"
-                    id="inputPassword4">
+                <label for="inputId" class="form-label">ID parcela</label>
+                <input type="text" name="idParcela" value="{{request('idParcela')}}" class="form-control"
+                    id="inputId">
             </div>
 
             <div class="col-md-2">
-                <label for="inputEmail4" class="form-label">Período de</label>
-                <input type="text" name="nome" value="{{request('nome')}}" class="form-control" id="inputEmail4">
+                <label for="inputPeriodoDe" class="form-label">Período de</label>
+                <input type="date" name="periodoDe" value="{{request('periodoDe')}}" class="form-control" id="inputPeriodoDe">
             </div>
             <div class="col-md-2">
-                <label for="inputPassword4" class="form-label">Período até</label>
-                <input type="text" name="cpf_cnpj" value="{{request('cpf_cnpj')}}" class="form-control"
-                    id="inputPassword4">
+                <label for="inputPeriodoAte" class="form-label">Período até</label>
+                <input type="date" name="periodoAte" value="{{request('periodoAte')}}" class="form-control"
+                    id="inputPeriodoAte">
             </div>
             <div class="col-md-4">
                 <label for="" class="form-label">Tipo Período</label><br>
 
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">Lançamento</label>
+                    <input class="form-check-input @error('periodoLancamento') is-invalid @enderror" type="checkbox"
+                        id="periodoLancamento" name="periodoLancamento" {{ request('periodoLancamento') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="periodoLancamento">Lançamento</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">Vencimento</label>
+                    <input class="form-check-input @error('periodoVencimento') is-invalid @enderror" type="checkbox"
+                        id="periodoVencimento" name="periodoVencimento" {{ request('periodoVencimento') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="periodoVencimento">Vencimento</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">Recebimento</label>
+                    <input class="form-check-input @error('periodoRecebimento') is-invalid @enderror" type="checkbox"
+                        id="periodoRecebimento" name="periodoRecebimento" {{ request('periodoRecebimento') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="periodoRecebimento">Recebimento</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">Baixa</label>
+                    <input class="form-check-input @error('periodoBaixa') is-invalid @enderror" type="checkbox"
+                        id="periodoBaixa" name="periodoBaixa" {{ request('periodoBaixa') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="periodoBaixa">Baixa</label>
                 </div>
             </div>
             <div class="col-md-4">
                 <label for="" class="form-label">Situação</label><br>
 
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
                     <label class="form-check-label" for="inlineCheckbox1">A vencer</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2">
                     <label class="form-check-label" for="inlineCheckbox2">Pago</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
                     <label class="form-check-label" for="inlineCheckbox1">Todos</label>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <label for="" class="form-label">A Receber refente</label><br>
-
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('refenteLotes') is-invalid @enderror" type="checkbox"
-                        id="refenteLotes" name="refenteLotes" {{ old('refenteLotes') ? 'checked' : '' }}>
+                        id="refenteLotes" name="refenteLotes" {{ request('refenteLotes') ? 'checked' : '' }}>
                     <label class="form-check-label" for="refenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('refenteOutros') is-invalid @enderror" type="checkbox"
-                        id="refenteOutros" name="refenteOutros" {{ old('refenteOutros') ? 'checked' : '' }}>
+                        id="refenteOutros" name="refenteOutros" {{ request('refenteOutros') ? 'checked' : '' }}>
                     <label class="form-check-label" for="refenteOutros">Outros</label>
                 </div>
             </div>
@@ -202,7 +205,7 @@
                     </td>
                 </tr>
                 <tr class="accordion-row">
-                    <td colspan="12">
+                    <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
                         <div class="accordion" id="accordion{{$resultado->id}}">
                             <div class="accordion-item">
@@ -266,7 +269,7 @@
                     </td>
                 </tr>
                 <tr class="accordion-row">
-                    <td colspan="12">
+                    <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
                         <div class="accordion" id="accordion{{$resultado->id}}">
                             <div class="accordion-item">

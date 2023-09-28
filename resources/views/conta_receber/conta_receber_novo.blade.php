@@ -47,7 +47,7 @@
             <div class="col-md-4">
                 <label for="inputCliente" class="form-label">Cliente</label>
                 <select id="inputCliente" name="cliente_id" class="form-select form-control">
-                <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                <option value="" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['clientes'] as $cliente)
                     <option value="{{ $cliente->id }}"
                         {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
