@@ -102,11 +102,11 @@ class ContaReceberController extends Controller
     //LISTAGEM E FILTRO CONTAS A RECEBER
     function contas_receber_listagem(Request $request){
         $titular_conta_id = $request->input('titular_conta_id');
-        $resultadosTotal = Parcela::all();
-        $total = $resultadosTotal->count();
+        $isReferenteLotes = $request->input('refenteLotes');
+        $isReferenteOutros = $request->input('refenteOutros');
 
-        if ($titular_conta_id == 0) {
-            $resultadosDebitos = DB::table('parcela as p')
+        if ($titular_conta_id == 0 && $isReferenteLotes) {
+            $resultados = DB::table('parcela as p')
             ->select(
                 'p.id as id',
                 'p.numero_parcela as numero_parcela',
@@ -120,20 +120,12 @@ class ContaReceberController extends Controller
                 'p.alterado_usuario_id as parcela_alterado_usuario_id',
                 'p.usuario_baixa_id as parcela_usuario_baixa_id',
                 'p.data_alteracao as parcela_data_alteracao',
-                'd.id as debito_id',
-                'd.tipo_debito_id as tipo_debito_id',
-                'd.quantidade_parcela as debito_quantidade_parcela',
-                'd.descricao_debito_id as debito_descricao_debito_id',  
+                'd.quantidade_parcela as quantidade_parcela',
                 'dd.descricao as descricao',  
-                'td.id as id_titular_conta',
-                'td.cliente_id as titular_conta_cliente_id',
                 'c.nome as nome',
+                'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
-                'c.tipo_cadastro as cliente_tipo_cadastro',
-                'c.id as id_cliente',     
-                'tpd.id as id_tipo_debito',
                 'tpd.descricao as tipo_debito_descricao', 
-                'l.id as id_lote',
                 'l.lote as lote',
                 'l.inscricao_municipal as inscricao',
                 'e.nome as empreendimento',
@@ -142,6 +134,7 @@ class ContaReceberController extends Controller
                 DB::raw('COALESCE(ua.name) as alterado_por'),
                 DB::raw('COALESCE(ub.name) as baixado_por')
             )
+            ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
             ->join('lote as l', 'd.lote_id', '=', 'l.id')
             ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
@@ -150,6 +143,7 @@ class ContaReceberController extends Controller
             ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
             ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
             ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
             ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
             ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
             ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
@@ -157,46 +151,8 @@ class ContaReceberController extends Controller
             ->orderBy('data_vencimento', 'ASC') 
             ->get();
 
-            $resultadosContasReceber = DB::table('parcela_conta_receber as p')
-            ->select(
-                'p.id as id_parcela_conta_receber',
-                'p.numero_parcela as numero_parcela_conta_receber',
-                'p.data_vencimento as data_vencimento_conta_receber',
-                'p.valor_parcela as valor_parcela_conta_receber',
-                'p.situacao as situacao_parcela_conta_receber',
-                'p.valor_pago as parcela_valor_pago_conta_receber',
-                'p.data_recebimento as data_recebimento_conta_receber',
-                'p.data_baixa as data_baixa_conta_receber',
-                'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id_conta_receber',
-                'p.alterado_usuario_id as parcela_alterado_usuario_id_conta_receber',
-                'p.usuario_baixa_id as parcela_usuario_baixa_id_conta_receber',
-                'p.data_alteracao as parcela_data_alteracao_conta_receber',
-                'cr.id as id_conta_receber',
-                'cr.cliente_id as conta_receber_cliente_id',
-                'cr.quantidade_parcela as conta_receber_quantidade_parcela',
-                'cr.titular_conta_id as conta_receber_titular_conta_id',  
-                'ctr.descricao as descricao_conta_receber',  
-                'td.id as id_titular_conta_conta_receber',
-                'td.cliente_id as titular_conta_cliente_id_conta_receber',
-                'c.nome as nome_conta_receber',
-                'c.razao_social as razao_social_conta_receber',
-                'c.tipo_cadastro as cliente_tipo_cadastro_conta_receber',
-                'c.id as id_cliente_conta_receber',     
-                'uc.name as cadastrado_por_conta_receber',
-                DB::raw('COALESCE(ua.name) as alterado_por_conta_receber'),
-                DB::raw('COALESCE(ub.name) as baixado_por_conta_receber')
-            )
-            ->join('conta_receber as cr', 'p.conta_receber_id', '=', 'cr.id')
-            ->join('cliente as c', 'cr.cliente_id', '=', 'c.id')
-            ->join('categoria_receber as ctr', 'cr.categoria_receber_id', '=', 'ctr.id')
-            ->join('titular_conta as td', 'cr.titular_conta_id', '=', 'td.id')
-            ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
-            ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
-            ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-            ->get();
-
-        }else {
-            $resultadosDebitos = DB::table('parcela as p')
+        }else if($titular_conta_id != 0 && $isReferenteLotes){
+            $resultados = DB::table('parcela as p')
             ->select(
                 'p.id as id',
                 'p.numero_parcela as numero_parcela',
@@ -210,20 +166,12 @@ class ContaReceberController extends Controller
                 'p.alterado_usuario_id as parcela_alterado_usuario_id',
                 'p.usuario_baixa_id as parcela_usuario_baixa_id',
                 'p.data_alteracao as parcela_data_alteracao',
-                'd.id as debito_id',
-                'd.tipo_debito_id as tipo_debito_id',
-                'd.quantidade_parcela as debito_quantidade_parcela',
-                'd.descricao_debito_id as debito_descricao_debito_id',  
+                'd.quantidade_parcela as quantidade_parcela',
                 'dd.descricao as descricao',  
-                'td.id as id_titular_conta',
-                'td.cliente_id as titular_conta_cliente_id',
                 'c.nome as nome',
+                'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
-                'c.tipo_cadastro as cliente_tipo_cadastro',
-                'c.id as id_cliente',     
-                'tpd.id as id_tipo_debito',
                 'tpd.descricao as tipo_debito_descricao', 
-                'l.id as id_lote',
                 'l.lote as lote',
                 'l.inscricao_municipal as inscricao',
                 'e.nome as empreendimento',
@@ -232,6 +180,7 @@ class ContaReceberController extends Controller
                 DB::raw('COALESCE(ua.name) as alterado_por'),
                 DB::raw('COALESCE(ub.name) as baixado_por')
             )
+            ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
             ->join('lote as l', 'd.lote_id', '=', 'l.id')
             ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
@@ -240,12 +189,48 @@ class ContaReceberController extends Controller
             ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
             ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
             ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
             ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
             ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
             ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
             ->where('d.titular_conta_id', $titular_conta_id)
             ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
             ->orderBy('data_vencimento', 'ASC') 
+            ->get();
+        }else if ($titular_conta_id == 0 && $isReferenteOutros) {
+            $resultados = DB::table('parcela_conta_receber as p')
+            ->select(
+                'p.id as id',
+                'p.numero_parcela as numero_parcela',
+                'p.data_vencimento as data_vencimento',
+                'p.valor_parcela as valor_parcela',
+                'p.situacao as situacao_parcela',
+                'p.valor_pago as parcela_valor_pago',
+                'p.data_recebimento as data_recebimento',
+                'p.data_baixa as data_baixa',
+                'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
+                'p.alterado_usuario_id as parcela_alterado_usuario_id',
+                'p.usuario_baixa_id as parcela_usuario_baixa_id',
+                'p.data_alteracao as parcela_data_alteracao',
+                'cr.quantidade_parcela as quantidade_parcela',
+                'ctr.descricao as descricao',
+                'c.nome as nome',
+                'c.tipo_cadastro as tipo_cadastro',
+                'c.razao_social as razao_social',
+                'uc.name as cadastrado_por',
+                DB::raw('COALESCE(ua.name) as alterado_por'),
+                DB::raw('COALESCE(ub.name) as baixado_por'),
+            )
+            ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
+            ->join('conta_receber as cr', 'p.conta_receber_id', '=', 'cr.id')
+            ->join('cliente as c', 'cr.cliente_id', '=', 'c.id')
+            ->join('categoria_receber as ctr', 'cr.categoria_receber_id', '=', 'ctr.id')
+            ->join('titular_conta as td', 'cr.titular_conta_id', '=', 'td.id')
+            ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id')
+            ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id')
+            ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+            ->orderBy('p.data_vencimento', 'ASC')
             ->get();
         }
 
@@ -258,16 +243,12 @@ class ContaReceberController extends Controller
         )
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
-        
-        // Combine as duas coleções
-        $resultados = $resultadosDebitos->concat($resultadosContasReceber);
-
+    
         $data = [
-            'resultadosDebitos' => $resultadosDebitos,
-            'resultadosContasReceber' => $resultadosContasReceber,
-            'total' => $total,
+            'resultados' => $resultados,
+            'isReferenteLotes' => $isReferenteLotes, 
         ];
-
+    
         return view('parcela/parcela_contas_receber', compact('titular_conta', 'data'));
     }
 }

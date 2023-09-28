@@ -9,6 +9,7 @@
 @endif
 
 <h2>Contas a receber</h2>
+
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
     <div class="card-body">
@@ -98,12 +99,26 @@
                 </div>
             </div>
 
+            <div class="col-md-3">
+                <label for="" class="form-label">A Receber refente</label><br>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="refenteLotes" name="refenteLotes"
+                      >
+                    <label class="form-check-label" for="refenteLotes">Lotes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="refenteOutros" name="refenteOutros"
+                        >
+                    <label class="form-check-label" for="refenteOutros">Outros</label>
+                </div>
+            </div>
 
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
                 <a href="{{ route('nova_receita') }}" class="btn-add"><span class="material-symbols-outlined">
                         add
-                    </span>Nova receita</a>
+                    </span>Nova receita (Outros)</a>
             </div>
         </form>
     </div>
@@ -119,11 +134,14 @@
     </div>
     @endif
     <div class="card-body">
+        @if(isset($data['resultados']))
         <table class="table table-bordered table-striped text-center">
+            @if($data['isReferenteLotes'])
             <thead>
                 <tr>
                     <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
+                    <th scope="col">Titular a receber</th>
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Tipo Débito</th>
                     <th scope="col">Descrição</th>
@@ -137,8 +155,8 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($data['resultadosDebitos']))
-                @foreach ($data['resultadosDebitos'] as $resultado)
+
+                @foreach ($data['resultados'] as $resultado)
                 <tr>
                     <td>
                         <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
@@ -150,14 +168,15 @@
                         </button>
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
-                    <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->debito_quantidade_parcela}}</td>
+                    <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
+                    <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->tipo_debito_descricao}}</td>
                     <td>{{$resultado->descricao}}</td>
                     <td>{{$resultado->empreendimento}}</td>
                     <td>{{$resultado->quadra}} / {{$resultado->lote}}</td>
                     <td>{{$resultado->inscricao}}</td>
                     <td>
-                        @if($resultado->cliente_tipo_cadastro == 0)
+                        @if($resultado->tipo_cadastro == 0)
                         {{$resultado->nome}}
                         @else
                         {{$resultado->razao_social}}
@@ -196,14 +215,79 @@
                     </td>
                 </tr>
                 @endforeach
-                @endif
             </tbody>
+
+            @else
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Titular a receber</th>
+                    <th scope="col">Nº parcela</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Vencimento</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Situação</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data['resultados'] as $resultado)
+                <tr>
+                    <td>
+                        <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{$resultado->id}}" aria-expanded="false"
+                            aria-controls="collapse{{$resultado->id}}">
+                            <span class="material-symbols-outlined">
+                                expand
+                            </span>
+                        </button>
+                    </td>
+                    <td scope="row">{{$resultado->id}}</td>
+                    <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
+                    <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
+                    <td>{{$resultado->descricao}}</td>
+                    <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
+                    <td>{{$resultado->valor_parcela}}</td>
+                    <td>
+                        @if($resultado->situacao_parcela == 0)
+                        Em aberto
+                        @else
+                        Pago
+                        @endif
+                    </td>
+                </tr>
+                <tr class="accordion-row">
+                    <td colspan="12">
+                        <!-- Colspan igual ao número de colunas na tabela -->
+                        <div class="accordion" id="accordion{{$resultado->id}}">
+                            <div class="accordion-item">
+                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
+                                    aria-labelledby="heading{{$resultado->id}}"
+                                    data-bs-parent="#accordion{{$resultado->id}}">
+                                    <div class="accordion-body">
+                                        <p>Recebimento em:
+                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                        </p>
+                                        <p>Valor recebido: R$ {{$resultado->parcela_valor_pago}}</p>
+                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
+                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+            @endif
+
         </table>
+        @endif
 
-
-        @if(isset($data['resultadosDebitos']))
+        @if(isset($data['resultados']))
         <div class="card-footer">
-            <p>Exibindo {{$data['resultadosDebitos']->count()}} de {{ $data['total'] }} registros</p>
+            <p>Exibindo {{$data['resultados']->count()}} registros</p>
         </div>
         @endif
 
