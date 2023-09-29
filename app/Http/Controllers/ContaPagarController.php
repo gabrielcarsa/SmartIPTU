@@ -174,6 +174,7 @@ class ContaPagarController extends Controller
             'p.data_alteracao as parcela_data_alteracao',
             'cp.quantidade_parcela as quantidade_parcela',
             'ctp.descricao as descricao',
+            'ctp.icone as icone_categoria',
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
@@ -256,19 +257,24 @@ class ContaPagarController extends Controller
 
           // Inicialize uma variável para armazenar o valor total
           $totalValorParcelas = 0;
+          $totalValorPago = 0;
 
           // Percorra a coleção de resultados
           foreach ($resultados as $resultado) {
-              // Verifique se a situação da parcela é igual a 0
-              if ($resultado->situacao_parcela == 0) {
+            $totalValorParcelas += $resultado->valor_parcela;
+
+              // Verifique se a situação da parcela é igual a 1 (Pago)
+              if ($resultado->situacao_parcela == 1) {
                   // Adicione o valor da parcela ao valor total
-                  $totalValorParcelas += $resultado->valor_parcela;
+                  $totalValorPago += $resultado->valor_parcela;
               }
           }
     
         $data = [
             'resultados' => $resultados,
             'isReferenteLotes' => $isReferenteLotes, 
+            'totalValorPago' => $totalValorPago,
+            'totalValorParcelas' => $totalValorParcelas,
         ];
         
     

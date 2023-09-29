@@ -255,10 +255,27 @@ class ContaReceberController extends Controller
         )
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
+
+        // Inicialize uma variável para armazenar o valor total
+        $totalValorParcelas = 0;
+        $totalValorPago = 0;
+
+        // Percorra a coleção de resultados
+        foreach ($resultados as $resultado) {
+          $totalValorParcelas += $resultado->valor_parcela;
+
+            // Verifique se a situação da parcela é igual a 1 (Pago)
+            if ($resultado->situacao_parcela == 1) {
+                // Adicione o valor da parcela ao valor total
+                $totalValorPago += $resultado->valor_parcela;
+            }
+        }
     
         $data = [
             'resultados' => $resultados,
             'isReferenteLotes' => $isReferenteLotes, 
+            'totalValorPago' => $totalValorPago,
+            'totalValorParcelas' => $totalValorParcelas,
         ];
     
         return view('conta_receber/contas_receber', compact('titular_conta', 'data'));

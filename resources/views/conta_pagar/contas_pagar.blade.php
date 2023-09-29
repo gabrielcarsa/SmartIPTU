@@ -30,7 +30,8 @@
             </div>
             <div class="col-md-4">
                 <label for="inputEmpreendimento" class="form-label">Empreendimento</label>
-                <input type="text" name="empreendimento" value="{{request('empreendimento')}}" class="form-control" id="inputEmpreendimento">
+                <input type="text" name="empreendimento" value="{{request('empreendimento')}}" class="form-control"
+                    id="inputEmpreendimento">
             </div>
             <div class="col-md-4">
                 <label for="inputTitularReceber" class="form-label">Titular da conta a pagar</label>
@@ -58,13 +59,13 @@
             </div>
             <div class="col-md-4">
                 <label for="inputId" class="form-label">ID parcela</label>
-                <input type="text" name="idParcela" value="{{request('idParcela')}}" class="form-control"
-                    id="inputId">
+                <input type="text" name="idParcela" value="{{request('idParcela')}}" class="form-control" id="inputId">
             </div>
 
             <div class="col-md-2">
                 <label for="inputPeriodoDe" class="form-label">Período de</label>
-                <input type="date" name="periodoDe" value="{{request('periodoDe')}}" class="form-control" id="inputPeriodoDe">
+                <input type="date" name="periodoDe" value="{{request('periodoDe')}}" class="form-control"
+                    id="inputPeriodoDe">
             </div>
             <div class="col-md-2">
                 <label for="inputPeriodoAte" class="form-label">Período até</label>
@@ -76,17 +77,20 @@
 
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('periodoLancamento') is-invalid @enderror" type="checkbox"
-                        id="periodoLancamento" name="periodoLancamento" {{ request('periodoLancamento') ? 'checked' : '' }}>
+                        id="periodoLancamento" name="periodoLancamento"
+                        {{ request('periodoLancamento') ? 'checked' : '' }}>
                     <label class="form-check-label" for="periodoLancamento">Lançamento</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('periodoVencimento') is-invalid @enderror" type="checkbox"
-                        id="periodoVencimento" name="periodoVencimento" {{ request('periodoVencimento') ? 'checked' : '' }}>
+                        id="periodoVencimento" name="periodoVencimento"
+                        {{ request('periodoVencimento') ? 'checked' : '' }}>
                     <label class="form-check-label" for="periodoVencimento">Vencimento</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('periodoRecebimento') is-invalid @enderror" type="checkbox"
-                        id="periodoRecebimento" name="periodoRecebimento" {{ request('periodoRecebimento') ? 'checked' : '' }}>
+                        id="periodoRecebimento" name="periodoRecebimento"
+                        {{ request('periodoRecebimento') ? 'checked' : '' }}>
                     <label class="form-check-label" for="periodoRecebimento">Recebimento</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -128,9 +132,11 @@
 
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
-                <a href="{{ route('nova_despesa') }}" class="btn-add"><span class="material-symbols-outlined">
+                <a href="{{ route('nova_despesa') }}" class="btn btn-add"><span class="material-symbols-outlined">
                         add
-                    </span>Nova conta a Pagar (Outros)</a>
+                    </span>
+                    Nova conta a Pagar (Outros)
+                </a>
             </div>
         </form>
     </div>
@@ -171,13 +177,9 @@
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
                     <td>
-                        <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{$resultado->id}}" aria-expanded="false"
-                            aria-controls="collapse{{$resultado->id}}">
-                            <span class="material-symbols-outlined">
-                                expand
-                            </span>
-                        </button>
+                        <input data-bs-toggle="collapse" data-bs-target="#collapse{{$resultado->id}}"
+                            aria-expanded="false" aria-controls="collapse{{$resultado->id}}" type="checkbox" id=""
+                            name="checkboxes[]" value="{{ $resultado->id }}" />
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
                     <!--<td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>-->
@@ -246,18 +248,16 @@
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
                     <td>
-                        <button class="btn accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{$resultado->id}}" aria-expanded="false"
-                            aria-controls="collapse{{$resultado->id}}">
-                            <span class="material-symbols-outlined">
-                                expand
-                            </span>
-                        </button>
+                        <input data-bs-toggle="collapse" data-bs-target="#collapse{{$resultado->id}}"
+                            aria-expanded="false" aria-controls="collapse{{$resultado->id}}" type="checkbox" id=""
+                            name="checkboxes[]" value="{{ $resultado->id }}" />
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
                     <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
-                    <td>{{$resultado->descricao}}</td>
+                    <td class="resultado-icone"><span
+                            class="material-symbols-outlined">{{$resultado->icone_categoria}}</span>
+                        {{$resultado->descricao}}</td>
                     <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
                     <td>{{$resultado->valor_parcela}}</td>
                     <td>
@@ -298,6 +298,8 @@
         @if(isset($data['resultados']))
         <div class="card-footer">
             <p>Exibindo {{$data['resultados']->count()}} registros</p>
+            <p>Valor total das parcelas: R$ {{$data['totalValorParcelas']}}</p>
+            <p>Valor total pago: R$ {{$data['totalValorPago']}}</p>
         </div>
         @endif
 
