@@ -102,5 +102,6 @@ Route::middleware([
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
         Route::get('/contas_pagar/listar',[ContaPagarController::class, 'contas_pagar_listagem']);
         Route::get('/contas_pagar/nova_despesa',[ContaPagarController::class, 'conta_pagar_novo'])->name('nova_despesa');
+        Route::post('/contas_pagar/cadastrar/{usuario}',[ContaPagarController::class, 'cadastrar']);
 
 });

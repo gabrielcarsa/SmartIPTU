@@ -25,13 +25,13 @@
 
     <div class="card-body">
 
-        <form class="row g-3" action="{{ '/contas_receber/cadastrar/' . Auth::user()->id }}" method="post"
+        <form class="row g-3" action="{{ '/contas_pagar/cadastrar/' . Auth::user()->id }}" method="post"
             autocomplete="off">
             @csrf
             <div class="col-md-4">
                 <label for="inputTitularReceber" class="form-label">Titular da despesa*</label>
                 <select id="inputTitularReceber" name="titular_conta_id" class="form-select form-control">
-                <option value="0" {{ old('titular_conta_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                    <option value="0" {{ old('titular_conta_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['titular_conta'] as $t)
                     <option value="{{ $t->id_titular_conta }}"
                         {{ old('titular_conta_id') == $t->id_titular_conta ? 'selected' : '' }}>
@@ -47,10 +47,9 @@
             <div class="col-md-4">
                 <label for="inputCliente" class="form-label">Fornecedor</label>
                 <select id="inputCliente" name="cliente_id" class="form-select form-control">
-                <option value="" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                    <option value="" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['clientes'] as $cliente)
-                    <option value="{{ $cliente->id }}"
-                        {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                    <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
                         @if(empty($cliente->nome))
                         {{$cliente->razao_social}}
                         @else
@@ -62,13 +61,13 @@
             </div>
             <div class="col-md-4">
                 <label for="inputDescricao" class="form-label">Descrição*</label>
-                <select id="inputDescricao" name="categoria_receber_id"
-                    class="form-select form-control @error('categoria_receber_id') is-invalid @enderror">
-                    <option value="0" {{ old('categoria_receber_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                <select id="inputDescricao" name="categoria_pagar_id"
+                    class="form-select form-control @error('categoria_pagar_id') is-invalid @enderror">
+                    <option value="0" {{ old('categoria_pagar_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['categorias'] as $cat)
-                    <option value="{{ $cat->id }}"
-                        {{ old('categoria_receber_id') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->descricao }}
+                    <option value="{{ $cat->id }}" {{ old('categoria_pagar_id') == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->descricao }} 
+
                     </option>
                     @endforeach
                 </select>
@@ -86,7 +85,7 @@
                 <input type="date" name="data_vencimento" value="{{ old('data_vencimento') }}"
                     class="form-control @error('data_vencimento') is-invalid @enderror" id="inputVencimento1Parcela">
             </div>
-            
+
             <div class="col-md-2">
                 <label for="inputValorParcela" id="valor_parcela" class="form-label">Valor da parcela*</label>
                 <input type="text" name="valor_parcela" value="{{ old('valor_parcela') }}"

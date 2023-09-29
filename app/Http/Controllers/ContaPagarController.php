@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CategoriaPagar;
+use App\Models\ContaPagar;
+use App\Models\ParcelaContaPagar;
 use App\Models\Cliente;
+use Carbon\Carbon;
 
 
 class ContaPagarController extends Controller
@@ -47,6 +50,51 @@ class ContaPagarController extends Controller
             'clientes' => $clientes,
         ];
         return view('conta_pagar/conta_pagar_novo', compact('data'));
+    }
+
+    //CADASTRO DE CONTA A PAGAR
+    function cadastrar($usuario, Request $request){
+        //Definindo data para cadastrar
+        date_default_timezone_set('America/Cuiaba');    
+
+        $contaPagar = new ContaPagar();
+        $contaPagar->titular_conta_id = $request->input('titular_conta_id');
+        $contaPagar->cliente_id = $request->input('cliente_id');
+        $contaPagar->categoria_pagar_id = $request->input('categoria_pagar_id');
+        $contaPagar->quantidade_parcela = $request->input('quantidade_parcela');
+        $contaPagar->data_vencimento = $request->input('data_vencimento');
+        $contaPagar->valor_parcela = $request->input('valor_parcela');
+        $contaPagar->valor_entrada = $request->input('valor_entrada');
+        $contaPagar->observacao = $request->input('observacao');
+        $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
+        $contaPagar->cadastrado_usuario_id = $usuario;
+        $contaPagar->save();
+
+        // Cadastrar Parcelas
+        $qtd_parcelas = $request->input('quantidade_parcela');
+        $contaPagar_id = $contaPagar->id;
+        $data_vencimento = $contaPagar->data_vencimento; 
+        $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+        $valor_entrada = $contaPagar->valor_entrada;
+
+        for($i = 1; $i <= $qtd_parcelas; $i++){
+            $parcela = new ParcelaContaPagar();
+            $parcela->conta_pagar_id = $contaPagar_id;
+            $parcela->numero_parcela = $i;
+            $parcela->valor_parcela = $contaPagar->valor_parcela;
+            $parcela->cadastrado_usuario_id = $usuario;
+            if($i > 1){
+                $parcela->data_vencimento = $dataCarbon->addMonth();
+            }else{
+                if($valor_entrada != 0){
+                    $parcela->valor_parcela = $valor_entrada;
+                }
+                $parcela->data_vencimento = $data_vencimento;
+            }
+            $parcela->save();
+        }
+
+        return redirect('contas_pagar')->with('success', 'Nova Despesa cadastrada com sucesso');
     }
 
       
@@ -168,7 +216,7 @@ class ContaPagarController extends Controller
                 ->get();
             } 
         
-        } else { //Referente a outras receitas
+        } else { //Referente a outras despesas
 
             if($titular_conta_id == 0){ //Se o titular da conta for 'Todos'
 

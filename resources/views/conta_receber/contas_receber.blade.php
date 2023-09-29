@@ -153,7 +153,7 @@
                 <tr>
                     <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
-                    <th scope="col">Titular a receber</th>
+                    <!--<th scope="col">Titular a receber</th>-->
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Tipo Débito</th>
                     <th scope="col">Descrição</th>
@@ -180,7 +180,7 @@
                         </button>
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
-                    <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
+                    <!--<td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>-->
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->tipo_debito_descricao}}</td>
                     <td>{{$resultado->descricao}}</td>
