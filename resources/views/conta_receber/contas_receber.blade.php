@@ -4,11 +4,41 @@
 
 <h2>Contas a receber</h2>
 
+@if(isset($data['resultados']))
+<a class="btn btn-primary btn-add" id="reajustar_parcelas" href="{{route('parcela_reajustar')}}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        attach_money
+    </span>
+    Reajustar Valores
+</a>
+
+<a class="btn btn-primary btn-add" id="alterar_vencimento" href="{{route('alterar_vencimento')}}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        edit_calendar
+    </span>
+    Alterar data de vencimento
+</a>
+
+<a class="btn btn-primary btn-add" id="baixar_parcela" href="{{route('baixar_parcela')}}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        payments
+    </span>
+    Baixar parcelas
+</a>
+@endif
+
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
+    </div>
+    @endif
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
     </div>
     @endif
     @if ($errors->any())
@@ -119,14 +149,14 @@
             <div class="col-md-3">
                 <label for="" class="form-label">A Receber refente</label><br>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input @error('refenteLotes') is-invalid @enderror" type="checkbox"
-                        id="refenteLotes" name="refenteLotes" {{ request('refenteLotes') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="refenteLotes">Lotes</label>
+                    <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
+                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="referenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input @error('refenteOutros') is-invalid @enderror" type="checkbox"
-                        id="refenteOutros" name="refenteOutros" {{ request('refenteOutros') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="refenteOutros">Outros</label>
+                    <input class="form-check-input @error('referenteOutros') is-invalid @enderror" type="checkbox"
+                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="referenteOutros">Outros</label>
                 </div>
             </div>
 
@@ -143,13 +173,11 @@
 @if(isset($data['resultados']))
 <div class="card">
     <h5 class="card-header">Lista de cadastros</h5>
-    @if(isset($data['resultados']))
     <div class="card-footer">
         <a class="btn btn-add"
             href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
-    @endif
     <div class="card-body">
         <table class="table table-bordered table-striped text-center">
             @if($data['isReferenteLotes'])
@@ -303,5 +331,75 @@
 </div>
 @endif
 
-
 @endsection
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Captura o clique no Parcelas Reajustar
+    $("#reajustar_parcelas").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+
+    // Captura o clique no Alterar Data Vencimento
+    $("#alterar_vencimento").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+
+    $("#baixar_parcela").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+
+    // Selecionar todos checkboxes
+    $("#selecionar_todos").click(function() {
+        // Obtém o estado atual do "Selecionar Todos" dentro da tabela atual
+        var selecionarTodos = $(this).prop('checked');
+
+        // Encontra os checkboxes individuais dentro da tabela atual e marca ou desmarca com base no estado do "Selecionar Todos"
+        $(this).closest('table').find("input[name='checkboxes[]']").prop('checked', selecionarTodos);
+    });
+
+
+});
+</script>

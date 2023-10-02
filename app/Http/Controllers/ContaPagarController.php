@@ -103,8 +103,8 @@ class ContaPagarController extends Controller
 
         //Campos
         $titular_conta_id = $request->input('titular_conta_id');
-        $isReferenteLotes = $request->input('refenteLotes');
-        $isReferenteOutros = $request->input('refenteOutros');
+        $isReferenteLotes = $request->input('referenteLotes');
+        $isReferenteOutros = $request->input('referenteOutros');
         $periodoDe = $request->input('periodoDe');
         $periodoAte = $request->input('periodoAte');
         $isPeriodoVencimento = $request->input('periodoVencimento');

@@ -14,7 +14,7 @@ class ParcelaController extends Controller
 {
     //RETORNA VIEW PARA REAJUSTAR PARCELA
     function reajustar_view(Request $request){
-       
+
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
              // Recupere os valores dos checkboxes da consulta da URL
@@ -52,6 +52,7 @@ class ParcelaController extends Controller
 
     //REAJUSTAR PARCELAS
     function reajustar($user_id, Request $request){
+        $origem = $request->input('origem'); //controle para redirecionar para lugar correto
 
         $validated = $request->validate([
             'valor_unico' => 'required|numeric|min:0.1',
@@ -67,7 +68,14 @@ class ParcelaController extends Controller
         $parcelaReferencia = Parcela::find($idParcelas[0]);
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
-        return redirect("lote/gestao/".$lote_id)->with('success', 'Parcelas reajustadas com sucesso');   
+        
+        if($origem == "lote_gestao"){
+            return redirect("lote/gestao/".$lote_id)->with('success', 'Parcelas reajustadas com sucesso');   
+        } else if($origem == "contas_receber"){
+            return redirect("contas_receber")->with('success', 'Parcelas reajustadas com sucesso');   
+        }else if($origem == "contas_pagar"){
+            return redirect("contas_pagar")->with('success', 'Parcelas reajustadas com sucesso');   
+        }
     }
 
       //RETORNA VIEW PARA ALTERAR DATA DE VENCIMENTO
@@ -109,8 +117,9 @@ class ParcelaController extends Controller
     }
 
     //ALTERAR DATA DE VENCIMENTO
-    function definir_alteracao_data($user_id, ParcelaRequest $request){
-
+    function definir_alteracao_data($user_id, Request $request){
+        $origem = $request->input('origem'); //controle para redirecionar para lugar correto
+        
         $validated = $request->validate([
             'data_vencimento' => 'required|date',
         ]);
@@ -133,7 +142,14 @@ class ParcelaController extends Controller
         $parcelaReferencia = Parcela::find($idParcelas[0]);
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
-        return redirect("lote/gestao/".$lote_id)->with('success', 'Data(s) de vencimento alteradas com sucesso');   
+
+        if($origem == "lote_gestao"){
+            return redirect("lote/gestao/".$lote_id)->with('success', 'Data(s) de vencimento alteradas com sucesso');   
+        } else if($origem == "contas_receber"){
+            return redirect("contas_receber")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
+        } else if($origem == "contas_pagar"){
+            return redirect("contas_pagar")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
+        }
     }
 
      //RETORNA VIEW PARA BAIXAR PARCELA
@@ -175,6 +191,8 @@ class ParcelaController extends Controller
 
     //BAIXAR PARCELAS
     function definir_baixar_parcela($user_id, Request $request){
+        $origem = $request->input('origem'); //controle para redirecionar para lugar correto
+
         $validated = $request->validate([
             'data_recebimento.*' => 'required|date',
             'valor_pago.*' => 'required|numeric|min:0.1',
@@ -200,8 +218,13 @@ class ParcelaController extends Controller
         $parcelaReferencia = Parcela::find($idParcelas[0]);
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
-        return redirect("lote/gestao/".$lote_id)->with('success', 'Parcelas baixadas com sucesso');
-
+        if($origem == "lote_gestao"){
+            return redirect("lote/gestao/".$lote_id)->with('success', 'Parcelas baixadas com sucesso'); 
+        } else if($origem == "contas_receber"){
+            return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   
+        }else if($origem == "contas_pagar"){
+            return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
+        }
    
     }
 }

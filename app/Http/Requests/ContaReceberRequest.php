@@ -22,8 +22,8 @@ class ContaReceberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'refenteLotes' => 'required_without:refenteOutros',
-            'refenteOutros' => 'required_without:refenteLotes',
+            'referenteLotes' => 'required_without:referenteOutros',
+            'referenteOutros' => 'required_without:referenteLotes',
            
         ];
     }

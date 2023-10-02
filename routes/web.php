@@ -97,11 +97,19 @@ Route::middleware([
         Route::post('/contas_receber/cadastrar/{usuario}',[ContaReceberController::class, 'cadastrar']);
         Route::get('/contas_receber',[ContaReceberController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
         Route::get('/contas_receber/listar',[ContaReceberController::class, 'contas_receber_listagem']);
+
+        Route::get('/contas_receber/reajustar',[ContaReceberController::class, 'reajustar_view'])->name('receber_reajustar');
+        Route::post('/contas_receber/definir_reajuste/{usuario}',[ContaReceberController::class, 'reajustar']);
+        Route::get('/contas_receber/alterar_vencimento',[ContaReceberController::class, 'alterar_vencimento'])->name('receber_alterar_vencimento');
+        Route::post('/contas_receber/definir_data_vencimento/{usuario}',[ContaReceberController::class, 'definir_alteracao_data']);
+        Route::get('/contas_receber/baixar_parcela',[ContaReceberController::class, 'baixar_parcela_view'])->name('receber_baixar_parcela');
+        Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
         
         //ROTAS CONTAS PAGAR
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
         Route::get('/contas_pagar/listar',[ContaPagarController::class, 'contas_pagar_listagem']);
         Route::get('/contas_pagar/nova_despesa',[ContaPagarController::class, 'conta_pagar_novo'])->name('nova_despesa');
         Route::post('/contas_pagar/cadastrar/{usuario}',[ContaPagarController::class, 'cadastrar']);
+
 
 });

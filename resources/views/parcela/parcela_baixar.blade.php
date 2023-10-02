@@ -24,7 +24,7 @@
     @endif
 
     <div class="card-body">
-        <form class="row g-3" action="{{ '/parcela/definir_baixar_parcela/' . Auth::user()->id }}" method="post"
+        <form class="row g-3" action="{{ '/parcela/definir_baixar_parcela/' . Auth::user()->id . '?origem=' . request()->input('origem') }}" method="post"
             autocomplete="off">
             @csrf
             <table class="table table-striped">

@@ -229,7 +229,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',');
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -247,7 +247,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',');
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -264,7 +264,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',');
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -278,8 +278,6 @@ $(document).ready(function() {
         // Encontra os checkboxes individuais dentro da tabela atual e marca ou desmarca com base no estado do "Selecionar Todos"
         $(this).closest('table').find("input[name='checkboxes[]']").prop('checked', selecionarTodos);
     });
-
-    // Restante do seu código JavaScript...
 
 });
 </script>
