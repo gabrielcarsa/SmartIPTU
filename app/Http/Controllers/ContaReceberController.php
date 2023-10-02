@@ -347,27 +347,26 @@ class ContaReceberController extends Controller
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
 
-    
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
-                $parcelas[] = DB::table('parcela as p')
+                $parcelas[] = DB::table('parcela_conta_receber as p')
                 ->select(
                     'p.id as id',
                     'p.numero_parcela as numero_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
                     'p.situacao as situacao_parcela',
-                    'd.id as debito_id',
-                    'd.quantidade_parcela as debito_quantidade_parcela',
-                    'd.descricao_debito_id as debito_descricao_debito_id',  
-                    'dd.descricao as descricao',       
+                    'cr.id as conta_receber_id',
+                    'cr.quantidade_parcela as debito_quantidade_parcela',
+                    'ccr.descricao as descricao',    
                 )
-                ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
+                ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
-            return view('parcela/parcela_alterar_vencimento', compact('parcelas'));
+            $parcelaOutros = true;
+            return view('parcela/parcela_alterar_vencimento', compact('parcelas', 'parcelaOutros'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
@@ -376,7 +375,6 @@ class ContaReceberController extends Controller
 
     //ALTERAR DATA DE VENCIMENTO
     function definir_alteracao_data($user_id, Request $request){
-        $origem = $request->input('origem'); //controle para redirecionar para lugar correto
         
         $validated = $request->validate([
             'data_vencimento' => 'required|date',
@@ -388,7 +386,7 @@ class ContaReceberController extends Controller
         $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
         $i = 0;
         foreach($idParcelas as $p){
-            $parcela = Parcela::find($p);
+            $parcela = ParcelaContaReceber::find($p);
             if($i > 0){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
@@ -397,17 +395,8 @@ class ContaReceberController extends Controller
             $parcela->save();
             $i++;
         }
-        $parcelaReferencia = Parcela::find($idParcelas[0]);
-        $debito = Debito::find($parcelaReferencia->debito_id);
-        $lote_id = $debito->lote_id;
 
-        if($origem == "lote_gestao"){
-            return redirect("lote/gestao/".$lote_id)->with('success', 'Data(s) de vencimento alteradas com sucesso');   
-        } else if($origem == "contas_receber"){
-            return redirect("contas_receber")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
-        } else if($origem == "contas_pagar"){
-            return redirect("contas_pagar")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
-        }
+        return redirect("contas_receber")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
     }
 
      //RETORNA VIEW PARA BAIXAR PARCELA
@@ -423,24 +412,24 @@ class ContaReceberController extends Controller
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
-                $parcelas[] = DB::table('parcela as p')
+                $parcelas[] = DB::table('parcela_conta_receber as p')
                 ->select(
                     'p.id as id',
                     'p.numero_parcela as numero_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
                     'p.situacao as situacao_parcela',
-                    'd.id as debito_id',
-                    'd.quantidade_parcela as debito_quantidade_parcela',
-                    'd.descricao_debito_id as debito_descricao_debito_id',  
-                    'dd.descricao as descricao',       
+                    'cr.id as conta_receber_id',
+                    'cr.quantidade_parcela as debito_quantidade_parcela',
+                    'ccr.descricao as descricao',    
                 )
-                ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
+                ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
-            return view('parcela/parcela_baixar', compact('parcelas'));
+            $parcelaOutros = true;
+            return view('parcela/parcela_baixar', compact('parcelas', 'parcelaOutros'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
@@ -449,7 +438,6 @@ class ContaReceberController extends Controller
 
     //BAIXAR PARCELAS
     function definir_baixar_parcela($user_id, Request $request){
-        $origem = $request->input('origem'); //controle para redirecionar para lugar correto
 
         $validated = $request->validate([
             'data_recebimento.*' => 'required|date',
@@ -462,8 +450,7 @@ class ContaReceberController extends Controller
     
         $i = 0;
         foreach ($idParcelas as $id) {
-            // Process each $id here
-            $parcela = Parcela::find($id);
+            $parcela = ParcelaContaReceber::find($id);
             $parcela->valor_pago = $valorPago[$i];
             $parcela->data_recebimento = $dataRecebimento[$i];
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
@@ -472,17 +459,6 @@ class ContaReceberController extends Controller
             $parcela->save();
             $i++;
         }
-       
-        $parcelaReferencia = Parcela::find($idParcelas[0]);
-        $debito = Debito::find($parcelaReferencia->debito_id);
-        $lote_id = $debito->lote_id;
-        if($origem == "lote_gestao"){
-            return redirect("lote/gestao/".$lote_id)->with('success', 'Parcelas baixadas com sucesso'); 
-        } else if($origem == "contas_receber"){
-            return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   
-        }else if($origem == "contas_pagar"){
-            return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
-        }
-   
+        return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   
     }
 }
