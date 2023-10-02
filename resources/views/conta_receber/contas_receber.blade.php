@@ -338,59 +338,119 @@
 
 <script>
 $(document).ready(function() {
-    // Captura o clique no Parcelas Reajustar
-    $("#reajustar_parcelas").click(function(event) {
-        event.preventDefault();
+    if (referenteLotes.checked) {
+        // Captura o clique no Parcelas Reajustar
+        $("#reajustar_parcelas").click(function(event) {
+            event.preventDefault();
 
-        // Obtenha os valores dos checkboxes selecionados
-        var checkboxesSelecionados = [];
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
 
-        $("input[name='checkboxes[]']:checked").each(function() {
-            checkboxesSelecionados.push($(this).val());
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(
+                ',') + "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
         });
 
-        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+        // Captura o clique no Alterar Data Vencimento
+        $("#alterar_vencimento").click(function(event) {
+            event.preventDefault();
 
-        // Redirecione para a URL com os parâmetros
-        window.location.href = url;
-    });
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
 
-    // Captura o clique no Alterar Data Vencimento
-    $("#alterar_vencimento").click(function(event) {
-        event.preventDefault();
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
 
-        // Obtenha os valores dos checkboxes selecionados
-        var checkboxesSelecionados = [];
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
+                ',') + "&origem=contas_receber";
 
-        $("input[name='checkboxes[]']:checked").each(function() {
-            checkboxesSelecionados.push($(this).val());
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
         });
 
-        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+        $("#baixar_parcela").click(function(event) {
+            event.preventDefault();
 
-        // Redirecione para a URL com os parâmetros
-        window.location.href = url;
-    });
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
 
-    $("#baixar_parcela").click(function(event) {
-        event.preventDefault();
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
 
-        // Obtenha os valores dos checkboxes selecionados
-        var checkboxesSelecionados = [];
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+                "&origem=contas_receber";
 
-        $("input[name='checkboxes[]']:checked").each(function() {
-            checkboxesSelecionados.push($(this).val());
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+    } else if (referenteOutros.checked) {
+        // Captura o clique no Parcelas Reajustar
+        $("#reajustar_parcelas").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('receber_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(
+                ',') + "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
         });
 
-        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=contas_receber";
+        // Captura o clique no Alterar Data Vencimento
+        $("#alterar_vencimento").click(function(event) {
+            event.preventDefault();
 
-        // Redirecione para a URL com os parâmetros
-        window.location.href = url;
-    });
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
 
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('receber_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
+                ',') + "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+
+        $("#baixar_parcela").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('receber_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+    }
     // Selecionar todos checkboxes
     $("#selecionar_todos").click(function() {
         // Obtém o estado atual do "Selecionar Todos" dentro da tabela atual

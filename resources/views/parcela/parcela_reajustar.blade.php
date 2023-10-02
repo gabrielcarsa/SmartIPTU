@@ -25,7 +25,7 @@
 
     <div class="card-body">
         <form class="row g-3"
-            action="{{ '/parcela/definir_reajuste/' . Auth::user()->id . '?origem=' . request()->input('origem') }}"
+            action="{{ $parcelaOutros == true ? '/contas_receber/definir_reajuste/' . Auth::user()->id : '/parcela/definir_reajuste/' . Auth::user()->id . '?origem=' . request()->input('origem') }}"
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
