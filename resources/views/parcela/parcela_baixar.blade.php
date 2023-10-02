@@ -24,7 +24,7 @@
     @endif
 
     <div class="card-body">
-        <form class="row g-3" action="{{ isset($parcelaOutros) ? '/contas_receber/definir_baixar_parcela/' . Auth::user()->id : '/parcela/definir_baixar_parcela/' . Auth::user()->id . '?origem=' . request()->input('origem') }}" method="post"
+        <form class="row g-3" action="{{ isset($parcelaReceberOutros) ? '/contas_receber/definir_baixar_parcela/' . Auth::user()->id : (isset($parcelaPagarOutros) ? '/contas_receber/definir_baixar_parcela/' . Auth::user()->id : '/parcela/definir_baixar_parcela/' . Auth::user()->id . '?origem=' . request()->input('origem')) }}" method="post"
             autocomplete="off">
             @csrf
             <table class="table table-striped">

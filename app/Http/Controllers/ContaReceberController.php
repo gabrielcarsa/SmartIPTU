@@ -310,7 +310,7 @@ class ContaReceberController extends Controller
                 ->where('p.id', $parcelaId)
                 ->get();
             }
-            $parcelaOutros = true;
+            $parcelaReceberOutros = true;
             return view('parcela/parcela_reajustar', compact('parcelas', 'parcelaOutros'));
 
         }else{
@@ -365,7 +365,7 @@ class ContaReceberController extends Controller
                 ->where('p.id', $parcelaId)
                 ->get();
             }
-            $parcelaOutros = true;
+            $parcelaReceberOutros = true;
             return view('parcela/parcela_alterar_vencimento', compact('parcelas', 'parcelaOutros'));
 
         }else{
@@ -428,7 +428,7 @@ class ContaReceberController extends Controller
                 ->where('p.id', $parcelaId)
                 ->get();
             }
-            $parcelaOutros = true;
+            $parcelaReceberOutros = true;
             return view('parcela/parcela_baixar', compact('parcelas', 'parcelaOutros'));
 
         }else{

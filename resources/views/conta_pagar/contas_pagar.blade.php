@@ -341,8 +341,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-var referenteLotes = document.getElementById("referenteLotes");
-var referenteOutros = document.getElementById("referenteOutros");
 
 
 $(document).ready(function() {
@@ -405,7 +403,7 @@ $(document).ready(function() {
         });
 
     } else if (referenteOutros.checked) {
-        
+
         // Captura o clique no Parcelas Reajustar
         $("#reajustar_parcelas").click(function(event) {
             event.preventDefault();
@@ -418,7 +416,7 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('pagar_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(
                 ',') + "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
@@ -437,7 +435,7 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('pagar_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
                 ',') + "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
@@ -455,7 +453,7 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            var url = "{{ route('pagar_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
                 "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros

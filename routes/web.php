@@ -97,7 +97,6 @@ Route::middleware([
         Route::post('/contas_receber/cadastrar/{usuario}',[ContaReceberController::class, 'cadastrar']);
         Route::get('/contas_receber',[ContaReceberController::class, 'contas_receber'])->name('contas_receber');//FINANCEIRO
         Route::get('/contas_receber/listar',[ContaReceberController::class, 'contas_receber_listagem']);
-
         Route::get('/contas_receber/reajustar',[ContaReceberController::class, 'reajustar_view'])->name('receber_reajustar');
         Route::post('/contas_receber/definir_reajuste/{usuario}',[ContaReceberController::class, 'reajustar']);
         Route::get('/contas_receber/alterar_vencimento',[ContaReceberController::class, 'alterar_vencimento'])->name('receber_alterar_vencimento');
@@ -110,6 +109,13 @@ Route::middleware([
         Route::get('/contas_pagar/listar',[ContaPagarController::class, 'contas_pagar_listagem']);
         Route::get('/contas_pagar/nova_despesa',[ContaPagarController::class, 'conta_pagar_novo'])->name('nova_despesa');
         Route::post('/contas_pagar/cadastrar/{usuario}',[ContaPagarController::class, 'cadastrar']);
+
+        Route::get('/contas_pagar/reajustar',[ContaPagarController::class, 'reajustar_view'])->name('pagar_reajustar');
+        Route::post('/contas_pagar/definir_reajuste/{usuario}',[ContaPagarController::class, 'reajustar']);
+        Route::get('/contas_pagar/alterar_vencimento',[ContaPagarController::class, 'alterar_vencimento'])->name('pagar_alterar_vencimento');
+        Route::post('/contas_pagar/definir_data_vencimento/{usuario}',[ContaPagarController::class, 'definir_alteracao_data']);
+        Route::get('/contas_pagar/baixar_parcela',[ContaPagarController::class, 'baixar_parcela_view'])->name('pagar_baixar_parcela');
+        Route::post('/contas_pagar/definir_baixar_parcela/{usuario}',[ContaPagarController::class, 'definir_baixar_parcela']);
 
 
 });

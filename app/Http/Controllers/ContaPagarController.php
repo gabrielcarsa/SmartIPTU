@@ -280,4 +280,185 @@ class ContaPagarController extends Controller
     
         return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'));
     }
+
+       //RETORNA VIEW PARA REAJUSTAR PARCELA
+       function reajustar_view(Request $request){
+
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+             // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+    
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_pagar as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
+                    'cp.id as conta_receber_id',
+                    'cp.quantidade_parcela as debito_quantidade_parcela',
+                    'ccp.descricao as descricao',       
+                )
+                ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
+                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            $parcelaPagarOutros = true;
+            return view('parcela/parcela_reajustar', compact('parcelas', 'parcelaPagarOutros'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    //REAJUSTAR PARCELAS
+    function reajustar($user_id, Request $request){
+        $validated = $request->validate([
+            'valor_unico' => 'required|numeric|min:0.1',
+        ]);
+
+        $idParcelas = $request->get('id_parcela', []);
+
+        foreach($idParcelas as $p){
+            $parcela = ParcelaContaPagar::find($p);
+            $parcela->valor_parcela = $request->input('valor_unico');
+            $parcela->save();
+        }
+             
+        return redirect("contas_pagar")->with('success', 'Parcelas reajustadas com sucesso');   
+
+    }
+
+      //RETORNA VIEW PARA ALTERAR DATA DE VENCIMENTO
+      function alterar_vencimento(Request $request){
+       
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+             // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_pagar as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
+                    'cp.id as conta_receber_id',
+                    'cp.quantidade_parcela as debito_quantidade_parcela',
+                    'ccp.descricao as descricao',       
+                )
+                ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
+                ->leftJoin('categoria_pagar AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            $parcelaPagarOutros = true;
+            return view('parcela/parcela_alterar_vencimento', compact('parcelas', 'parcelaPagarOutros'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    //ALTERAR DATA DE VENCIMENTO
+    function definir_alteracao_data($user_id, Request $request){
+        
+        $validated = $request->validate([
+            'data_vencimento' => 'required|date',
+        ]);
+
+        $idParcelas = $request->get('id_parcela', []);
+
+        $data_vencimento = $request->input('data_vencimento'); 
+        $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+        $i = 0;
+        foreach($idParcelas as $p){
+            $parcela = ParcelaContaPagar::find($p);
+            if($i > 0){
+                $parcela->data_vencimento = $dataCarbon->addMonth();
+            }else{
+                $parcela->data_vencimento = $data_vencimento;
+            }
+            $parcela->save();
+            $i++;
+        }
+
+        return redirect("contas_pagar")->with('success', 'Data(s) de vencimento alteradas com sucesso');   
+    }
+
+     //RETORNA VIEW PARA BAIXAR PARCELA
+     function baixar_parcela_view(Request $request){
+       
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+             // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_pagar as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.valor_parcela as valor_parcela',
+                    'p.situacao as situacao_parcela',
+                    'cp.id as conta_receber_id',
+                    'cp.quantidade_parcela as debito_quantidade_parcela',
+                    'ccp.descricao as descricao',       
+                )
+                ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
+                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            $parcelaPagarOutros = true;
+            return view('parcela/parcela_baixar', compact('parcelas', 'parcelaPagarOutros'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    //BAIXAR PARCELAS
+    function definir_baixar_parcela($user_id, Request $request){
+
+        $validated = $request->validate([
+            'data_recebimento.*' => 'required|date',
+            'valor_pago.*' => 'required|numeric|min:0.1',
+        ]);
+
+        $idParcelas = $request->get('id_parcela', []);
+        $valorPago = $request->get('valor_pago', []);
+        $dataRecebimento = $request->get('data_recebimento', []);
+    
+        $i = 0;
+        foreach ($idParcelas as $id) {
+            $parcela = ParcelaContaPagar::find($id);
+            $parcela->valor_pago = $valorPago[$i];
+            $parcela->data_recebimento = $dataRecebimento[$i];
+            $parcela->data_baixa = date('d-m-Y h:i:s a', time());
+            $parcela->usuario_baixa_id = $user_id;
+            $parcela->situacao = 1;
+            $parcela->save();
+            $i++;
+        }
+        return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
+    }
 }

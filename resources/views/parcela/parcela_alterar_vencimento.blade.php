@@ -25,7 +25,7 @@
 
     <div class="card-body">
         <form class="row g-3"
-            action="{{ isset($parcelaOutros) ? '/contas_receber/definir_data_vencimento/' . Auth::user()->id :'/parcela/definir_data_vencimento/' . Auth::user()->id . '?origem=' . request()->input('origem') }}"
+            action="{{ isset($parcelaReceberOutros) ? '/contas_receber/definir_data_vencimento/' . Auth::user()->id : (isset($parcelaPagarOutros) ? '/contas_pagar/definir_data_vencimento/' : '/parcela/definir_data_vencimento/' . Auth::user()->id . '?origem=' . request()->input('origem')) }}"
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
@@ -44,7 +44,7 @@
                 <label for="inputIdParcelas" id="" class="form-label">ID</label>
                 <input type="text" name="" value="{{ $parcela[0]->id }}" readonly disabled
                     class="form-control @error('id_parcela') is-invalid @enderror" id="inputIdParcelas">
-                    <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
+                <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
             </div>
             <div class="col-md-1">
                 <label for="inputIdParcelas" id="numero_parcela" class="form-label">Nº parcela</label>
