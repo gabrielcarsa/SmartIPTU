@@ -205,7 +205,18 @@ ul a:hover{
     font-style: none;
     text-decoration: none;
 }
-
-
+.modal-body p{
+    display: flex; /* Usar flexbox para centralizar verticalmente e horizontalmente */
+    align-items: center; /* Centralizar verticalmente */
+    padding: 0;
+}
+.modal-body span{
+    width: 10px;
+    padding: 0 40px;
+    color: #0D6EFD;
+}
+#data_vencimento_modal{
+    font-weight: 700;
+}
 
 
