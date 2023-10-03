@@ -59,7 +59,7 @@ class ContaPagarController extends Controller
 
         $contaPagar = new ContaPagar();
         $contaPagar->titular_conta_id = $request->input('titular_conta_id');
-        $contaPagar->cliente_id = $request->input('cliente_id');
+        $contaPagar->fornecedor_id = $request->input('cliente_id');
         $contaPagar->categoria_pagar_id = $request->input('categoria_pagar_id');
         $contaPagar->quantidade_parcela = $request->input('quantidade_parcela');
         $contaPagar->data_vencimento = $request->input('data_vencimento');
@@ -184,7 +184,7 @@ class ContaPagarController extends Controller
         )
         ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
         ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
-        ->join('cliente as c', 'cp.cliente_id', '=', 'c.id')
+        ->join('cliente as c', 'cp.fornecedor_id', '=', 'c.id')
         ->join('categoria_pagar as ctp', 'cp.categoria_pagar_id', '=', 'ctp.id')
         ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id')
