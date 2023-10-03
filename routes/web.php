@@ -10,6 +10,7 @@ use App\Http\Controllers\ParcelaController;
 use App\Http\Controllers\PrescricaoController;
 use App\Http\Controllers\ContaReceberController;
 use App\Http\Controllers\ContaPagarController;
+use App\Http\Controllers\CalendarioController;
 
 
 
@@ -109,13 +110,15 @@ Route::middleware([
         Route::get('/contas_pagar/listar',[ContaPagarController::class, 'contas_pagar_listagem']);
         Route::get('/contas_pagar/nova_despesa',[ContaPagarController::class, 'conta_pagar_novo'])->name('nova_despesa');
         Route::post('/contas_pagar/cadastrar/{usuario}',[ContaPagarController::class, 'cadastrar']);
-
         Route::get('/contas_pagar/reajustar',[ContaPagarController::class, 'reajustar_view'])->name('pagar_reajustar');
         Route::post('/contas_pagar/definir_reajuste/{usuario}',[ContaPagarController::class, 'reajustar']);
         Route::get('/contas_pagar/alterar_vencimento',[ContaPagarController::class, 'alterar_vencimento'])->name('pagar_alterar_vencimento');
         Route::post('/contas_pagar/definir_data_vencimento/{usuario}',[ContaPagarController::class, 'definir_alteracao_data']);
         Route::get('/contas_pagar/baixar_parcela',[ContaPagarController::class, 'baixar_parcela_view'])->name('pagar_baixar_parcela');
         Route::post('/contas_pagar/definir_baixar_parcela/{usuario}',[ContaPagarController::class, 'definir_baixar_parcela']);
+
+        //CALENDÁRIO
+        Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');
 
 
 });

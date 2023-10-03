@@ -39,6 +39,9 @@ ul a {
     display: flex; /* Tornar os links flexíveis para alinhar ícones e texto */
     align-items: center; /* Alinhar verticalmente ícones e texto */
 }
+ul a:hover{
+    color: #b8b8b8;
+}
 .list-offcanvas li{
     margin: 12px;
 }
@@ -184,3 +187,25 @@ ul a {
     color: #424250;
     margin-right: 5px;
 }
+
+/*CALENDARIO*/
+
+/* Estilize os nomes dos dias da semana */
+.fc-col-header-cell-cushion {
+    text-transform: uppercase !important; /* Transforma os nomes dos dias em maiúsculas */
+    font-weight: bold; 
+    color: #FFFF;
+    font-style: none;
+    background-color: #424250;
+    width: 100% ;
+    text-decoration: none;
+}
+.fc-daygrid-day-number{
+    color: #000;
+    font-style: none;
+    text-decoration: none;
+}
+
+
+
+

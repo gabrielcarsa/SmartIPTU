@@ -60,7 +60,7 @@
                 </li>
                 <div class="collapse" id="collapseExample">
                     <ul class="sublist-offcanvas">
-                        <li><a href=""><span class="material-symbols-outlined">
+                        <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
                                 </span>Calendário Financeiro</a></li>
                         <li><a href="{{ route('contas_receber') }}"><span class="material-symbols-outlined">
