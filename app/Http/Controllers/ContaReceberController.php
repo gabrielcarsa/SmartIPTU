@@ -311,7 +311,7 @@ class ContaReceberController extends Controller
                 ->get();
             }
             $parcelaReceberOutros = true;
-            return view('parcela/parcela_reajustar', compact('parcelas', 'parcelaOutros'));
+            return view('parcela/parcela_reajustar', compact('parcelas', 'parcelaReceberOutros'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
@@ -366,7 +366,7 @@ class ContaReceberController extends Controller
                 ->get();
             }
             $parcelaReceberOutros = true;
-            return view('parcela/parcela_alterar_vencimento', compact('parcelas', 'parcelaOutros'));
+            return view('parcela/parcela_alterar_vencimento', compact('parcelas', 'parcelaReceberOutros'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
@@ -429,7 +429,7 @@ class ContaReceberController extends Controller
                 ->get();
             }
             $parcelaReceberOutros = true;
-            return view('parcela/parcela_baixar', compact('parcelas', 'parcelaOutros'));
+            return view('parcela/parcela_baixar', compact('parcelas', 'parcelaReceberOutros'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');

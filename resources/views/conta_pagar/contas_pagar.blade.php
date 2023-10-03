@@ -264,7 +264,7 @@
                 <tr>
                     <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
-                    <th scope="col">Titular a receber</th>
+                    <th scope="col">Titular da conta</th>
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Vencimento</th>

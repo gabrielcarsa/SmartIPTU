@@ -306,7 +306,7 @@ class ContaPagarController extends Controller
                     'ccp.descricao as descricao',       
                 )
                 ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
-                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->leftJoin('categoria_pagar AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
