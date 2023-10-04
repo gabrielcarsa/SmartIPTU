@@ -111,7 +111,7 @@ class ContaPagarController extends Controller
         $isPeriodoBaixa = $request->input('periodoBaixa');
         $isPeriodoLancamento = $request->input('periodoLancamento');
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
-
+        $idParcela = $request->input('idParcela');
     
 
         //select referente a parcelas de contas a pagar de lotes
@@ -155,7 +155,9 @@ class ContaPagarController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-        ->whereColumn('l.cliente_id', '=', 'td.cliente_id');
+        ->whereColumn('l.cliente_id', '=', 'td.cliente_id')
+        ->orderBy('data_vencimento', 'ASC');
+
 
         //select referente a parcelas de outras contas a pagar
         $queryReferenteOutros = DB::table('parcela_conta_pagar as p')
@@ -190,35 +192,67 @@ class ContaPagarController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id')
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id')
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id')
-        ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id');
+        ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+        ->orderBy('data_vencimento', 'ASC'); 
 
-        
+        /*----------
+        FILTRO
+        ----------*/
         if ($isReferenteLotes) { //Referente a Lotes
 
             if($titular_conta_id == 0){ //Se o titular da conta for 'Todos'
 
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
+
                     $resultados = $queryReferenteLotes
                     ->where('p.data_vencimento', '>', $periodoDe)
                     ->where('p.data_vencimento', '<', $periodoAte)
-                    ->orderBy('data_vencimento', 'ASC') 
                     ->get();
-                }else{ //Busca todos períodos referente a Lotes
+
+                }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e Todos titulares
+
                     $resultados = $queryReferenteLotes
-                    ->orderBy('data_vencimento', 'ASC') 
+                    ->where('p.id', '=', $idParcela)
                     ->get();
+
+                }else{ //Se não houver nenhum período e nenhuma parcela específica
+
+                    $resultados = $queryReferenteLotes->get();
+                
                 }
 
             }else{ //Se o titular da conta for específico
 
-                $resultados = $queryReferenteLotes
-                ->where('d.titular_conta_id', $titular_conta_id)
-                ->orderBy('data_vencimento', 'ASC') 
-                ->get();
+                if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.data_vencimento', '>', $periodoDe)
+                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('d.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e titular especifico
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.id', '=', $idParcela)
+                    ->where('d.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                }else{ //Se não houver nenhum período e nenhuma parcela específica mas com titular especifico
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                }
+               
             } 
         
-        } else { //Referente a outras despesas
+        } 
 
+        //Referente a outras despesas
+
+        else { 
             if($titular_conta_id == 0){ //Se o titular da conta for 'Todos'
 
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
@@ -226,22 +260,44 @@ class ContaPagarController extends Controller
                     $resultados = $queryReferenteOutros
                     ->where('p.data_vencimento', '>', $periodoDe)
                     ->where('p.data_vencimento', '<', $periodoAte)
-                    ->orderBy('data_vencimento', 'ASC') 
                     ->get();
 
-                } else{ //Busca todos períodos referente a Lotes
+                } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e Todos titulares
 
                     $resultados = $queryReferenteOutros
-                    ->orderBy('p.data_vencimento', 'ASC')
+                    ->where('p.id', '=', $idParcela)
                     ->get();
+
+                } else{ //Busca todos períodos referente a outras despesas
+
+                    $resultados = $queryReferenteOutros->get();
                 }
 
             }else{ //Se o titular da conta for específico
+                
+                if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
-                $resultados = $queryReferenteOutros
-                ->where('cr.titular_conta_id', $titular_conta_id)
-                ->orderBy('p.data_vencimento', 'ASC')
-                ->get();
+                    $resultados = $queryReferenteOutros
+                    ->where('p.data_vencimento', '>', $periodoDe)
+                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('cp.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e titular específico
+
+                    $resultados = $queryReferenteOutros
+                    ->where('p.id', '=', $idParcela)
+                    ->where('cp.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                }
+                else{ //Busca todos períodos referente a outras receitas e titular específico
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cp.titular_conta_id', $titular_conta_id)
+                    ->get();
+
+                }
             }      
         } 
 
