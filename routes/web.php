@@ -128,5 +128,6 @@ Route::middleware([
         //CADASTRO TIPO DE DÉBITOS
         Route::get('/tipo_debito',[TipoDebitoController::class, 'tipo_debito'])->name('tipo_debito');
         Route::post('/tipo_debito/cadastrar/{usuario}',[TipoDebitoController::class, 'cadastrar']);
+        Route::get('/tipo_debito/excluir/{id}',[TipoDebitoController::class, 'excluir']);
 
 });

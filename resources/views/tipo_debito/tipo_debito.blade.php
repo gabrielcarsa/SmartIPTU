@@ -27,7 +27,7 @@
     @endif
 
     <div class="card-body">
-        <form class="row g-3" action="{{ '/tipo_debito/cadastrar/' . Auth::user()->id }}" method="get" autocomplete="off">
+        <form class="row g-3" action="{{ '/tipo_debito/cadastrar/' . Auth::user()->id }}" method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
                 <label for="inputDescricao" class="form-label">Descrição</label>
@@ -59,7 +59,7 @@
                     <th scope="row">{{$tipo->id}}</th>
                     <td>{{$tipo->descricao}}</td>
                     <td>
-                        <a class="btn-acao-listagem-danger" href="excluir/{{$tipo->id}}">Excluir</a>
+                        <a class="btn-acao-listagem-danger" href="tipo_debito/excluir/{{$tipo->id}}">Excluir</a>
                     </td>
                 </tr>
                 @endforeach
