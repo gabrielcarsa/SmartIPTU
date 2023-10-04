@@ -48,7 +48,7 @@
                             group
                         </span>Cadastro e controle de usuários</a></li>
                 <li>
-                    <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                    <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
                         <span class="material-symbols-outlined">
                             universal_currency_alt
@@ -58,7 +58,7 @@
                         </span>
                     </a>
                 </li>
-                <div class="collapse" id="collapseExample">
+                <div class="collapse" id="collapseFinanceiro">
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
@@ -72,12 +72,37 @@
                     </ul>
                 </div>
 
-                <li><a href="/"><span class="material-symbols-outlined">
+                <li>
+                    <a data-bs-toggle="collapse" href="#collapseConfiguracoes" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        <span class="material-symbols-outlined">
                             settings
                         </span>Configurações
                         <span class="material-symbols-outlined">
                             arrow_drop_down
-                        </span></a></li>
+                        </span>
+                    </a>
+                </li>
+                <div class="collapse" id="collapseConfiguracoes">
+                    <ul class="sublist-offcanvas">
+                        <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
+                                    person_pin
+                                </span>Titular da Conta</a></li>
+                        <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
+                                    request_quote
+                                </span>Tipo de Débitos</a></li>
+                        <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
+                                    description
+                                </span>Descrição de Débitos</a></li>
+                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                                    attach_money
+                                </span>Categoria a Pagar</a></li>
+                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                                    money_off
+                                </span>Categoria a Receber</a></li>
+                    </ul>
+                </div>
+
 
             </ul>
         </div>

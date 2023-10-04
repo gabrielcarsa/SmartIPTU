@@ -11,6 +11,11 @@ use App\Http\Controllers\PrescricaoController;
 use App\Http\Controllers\ContaReceberController;
 use App\Http\Controllers\ContaPagarController;
 use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\TipoDebitoController;
+use App\Http\Controllers\DescricaoDebitoController;
+use App\Http\Controllers\CategoriaContaReceberController;
+use App\Http\Controllers\CategoriaContaPagarController;
+
 
 
 
@@ -73,7 +78,6 @@ Route::middleware([
         //ROTAS DEBITO
         Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
         Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
-        Route::get('/contas_receber/nova_receita',[DebitoController::class, 'nova_receita'])->name('nova_receita');//FINANCEIRO
 
 
         //ROTAS PARCELA
@@ -104,6 +108,7 @@ Route::middleware([
         Route::post('/contas_receber/definir_data_vencimento/{usuario}',[ContaReceberController::class, 'definir_alteracao_data']);
         Route::get('/contas_receber/baixar_parcela',[ContaReceberController::class, 'baixar_parcela_view'])->name('receber_baixar_parcela');
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
+        Route::get('/contas_receber/nova_receita',[DebitoController::class, 'nova_receita'])->name('nova_receita');//FINANCEIRO
         
         //ROTAS CONTAS PAGAR
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
@@ -120,5 +125,8 @@ Route::middleware([
         //CALENDÁRIO
         Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');
 
+        //CADASTRO TIPO DE DÉBITOS
+        Route::get('/tipo_debito',[TipoDebitoController::class, 'tipo_debito'])->name('tipo_debito');
+        Route::post('/tipo_debito/cadastrar/{usuario}',[TipoDebitoController::class, 'cadastrar']);
 
 });

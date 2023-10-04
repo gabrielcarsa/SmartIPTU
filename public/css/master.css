@@ -14,10 +14,11 @@ body{
 .btn-sidebar{
     margin-right: 15px;
     border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 .btn-sidebar span{
     padding: 5px;
+    font-size: 35px;
+
 }
 .offcanvas{
     background-color: #424250 !important;

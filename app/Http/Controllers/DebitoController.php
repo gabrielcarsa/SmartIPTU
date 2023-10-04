@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Debito;
 use App\Models\Parcela;
-use App\Models\Descricao_Debito;
-use App\Models\Tipo_Debito;
+use App\Models\DescricaoDebito;
+use App\Models\TipoDebito;
 use Carbon\Carbon;
 use App\Http\Requests\DebitoRequest;
 
@@ -16,8 +16,8 @@ class DebitoController extends Controller
 {
     //RETORNA VIEW PARA ADICIONAR DÉBITO
     function novo($lote_id){
-        $tipo_debito = Tipo_Debito::all();
-        $descricao_debito = Descricao_Debito::all();
+        $tipo_debito = TipoDebito::all();
+        $descricao_debito = DescricaoDebito::all();
 
         $data = [
             'tipo_debito' => $tipo_debito,
