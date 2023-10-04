@@ -25,7 +25,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary">Ver mais</button>
+                <a href="" class="btn btn-primary redirect">Ver mais</a>
             </div>
         </div>
     </div>
@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
             numParcela: item.numero_parcela,
             qtdParcela: item.quantidade_parcela,
             data_vencimento: item.data_vencimento,
+            idParcela: item.id,
+            lote: item.lote,
         });
     });
 
@@ -59,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
             numParcela: item.numero_parcela,
             qtdParcela: item.quantidade_parcela,
             data_vencimento: item.data_vencimento,
-
+            idParcela: item.id,
+            lote: item.lote,
         });
     });
 
@@ -97,6 +100,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 .extendedProps.qtdParcela + '</p>';
 
             $('#eventoModal .modal-body').html(eventoInfo);
+
+            // Define o novo href do elemento <a> com base nos detalhes do evento
+            if(info.event.extendedProps.lote == null){
+                var novoHref = "/contas_pagar/listar?idParcela=" + info.event.extendedProps.idParcela + "&titular_conta_id=0&referenteOutros=on";
+            }else{
+                var novoHref = "/contas_pagar/listar?idParcela=" + info.event.extendedProps.idParcela + "&titular_conta_id=0&referenteLotes=on";
+            }
+            $('.redirect').attr("href", novoHref);
 
             // Exibe o modal
             $('#eventoModal').modal('show');
