@@ -15,6 +15,7 @@ use App\Http\Controllers\TipoDebitoController;
 use App\Http\Controllers\DescricaoDebitoController;
 use App\Http\Controllers\CategoriaContaReceberController;
 use App\Http\Controllers\CategoriaContaPagarController;
+use App\Http\Controllers\TitularContaController;
 
 
 
@@ -125,9 +126,14 @@ Route::middleware([
         //CALENDÁRIO
         Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');
 
-        //CADASTRO TIPO DE DÉBITOS
+        //ROTAS TIPO DE DÉBITOS
         Route::get('/tipo_debito',[TipoDebitoController::class, 'tipo_debito'])->name('tipo_debito');
         Route::post('/tipo_debito/cadastrar/{usuario}',[TipoDebitoController::class, 'cadastrar']);
         Route::get('/tipo_debito/excluir/{id}',[TipoDebitoController::class, 'excluir']);
+
+        //ROTAS PARA TITULAR DA CONTA
+        Route::get('/titular_conta',[TitularContaController::class, 'titular_conta'])->name('titular_conta');
+        Route::post('/titular_conta/cadastrar/{usuario}',[TitularContaController::class, 'cadastrar']);
+        Route::get('/titular_conta/excluir/{id}',[TitularContaController::class, 'excluir']);
 
 });

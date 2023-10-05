@@ -85,7 +85,7 @@
                 </li>
                 <div class="collapse" id="collapseConfiguracoes">
                     <ul class="sublist-offcanvas">
-                        <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
+                        <li><a href="{{ route('titular_conta') }}"><span class="material-symbols-outlined">
                                     person_pin
                                 </span>Titular da Conta</a></li>
                         <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
