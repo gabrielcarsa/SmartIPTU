@@ -15,23 +15,23 @@ class CategoriaReceberController extends Controller
     }
     
 
-    //CADASTRO DE CATEGORIA DE CONTAS A PAGAR
+    //CADASTRO DE CATEGORIA DE CONTAS A RECEBER
     function cadastrar($usuario, Request $request){
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
-        $categoria_pagar = new CategoriaPagar();
-        $categoria_pagar->descricao = $request->input('descricao');
-        $categoria_pagar->data_cadastro = date('d-m-Y h:i:s a', time());
-        $categoria_pagar->cadastrado_usuario_id = $usuario;
-        $categoria_pagar->save();
+        $categoria_receber = new CategoriaReceber();
+        $categoria_receber->descricao = $request->input('descricao');
+        $categoria_receber->data_cadastro = date('d-m-Y h:i:s a', time());
+        $categoria_receber->cadastrado_usuario_id = $usuario;
+        $categoria_receber->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');
     }
 
     //EXCLUIR DE CONTAS A PAGAR
     function excluir($id){
-        $categoria_pagar = CategoriaPagar::find($id);
-        $categoria_pagar->delete();
+        $categoria_receber = CategoriaReceber::find($id);
+        $categoria_receber->delete();
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 
     }
