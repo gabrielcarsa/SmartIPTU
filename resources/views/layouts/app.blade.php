@@ -94,10 +94,10 @@
                         <li><a href="{{ route('descricao_debito') }}"><span class="material-symbols-outlined">
                                     description
                                 </span>Descrição de Débitos</a></li>
-                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                        <li><a href="{{ route('categoria_pagar') }}"><span class="material-symbols-outlined">
                                     attach_money
                                 </span>Categoria a Pagar</a></li>
-                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                        <li><a href="{{ route('categoria_receber') }}"><span class="material-symbols-outlined">
                                     money_off
                                 </span>Categoria a Receber</a></li>
                     </ul>

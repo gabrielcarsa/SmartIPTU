@@ -13,8 +13,8 @@ use App\Http\Controllers\ContaPagarController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\TipoDebitoController;
 use App\Http\Controllers\DescricaoDebitoController;
-use App\Http\Controllers\CategoriaContaReceberController;
-use App\Http\Controllers\CategoriaContaPagarController;
+use App\Http\Controllers\CategoriaReceberController;
+use App\Http\Controllers\CategoriaPagarController;
 use App\Http\Controllers\TitularContaController;
 
 
@@ -140,6 +140,16 @@ Route::middleware([
         Route::get('/descricao_debito',[DescricaoDebitoController::class, 'descricao_debito'])->name('descricao_debito');
         Route::post('/descricao_debito/cadastrar/{usuario}',[DescricaoDebitoController::class, 'cadastrar']);
         Route::get('/descricao_debito/excluir/{id}',[DescricaoDebitoController::class, 'excluir']);
+
+        //ROTAS CATEGORIA CONTAS A PAGAR
+        Route::get('/categoria_pagar',[CategoriaPagarController::class, 'categoria_pagar'])->name('categoria_pagar');
+        Route::post('/categoria_pagar/cadastrar/{usuario}',[CategoriaPagarController::class, 'cadastrar']);
+        Route::get('/categoria_pagar/excluir/{id}',[CategoriaPagarController::class, 'excluir']);
+
+        //ROTAS CATEGORIA CONTAS A RECEBER
+        Route::get('/categoria_receber',[CategoriaReceberController::class, 'categoria_receber'])->name('categoria_receber');
+        Route::post('/categoria_receber/cadastrar/{usuario}',[CategoriaReceberController::class, 'cadastrar']);
+        Route::get('/categoria_receber/excluir/{id}',[CategoriaReceberController::class, 'excluir']);
 
 
 });

@@ -283,9 +283,7 @@
                     <td scope="row">{{$resultado->id}}</td>
                     <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
-                    <td class="resultado-icone"><span
-                            class="material-symbols-outlined">{{$resultado->icone_categoria}}</span>
-                        {{$resultado->descricao}}</td>
+                    <td>{{$resultado->descricao}}</td>
                     <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
                     <td>{{$resultado->valor_parcela}}</td>
                     <td>

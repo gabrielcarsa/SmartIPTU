@@ -176,7 +176,6 @@ class ContaPagarController extends Controller
             'p.data_alteracao as parcela_data_alteracao',
             'cp.quantidade_parcela as quantidade_parcela',
             'ctp.descricao as descricao',
-            'ctp.icone as icone_categoria',
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
