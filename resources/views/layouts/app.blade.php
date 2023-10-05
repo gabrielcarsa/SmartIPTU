@@ -91,7 +91,7 @@
                         <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
                                     request_quote
                                 </span>Tipo de Débitos</a></li>
-                        <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
+                        <li><a href="{{ route('descricao_debito') }}"><span class="material-symbols-outlined">
                                     description
                                 </span>Descrição de Débitos</a></li>
                         <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">

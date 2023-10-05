@@ -123,7 +123,7 @@ Route::middleware([
         Route::get('/contas_pagar/baixar_parcela',[ContaPagarController::class, 'baixar_parcela_view'])->name('pagar_baixar_parcela');
         Route::post('/contas_pagar/definir_baixar_parcela/{usuario}',[ContaPagarController::class, 'definir_baixar_parcela']);
 
-        //CALENDÁRIO
+        //ROTA CALENDÁRIO
         Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');
 
         //ROTAS TIPO DE DÉBITOS
@@ -135,5 +135,11 @@ Route::middleware([
         Route::get('/titular_conta',[TitularContaController::class, 'titular_conta'])->name('titular_conta');
         Route::post('/titular_conta/cadastrar/{usuario}',[TitularContaController::class, 'cadastrar']);
         Route::get('/titular_conta/excluir/{id}',[TitularContaController::class, 'excluir']);
+
+        //ROTAS DESCRIÇÃO DÉBITO
+        Route::get('/descricao_debito',[DescricaoDebitoController::class, 'descricao_debito'])->name('descricao_debito');
+        Route::post('/descricao_debito/cadastrar/{usuario}',[DescricaoDebitoController::class, 'cadastrar']);
+        Route::get('/descricao_debito/excluir/{id}',[DescricaoDebitoController::class, 'excluir']);
+
 
 });

@@ -44,7 +44,7 @@ class TitularContaController extends Controller
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');
     }
 
-    //EXCLUIR TIPO DE DEBITO
+    //EXCLUIR TITULAR CONTA
     function excluir($id){
         $titular_conta = TitularConta::find($id);
         $titular_conta->delete();

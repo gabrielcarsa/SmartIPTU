@@ -32,7 +32,8 @@
             @csrf
 
             <div class="col-md-4">
-                <label for="inputCliente" class="form-label">Selecione o cliente para virar titular de uma conta*</label>
+                <label for="inputCliente" class="form-label">Selecione o cliente para virar titular de uma
+                    conta*</label>
                 <select id="inputCliente" name="cliente_id"
                     class="form-select form-control @error('cliente_id') is-invalid @enderror">
                     <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
