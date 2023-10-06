@@ -40,12 +40,12 @@ class DebitoController extends Controller
         $debito->titular_conta_id = 1;
         $debito->data_vencimento = $request->input('data_vencimento');
         $debito->descricao_debito_id = $request->input('descricao_debito_id');
-
+        
         $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
-        $debito->valor_parcela = (double) number_format($valor_parcela, 2, '.', '');        
-
+        $debito->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
+      
         $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
-        $debito->valor_entrada = (double) number_format($valor_entrada, 2, '.', '');   
+        $debito->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
         $debito->observacao = $request->input('observacao');
         $debito->data_cadastro = date('d-m-Y h:i:s a', time());

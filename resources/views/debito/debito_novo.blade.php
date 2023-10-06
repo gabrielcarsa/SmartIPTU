@@ -25,7 +25,7 @@
 
     <div class="card-body">
         <form class="row g-3" action="{{ '/debito/cadastrar/' . Auth::user()->id . '/' . $data['lote_id'] }}"
-            method="post" autocomplete="off">
+            method="post" autocomplete="off" id="formCadastro">
             @csrf
             <div class="col-md-3">
                 <label for="inputTipoDebito" class="form-label">Tipo de débito*</label>
@@ -101,6 +101,7 @@
   $(document).ready(function() {
     $('#inputValorEntrada').mask('000.000.000.000.000,00', { reverse: true });
   });
+
 </script>
 
 @endsection

@@ -45,14 +45,33 @@ class ContaReceberController extends Controller
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
+        $request->merge([
+            'valor_parcela' => str_replace(['.', ','], ['', '.'], $request->input('valor_parcela')),
+            'valor_entrada' => str_replace(['.', ','], ['', '.'], $request->input('valor_entrada')),
+        ]);
+
+        $validated = $request->validate([
+            'quantidade_parcela' => 'required|numeric',
+            'cliente_id' => 'required|numeric|min:1',
+            'categoria_receber_id' => 'required|numeric|min:1',
+            'valor_parcela' => 'required|numeric',
+            'data_vencimento' => 'required|date',
+            'valor_entrada' => 'nullable|numeric',
+        ]);
+
         $contaReceber = new ContaReceber();
         $contaReceber->titular_conta_id = $request->input('titular_conta_id');
         $contaReceber->cliente_id = $request->input('cliente_id');
         $contaReceber->categoria_receber_id = $request->input('categoria_receber_id');
         $contaReceber->quantidade_parcela = $request->input('quantidade_parcela');
         $contaReceber->data_vencimento = $request->input('data_vencimento');
-        $contaReceber->valor_parcela = $request->input('valor_parcela');
-        $contaReceber->valor_entrada = $request->input('valor_entrada');
+
+        $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
+        $contaReceber->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
+      
+        $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
+        $contaReceber->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
+
         $contaReceber->observacao = $request->input('observacao');
         $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
         $contaReceber->cadastrado_usuario_id = $usuario;

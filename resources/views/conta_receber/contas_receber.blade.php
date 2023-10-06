@@ -223,7 +223,7 @@
                         @endif
                     </td>
                     <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
-                    <td>{{$resultado->valor_parcela}}</td>
+                    <td>R$ {{number_format($resultado->valor_parcela, 2, ',', '.')}}</td>
                     <td>
                         @if($resultado->situacao_parcela == 0)
                         Em aberto
@@ -244,7 +244,7 @@
                                         <p>Recebimento em:
                                             {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{$resultado->parcela_valor_pago}}</p>
+                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>
@@ -283,7 +283,7 @@
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->descricao}}</td>
                     <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
-                    <td>{{$resultado->valor_parcela}}</td>
+                    <td>R$ {{number_format($resultado->valor_parcela, 2, ',', '.')}}</td>
                     <td>
                         @if($resultado->situacao_parcela == 0)
                         Em aberto
@@ -304,7 +304,7 @@
                                         <p>Recebimento em:
                                             {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{$resultado->parcela_valor_pago}}</p>
+                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>

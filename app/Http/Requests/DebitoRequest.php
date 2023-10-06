@@ -21,10 +21,6 @@ class DebitoRequest extends FormRequest
      */
     public function rules(): array
     {
-         // Substituir vírgulas por pontos no valor_parcela antes da validação
-         $valorParcela = str_replace(',', '.', $this->input('valor_parcela'));
-         $this->merge(['valor_parcela' => $valorParcela]);
-         
         return [
             'quantidade_parcela' => 'required|numeric',
             'tipo_debito_id' => 'required|numeric|min:1',
@@ -33,6 +29,14 @@ class DebitoRequest extends FormRequest
             'data_vencimento' => 'required|date',
             'valor_entrada' => 'nullable|numeric',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'valor_parcela' => str_replace(['.', ','], ['', '.'], $this->input('valor_parcela')),
+            'valor_entrada' => str_replace(['.', ','], ['', '.'], $this->input('valor_entrada')),
+        ]);
     }
 
 
