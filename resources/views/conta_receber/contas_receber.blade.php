@@ -322,8 +322,8 @@
         @if(isset($data['resultados']))
         <div class="card-footer">
             <p>Exibindo {{$data['resultados']->count()}} registros</p>
-            <p>Valor total das parcelas: R$ {{$data['totalValorParcelas']}}</p>
-            <p>Valor total pago: R$ {{$data['totalValorPago']}}</p>
+            <p>Valor total das parcelas: R$ {{number_format($data['totalValorParcelas'], 2, ',', '.')}}</p>
+            <p>Valor total pago: R$ {{number_format($data['totalValorPago'], 2, ',', '.')}}</p>
         </div>
         @endif
 

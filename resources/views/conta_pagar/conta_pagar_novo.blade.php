@@ -46,8 +46,8 @@
             </div>
             <div class="col-md-4">
                 <label for="inputCliente" class="form-label">Fornecedor</label>
-                <select id="inputCliente" name="cliente_id" class="form-select form-control">
-                    <option value="" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                <select id="inputCliente" name="cliente_id" class="form-select form-control @error('cliente_id') is-invalid @enderror">
+                    <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['clientes'] as $cliente)
                     <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
                         @if(empty($cliente->nome))
@@ -110,4 +110,19 @@
         </form>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    $('#inputValorParcela').mask('000.000.000.000.000,00', { reverse: true });
+  });
+  $(document).ready(function() {
+    $('#inputValorEntrada').mask('000.000.000.000.000,00', { reverse: true });
+  });
+
+</script>
 @endsection

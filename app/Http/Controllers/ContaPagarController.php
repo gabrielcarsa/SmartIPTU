@@ -55,7 +55,21 @@ class ContaPagarController extends Controller
     //CADASTRO DE CONTA A PAGAR
     function cadastrar($usuario, Request $request){
         //Definindo data para cadastrar
-        date_default_timezone_set('America/Cuiaba');    
+        date_default_timezone_set('America/Cuiaba');   
+        
+        $request->merge([
+            'valor_parcela' => str_replace(['.', ','], ['', '.'], $request->input('valor_parcela')),
+            'valor_entrada' => str_replace(['.', ','], ['', '.'], $request->input('valor_entrada')),
+        ]);
+
+        $validated = $request->validate([
+            'quantidade_parcela' => 'required|numeric',
+            'cliente_id' => 'required|numeric|min:1',
+            'categoria_pagar_id' => 'required|numeric|min:1',
+            'valor_parcela' => 'required|numeric',
+            'data_vencimento' => 'required|date',
+            'valor_entrada' => 'nullable|numeric',
+        ]);
 
         $contaPagar = new ContaPagar();
         $contaPagar->titular_conta_id = $request->input('titular_conta_id');
@@ -63,8 +77,13 @@ class ContaPagarController extends Controller
         $contaPagar->categoria_pagar_id = $request->input('categoria_pagar_id');
         $contaPagar->quantidade_parcela = $request->input('quantidade_parcela');
         $contaPagar->data_vencimento = $request->input('data_vencimento');
-        $contaPagar->valor_parcela = $request->input('valor_parcela');
-        $contaPagar->valor_entrada = $request->input('valor_entrada');
+
+        $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
+        $contaPagar->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
+      
+        $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
+        $contaPagar->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
+
         $contaPagar->observacao = $request->input('observacao');
         $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
         $contaPagar->cadastrado_usuario_id = $usuario;
