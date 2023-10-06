@@ -220,4 +220,10 @@ ul a:hover{
     font-weight: 700;
 }
 
+/*DASHBOARD*/
+.graficoDashboard{
+    background-color: #FFF;
+    width: 500px;
+}
+
 

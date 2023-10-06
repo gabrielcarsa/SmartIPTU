@@ -16,6 +16,8 @@ use App\Http\Controllers\DescricaoDebitoController;
 use App\Http\Controllers\CategoriaReceberController;
 use App\Http\Controllers\CategoriaPagarController;
 use App\Http\Controllers\TitularContaController;
+use App\Http\Controllers\DashboardController;
+
 
 
 
@@ -42,7 +44,7 @@ Route::middleware([
 ])->group(function () {
 
         //DASHBOARD
-        Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+        Route::get('/dashboard',[DashboardController::class, 'dashboard'])->name('dashboard');
 
         //ROTAS CLIENTE
         Route::get('/cliente',[ClienteController::class, 'cliente']);
@@ -109,7 +111,6 @@ Route::middleware([
         Route::post('/contas_receber/definir_data_vencimento/{usuario}',[ContaReceberController::class, 'definir_alteracao_data']);
         Route::get('/contas_receber/baixar_parcela',[ContaReceberController::class, 'baixar_parcela_view'])->name('receber_baixar_parcela');
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
-        Route::get('/contas_receber/nova_receita',[DebitoController::class, 'nova_receita'])->name('nova_receita');//FINANCEIRO
         
         //ROTAS CONTAS PAGAR
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
