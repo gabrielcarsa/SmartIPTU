@@ -48,7 +48,7 @@
                             <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor_parcela" value="{{ $parcela[0]->valor_parcela }}" readonly
+                            <input type="text" name="valor_parcela" value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly
                                 disabled class="form-control @error('valor_parcela') is-invalid @enderror"
                                 id="inputValorParcelas">
                         </th>
@@ -61,13 +61,13 @@
                         </th>
                         <th scope="row">
                             <input type="text" name="valor_pago[]" value="{{ old('valor_pago.' . $index) != null ?  old('valor_pago.' . $index) : '' }}"
-                                class="form-control @error('valor_pago.' . $index) is-invalid @enderror"
-                                id="inputValorParcelas">
+                                class="form-control valor_pago @error('valor_pago.' . $index) is-invalid @enderror"
+                                id="inputValorPago">
                         </th>
                         <th scope="row">
                             <input type="date" name="data_recebimento[]"
                                 value="{{ old('data_recebimento.' . $index) != null ?  old('data_recebimento.' . $index) : '' }}"
-                                class="form-control @error('data_recebimento.' . $index) is-invalid @enderror" id="inputValorPago">
+                                class="form-control @error('data_recebimento.' . $index) is-invalid @enderror" id="">
                         </th>
                         <th scope="row">
 
@@ -87,4 +87,16 @@
         </form>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    $('input.valor_pago').mask('000.000.000.000.000,00', { reverse: true });
+  });
+</script>
+
 @endsection

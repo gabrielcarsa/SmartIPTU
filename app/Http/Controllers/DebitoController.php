@@ -40,8 +40,13 @@ class DebitoController extends Controller
         $debito->titular_conta_id = 1;
         $debito->data_vencimento = $request->input('data_vencimento');
         $debito->descricao_debito_id = $request->input('descricao_debito_id');
-        $debito->valor_parcela = $request->input('valor_parcela');
-        $debito->valor_entrada = $request->input('valor_entrada');
+
+        $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
+        $debito->valor_parcela = (double) number_format($valor_parcela, 2, '.', '');        
+
+        $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
+        $debito->valor_entrada = (double) number_format($valor_entrada, 2, '.', '');   
+
         $debito->observacao = $request->input('observacao');
         $debito->data_cadastro = date('d-m-Y h:i:s a', time());
         $debito->cadastrado_usuario_id = $usuario;
@@ -74,5 +79,4 @@ class DebitoController extends Controller
         return redirect('lote/gestao/'.$lote_id)->with('success', 'Débito cadastrado com sucesso');
     }
 
-    //NOVA RECEITA
 }

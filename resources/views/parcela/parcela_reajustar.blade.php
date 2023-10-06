@@ -67,7 +67,7 @@
             </div>
             <div class="col-md-3">
                 <label for="inputValorParcelas" id="valor_parcela" class="form-label">Valor</label>
-                <input type="text" name="valor_parcela" value="{{ $parcela[0]->valor_parcela }}" readonly disabled
+                <input type="text" name="valor_parcela" value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly disabled
                     class="form-control @error('valor_parcela') is-invalid @enderror" id="inputValorParcelas">
             </div>
 
@@ -78,4 +78,15 @@
         </form>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#inputValorUnico').mask('000.000.000.000.000,00', { reverse: true });
+  });
+
+</script>
 @endsection

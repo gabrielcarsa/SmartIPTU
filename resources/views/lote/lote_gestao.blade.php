@@ -36,7 +36,7 @@
             <p> <span class="material-symbols-outlined">
                     receipt_long
                 </span> Total Débitos</p>
-            <h4>R$ {{$totalValorParcelas}}</h4>
+            <h4>R$ {{number_format($totalValorParcelas, 2, ',', '.')}}</h4>
         </div>
     </div>
 </div>
@@ -166,8 +166,8 @@ $displayedDebitoDescricao = [];
                             {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
                         </th>
                         @endif
-                        <th scope="row">R$ {{ $resultado->valor_parcela }}</th>
-                        <th scope="row">R$ {{ $resultado->valor_pago_parcela }}</th>
+                        <th scope="row">R$ {{ number_format($resultado->valor_parcela, 2, ',', '.') }}</th>
+                        <th scope="row">R$ {{ number_format($resultado->valor_pago_parcela, 2, ',', '.') }}</th>
                         @if(empty($resultado->data_recebimento_parcela))
                         <th scope="row"></th>
                         @else

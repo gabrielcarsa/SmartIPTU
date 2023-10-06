@@ -67,7 +67,7 @@
             </div>
             <div class="col-md-3">
                 <label for="inputValorParcelas" id="valor_parcela" class="form-label">Valor</label>
-                <input type="text" name="valor_parcela" value="{{ $parcela[0]->valor_parcela }}" readonly disabled
+                <input type="text" name="valor_parcela" value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly disabled
                     class="form-control @error('valor_parcela') is-invalid @enderror" id="inputValorParcelas">
             </div>
 

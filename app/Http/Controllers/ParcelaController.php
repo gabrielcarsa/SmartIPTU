@@ -54,6 +54,9 @@ class ParcelaController extends Controller
     function reajustar($user_id, Request $request){
         $origem = $request->input('origem'); //controle para redirecionar para lugar correto
 
+        $valor_unico = str_replace(',', '.', $request->input('valor_unico'));
+        $request->merge(['valor_unico' => $valor_unico]);
+
         $validated = $request->validate([
             'valor_unico' => 'required|numeric|min:0.1',
         ]);
@@ -62,7 +65,10 @@ class ParcelaController extends Controller
 
         foreach($idParcelas as $p){
             $parcela = Parcela::find($p);
-            $parcela->valor_parcela = $request->input('valor_unico');
+
+            $valor_parcela = str_replace(',', '.', $request->input('valor_unico'));
+            $parcela->valor_parcela = (double) number_format($valor_parcela, 2, '.', '');  
+
             $parcela->save();
         }
         $parcelaReferencia = Parcela::find($idParcelas[0]);
@@ -192,6 +198,9 @@ class ParcelaController extends Controller
     //BAIXAR PARCELAS
     function definir_baixar_parcela($user_id, Request $request){
         $origem = $request->input('origem'); //controle para redirecionar para lugar correto
+
+        $valor_pago = str_replace(',', '.', $request->input('valor_pago'));
+        $request->merge(['valor_pago' => $valor_pago]);
 
         $validated = $request->validate([
             'data_recebimento.*' => 'required|date',
