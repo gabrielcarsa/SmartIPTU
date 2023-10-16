@@ -2,11 +2,14 @@
 @section('conteudo')
 
 <h1>Dashboard</h1>
-@foreach( $data['titulares_contas'] as $item )
-<p>{{$item['nome_cliente_ou_razao_social']}}</p>
-<p>{{$item['total_contas_pagar']}}</p>
-<p>{{$item['total_debitos']}}</p>
-@endforeach
+
+
+<p>
+A fazer
+- Reajustar/ Vencimento/ Baixar Parcelas de Contas a Pagar/Receber (mascara dinheiro)
+- Validações
+- 
+</p>
 
 
 
@@ -14,7 +17,7 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <h5 class="card-header">Cadastrar categoria de contas a pagar</h5>
+                <h5 class="card-header">Total de Contas a Pagar por titular (não incluso débitos de IPTU)</h5>
                 <div class="card-body">
                     <canvas id="graficoDebitosTitulares"></canvas>
                 </div>
@@ -22,7 +25,7 @@
         </div>
         <div class="col">
             <div class="card">
-                <h5 class="card-header">Cadastrar categoria de contas a pagar</h5>
+                <h5 class="card-header">Débitos referentes a Clientes e Empresa</h5>
                 <div class="card-body">
                     <canvas id="graficoDividaClienteEmpresa"></canvas>
                 </div>
@@ -33,11 +36,15 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const labels = {!!json_encode(array_column($data['titulares_contas'], 'nome_cliente_ou_razao_social')) !!};
-const data = {!!json_encode(array_column($data['titulares_contas'], 'total_debitos')) !!};
+const labels_graficoDebitosTitulares = {!!json_encode(array_column($data['titulares_contas'], 'nome_cliente_ou_razao_social')) !!};
+const data_graficoDebitosTitulares = {!!json_encode(array_column($data['titulares_contas'], 'total_contas_pagar')) !!};
+
+const labels_graficoDividaClienteEmpresa = {!!json_encode(array_column($data['debitosEmpresaCliente'], 'nome_cliente_ou_razao_social')) !!};
+const data_graficoDividaClienteEmpresa= {!!json_encode(array_column($data['debitosEmpresaCliente'], 'total_debitos')) !!};
 
 const graficoDebitosTitulares = document.getElementById('graficoDebitosTitulares');
 const graficoDividaClienteEmpresa = document.getElementById('graficoDividaClienteEmpresa');
@@ -46,10 +53,13 @@ const graficoDividaClienteEmpresa = document.getElementById('graficoDividaClient
 new Chart(graficoDebitosTitulares, {
     type: 'bar',
     data: {
-        labels: labels,
+        labels: labels_graficoDebitosTitulares,
         datasets: [{
-            label: '# of Votes',
-            data: data,
+            label: 'R$ Contas a Pagar',
+            data: data_graficoDebitosTitulares,
+            backgroundColor: [
+             'rgba(224, 49, 49, 0.8)',
+            ],
             borderWidth: 1
         }]
     },
@@ -65,21 +75,20 @@ new Chart(graficoDebitosTitulares, {
 new Chart(graficoDividaClienteEmpresa, {
     type: 'doughnut',
     data: {
-        labels: ['Red', 'Blue', 'Yellow'],
+        labels: labels_graficoDividaClienteEmpresa,
         datasets: [{
-            label: 'My First Dataset',
-            data: [300, 50, 100],
+            label: 'R$ Débitos',
+            data: data_graficoDividaClienteEmpresa,
             backgroundColor: [
-                'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+                'rgb(255, 99, 132)',
             ],
-            hoverOffset: 4
+            hoverOffset: 2
         }]
     },
     options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
     }
 });
 
