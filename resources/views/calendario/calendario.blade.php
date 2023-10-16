@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var eventoInfo =
                 '<p id="data_vencimento_modal"> <span class="material-symbols-outlined">event</span>' +
                 dataFormatada +
-                '</p><p> <span class="material-symbols-outlined">paid</span> Valor da parcela: R$ ' +
-                info.event.extendedProps.valor +
+                '</p><p> <span class="material-symbols-outlined">paid</span> Valor da parcela: ' +
+                new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(info.event.extendedProps.valor) +
                 '</p><p> <span class="material-symbols-outlined">filter_1</span> N° da parcela: ' +
                 info.event.extendedProps.numParcela + ' de ' + info.event
                 .extendedProps.qtdParcela + '</p>';
