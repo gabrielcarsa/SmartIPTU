@@ -13,7 +13,6 @@ class DashboardController extends Controller
     function dashboard(){
 
         //Consultas para relacionar debitos e contas a pagar a titulares das contas
-        
         $debitos_titulares = DB::table('parcela as p')
            ->selectRaw('tc.id as id')
            ->selectRaw('SUM(p.valor_parcela) as total_debitos')
@@ -76,20 +75,14 @@ class DashboardController extends Controller
         $total_titular_conta = $titulares_contas->count();
     
 
-
         //select referente a parcelas de contas a pagar de lotes
         $queryDebitos = DB::table('parcela as p')
             ->selectRaw('SUM(p.valor_parcela) as total_debitos')
             ->selectRaw('CASE WHEN c.razao_social IS NOT NULL THEN c.razao_social ELSE c.nome END AS nome_cliente_ou_razao_social')
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
             ->join('lote as l', 'd.lote_id', '=', 'l.id')
-            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
-            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
             ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
-            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
             ->join('titular_conta as tc', 'd.titular_conta_id', '=', 'tc.id')
-            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
-            ->leftJoin('cliente AS titular_conta_cliente', 'tc.cliente_id', '=', 'titular_conta_cliente.id')
             ->whereNull('p.situacao')
             ->groupBy('l.cliente_id', 'nome_cliente_ou_razao_social')
             ->get();
@@ -136,10 +129,32 @@ class DashboardController extends Controller
         ];
 
 
+        $receberPorAnos = DB::table('parcela as p')
+            ->selectRaw("EXTRACT(YEAR FROM p.data_vencimento) as ano_vencimento")
+            ->selectRaw('SUM(p.valor_parcela) as total_debitos')
+            ->join('debito as d', 'p.debito_id', '=', 'd.id')
+            ->join('lote as l', 'd.lote_id', '=', 'l.id')
+            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
+            ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
+            ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+            ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
+            ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
+            ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
+            ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
+            ->whereNull('p.situacao')
+            ->groupBy('ano_vencimento')
+            ->orderBy('ano_vencimento', 'ASC')
+            ->get();
+
         $data = [
             'total_titular_conta' => $total_titular_conta,
             'titulares_contas' => $data,
             'debitosEmpresaCliente' => $debitosEmpresaCliente,
+            'receberPorAnos' => $receberPorAnos->toArray()
         ];
 
 

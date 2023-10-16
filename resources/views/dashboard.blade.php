@@ -32,6 +32,17 @@ A fazer
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+        <div class="card">
+                <h5 class="card-header">Débitos a receber de clientes</h5>
+                <div class="card-body">
+                    <canvas id="graficoReceberDebitos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -46,8 +57,14 @@ const data_graficoDebitosTitulares = {!!json_encode(array_column($data['titulare
 const labels_graficoDividaClienteEmpresa = {!!json_encode(array_column($data['debitosEmpresaCliente'], 'nome_cliente_ou_razao_social')) !!};
 const data_graficoDividaClienteEmpresa= {!!json_encode(array_column($data['debitosEmpresaCliente'], 'total_debitos')) !!};
 
+
+const labels_graficoReceberDebitos = {!!json_encode(array_column($data['receberPorAnos'], 'ano_vencimento')) !!};
+const data_graficoReceberDebitos = {!!json_encode(array_column($data['receberPorAnos'], 'total_debitos')) !!};
+
 const graficoDebitosTitulares = document.getElementById('graficoDebitosTitulares');
 const graficoDividaClienteEmpresa = document.getElementById('graficoDividaClienteEmpresa');
+const graficoReceberDebitos = document.getElementById('graficoReceberDebitos');
+
 
 
 new Chart(graficoDebitosTitulares, {
@@ -58,7 +75,7 @@ new Chart(graficoDebitosTitulares, {
             label: 'R$ Contas a Pagar',
             data: data_graficoDebitosTitulares,
             backgroundColor: [
-             'rgba(224, 49, 49, 0.8)',
+             'rgba(177, 7, 192, 0.8)',
             ],
             borderWidth: 1
         }]
@@ -89,6 +106,29 @@ new Chart(graficoDividaClienteEmpresa, {
     options: {
         responsive: true,
         maintainAspectRatio: false,
+    }
+});
+
+new Chart(graficoReceberDebitos, {
+    type: 'bar',
+    data: {
+        labels: labels_graficoReceberDebitos,
+        datasets: [{
+            label: 'R$ Débitos a receber',
+            data: data_graficoReceberDebitos,
+            backgroundColor: [
+             'RGBA(0, 139, 139)',
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
     }
 });
 
