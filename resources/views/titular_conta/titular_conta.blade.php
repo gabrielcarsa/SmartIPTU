@@ -72,7 +72,12 @@
                 @foreach ($data['titulares_contas'] as $titular)
                 <tr>
                     <th scope="row">{{$titular->id}}</th>
-                    <td>{{$titular->nome_cliente_ou_razao_social}}</td>
+                    <td>
+                        {{$titular->nome_cliente_ou_razao_social}} 
+                        @if($titular->id == 1)
+                        <span class="empresa-span">Empresa</span>
+                        @endif
+                    </td>
                     <td>
                         <a class="btn-acao-listagem-danger" href="titular_conta/excluir/{{$titular->id}}">Excluir</a>
                     </td>

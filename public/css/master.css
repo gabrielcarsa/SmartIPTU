@@ -135,6 +135,14 @@ ul a:hover{
     color: #fff;
     margin-right: 5px;
 }
+.empresa-span{
+    background-color: #38b44d;
+    padding: 5px;
+    color: #FFFF;
+    font-size: 11px;
+    border-radius: 1em;
+    margin-left: 20px;
+}
 .resultados-table th{
     font-weight: 300 !important;
     padding: 15px !important;

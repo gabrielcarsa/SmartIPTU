@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TitularConta;
 use App\Models\Cliente;
+use App\Models\ContaReceber;
+use App\Models\ContaPagar;
+use App\Models\Debito;
 use Illuminate\Support\Facades\DB;
 
 
@@ -47,6 +50,16 @@ class TitularContaController extends Controller
     //EXCLUIR TITULAR CONTA
     function excluir($id){
         $titular_conta = TitularConta::find($id);
+
+        //Verifica se existe
+        if (!$titular_conta) {
+            return redirect()->back()->with('error', 'Titular não encontrado.');
+        }
+        // Verifique se existem relacionamentos
+        if ($titular_conta->hasOne(ContaReceber::class) || $titular_conta->hasOne(ContaPagar::class) || $titular_conta->hasOne(Debito::class)) {
+            return redirect()->back()->with('error', 'Este Titular está relacionado a alguma conta e não pode ser excluído.');
+        }
+
         $titular_conta->delete();
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 
