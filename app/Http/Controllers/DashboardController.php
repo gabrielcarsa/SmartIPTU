@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cliente;
 use App\Models\TitularConta;
+use App\Models\Empreendimento;
 
 
 class DashboardController extends Controller
@@ -128,7 +129,7 @@ class DashboardController extends Controller
             $debitosEmpresa,
         ];
 
-
+        //Alimentar gráfico de Receber Débitos por ano
         $receberPorAnos = DB::table('parcela as p')
             ->selectRaw("EXTRACT(YEAR FROM p.data_vencimento) as ano_vencimento")
             ->selectRaw('SUM(p.valor_parcela) as total_debitos')
@@ -150,11 +151,58 @@ class DashboardController extends Controller
             ->orderBy('ano_vencimento', 'ASC')
             ->get();
 
+        //Alimentar gráfico de Receber Débitos por ano
+        $lotesEmpreendimentos = DB::table('empreendimento as e')
+            ->select(
+                'e.nome as empreendimento', 
+                DB::raw('COUNT(l.id) as total_lotes')
+            )
+            ->join('quadra as q', 'e.id', '=', 'q.empreendimento_id')
+            ->join('lote as l', 'q.id', '=', 'l.quadra_id')
+            ->join('debito as d', 'l.id', '=', 'd.lote_id')
+            ->groupBy('empreendimento')
+            ->orderBy('empreendimento', 'ASC')
+            ->get();
+
+
+        /*$lotesAjuizadosPorEmpreendimento = DB::table('debito as d')
+            ->select(
+                'e.nome as empreendimento', 
+                DB::raw('COUNT(DISTINCT l.id) as total_lotes_ajuizados'),
+                DB::raw('
+                    (SELECT COUNT(l.id)
+                    FROM empreendimento as e JOIN quadra as q ON e.id = q.empreendimento_id 
+                    JOIN lote as l ON q.id = l.quadra_id 
+                    group by e.nome
+                    order by e.nome ASC ) as total_lotes')
+            )
+            ->join('lote as l', 'd.lote_id', '=', 'l.id')
+            ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento as e', 'e.id', '=', 'q.empreendimento_id')
+            ->where('d.tipo_debito_id', 1)
+            ->groupBy('e.nome')
+            ->get();*/
+
+            $lotesEmpreendimentos = DB::table('empreendimento as e')
+            ->select(
+                'e.nome as empreendimento',
+                DB::raw('COUNT(DISTINCT l.id) as total_lotes'),
+                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 1 THEN l.id END) as total_lotes_ajuizados')
+            )
+            ->join('quadra as q', 'e.id', '=', 'q.empreendimento_id')
+            ->join('lote as l', 'q.id', '=', 'l.quadra_id')
+            ->leftJoin('debito as d', 'l.id', '=', 'd.lote_id')
+            ->groupBy('e.nome')
+            ->orderBy('e.nome', 'ASC')
+            ->get();
+        //dd($lotesEmpreendimentos);
+
         $data = [
             'total_titular_conta' => $total_titular_conta,
             'titulares_contas' => $data,
             'debitosEmpresaCliente' => $debitosEmpresaCliente,
-            'receberPorAnos' => $receberPorAnos->toArray()
+            'receberPorAnos' => $receberPorAnos->toArray(),
+            'lotesEmpreendimentos' => $lotesEmpreendimentos
         ];
 
 

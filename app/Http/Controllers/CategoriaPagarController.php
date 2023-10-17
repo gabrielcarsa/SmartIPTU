@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CategoriaPagar;
+use App\Models\ContaPagar;
+
 
 class CategoriaPagarController extends Controller
 {
@@ -16,6 +18,12 @@ class CategoriaPagarController extends Controller
 
     //CADASTRO DE CATEGORIA DE CONTAS A PAGAR
     function cadastrar($usuario, Request $request){
+
+        //Validar para não salvar descrição
+        $validated = $request->validate([
+            'descricao' => 'required',
+        ]);
+
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
@@ -30,6 +38,18 @@ class CategoriaPagarController extends Controller
     //EXCLUIR DE CONTAS A PAGAR
     function excluir($id){
         $categoria_pagar = CategoriaPagar::find($id);
+
+         //Verifica se existe
+         if (!$categoria_pagar) {
+            return redirect()->back()->with('error', 'Descrição não encontrada.');
+        }
+
+        // Verifique se existem relacionamentos
+        $relacionamentos = ContaPagar::where('categoria_pagar_id', $categoria_pagar->id)->get();
+        if ($relacionamentos->count() > 0) {
+            return redirect()->back()->with('error', 'Esta descrição está relacionado a alguma conta a pagar e não pode ser excluído.');
+        }
+
         $categoria_pagar->delete();
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 

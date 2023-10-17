@@ -1,28 +1,63 @@
 @extends('layouts/app')
 @section('conteudo')
 
-<h1>Dashboard</h1>
-
-
-<p>
-A fazer
-- Reajustar/ Vencimento/ Baixar Parcelas de Contas a Pagar/Receber (mascara dinheiro)
-- Validações
-- 
-</p>
-
-
+<h1>Dashboard</h1><br>
 
 <div class="container text-center">
     <div class="row">
-        <div class="col">
+        <div class="col-8">
             <div class="card">
-                <h5 class="card-header">Total de Contas a Pagar por titular (não incluso débitos de IPTU)</h5>
+                <h5 class="card-header">Débitos a receber de clientes</h5>
                 <div class="card-body">
-                    <canvas id="graficoDebitosTitulares"></canvas>
+                    <canvas id="graficoReceberDebitos"></canvas>
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card">
+                <h5 class="card-header">Mais informações</h5>
+                <div class="card-body">
+                    <p>67 981368324</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <h5 class="card-header">Lotes</h5>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-left">
+                                <th scope="col">Empreendimento</th>
+                                <th scope="col">Qtnd. de lotes Ajuizados</th>
+                                <th scope="col">Qtnd. de lotes Dívida Ativa</th>
+                                <th scope="col">Qtnd. de lotes Negativado</th>
+                                <th scope="col">Qtnd. de lotes feito Parcelamento</th>
+                                <th scope="col">Total Lotes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($data['lotesEmpreendimentos'] as $resultado)
+                            <tr class="resultados-table text-left">
+                                <td scope="row">{{$resultado->empreendimento}}</td>
+                                <td scope="row">{{$resultado->total_lotes_ajuizados}}</td>
+                                <td scope="row">hd</td>
+                                <td scope="row">hd</td>
+                                <td scope="row">hd</td>
+                                <td scope="row">{{ $resultado->total_lotes }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col">
             <div class="card">
                 <h5 class="card-header">Débitos referentes a Clientes e Empresa</h5>
@@ -31,17 +66,16 @@ A fazer
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col">
-        <div class="card">
-                <h5 class="card-header">Débitos a receber de clientes</h5>
+            <div class="card">
+                <h5 class="card-header">Total de Contas a Pagar por titular (não incluso débitos de IPTU)</h5>
                 <div class="card-body">
-                    <canvas id="graficoReceberDebitos"></canvas>
+                    <canvas id="graficoDebitosTitulares"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
 
 </div>
 
@@ -55,7 +89,7 @@ const labels_graficoDebitosTitulares = {!!json_encode(array_column($data['titula
 const data_graficoDebitosTitulares = {!!json_encode(array_column($data['titulares_contas'], 'total_contas_pagar')) !!};
 
 const labels_graficoDividaClienteEmpresa = {!!json_encode(array_column($data['debitosEmpresaCliente'], 'nome_cliente_ou_razao_social')) !!};
-const data_graficoDividaClienteEmpresa= {!!json_encode(array_column($data['debitosEmpresaCliente'], 'total_debitos')) !!};
+const data_graficoDividaClienteEmpresa = {!!json_encode(array_column($data['debitosEmpresaCliente'], 'total_debitos')) !!};
 
 
 const labels_graficoReceberDebitos = {!!json_encode(array_column($data['receberPorAnos'], 'ano_vencimento')) !!};
@@ -75,7 +109,7 @@ new Chart(graficoDebitosTitulares, {
             label: 'R$ Contas a Pagar',
             data: data_graficoDebitosTitulares,
             backgroundColor: [
-             'rgba(177, 7, 192, 0.8)',
+                'rgba(177, 7, 192, 0.8)',
             ],
             borderWidth: 1
         }]
@@ -117,7 +151,7 @@ new Chart(graficoReceberDebitos, {
             label: 'R$ Débitos a receber',
             data: data_graficoReceberDebitos,
             backgroundColor: [
-             'RGBA(0, 139, 139)',
+                'RGBA(0, 139, 139)',
             ],
             borderWidth: 1
         }]
@@ -131,7 +165,6 @@ new Chart(graficoReceberDebitos, {
         }
     }
 });
-
 </script>
 
 @endsection
