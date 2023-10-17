@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DescricaoDebito;
+use App\Models\Debito;
+
 
 class DescricaoDebitoController extends Controller
 {
@@ -16,6 +18,12 @@ class DescricaoDebitoController extends Controller
 
     //CADASTRO DE DESCRIÇÃO DE DEBITOS
     function cadastrar($usuario, Request $request){
+        
+        //Validar para não salvar descrição
+        $validated = $request->validate([
+            'descricao' => 'required',
+        ]);
+
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
@@ -30,6 +38,18 @@ class DescricaoDebitoController extends Controller
     //EXCLUIR DE DESCRIÇÃO DE DEBITOS
     function excluir($id){
         $descricao_debito = DescricaoDebito::find($id);
+
+         //Verifica se existe
+         if (!$descricao_debito) {
+            return redirect()->back()->with('error', 'Descrição não encontrada.');
+        }
+
+        // Verifique se existem relacionamentos
+        $relacionamentos = Debito::where('descricao_debito_id', $descricao_debito->id)->get();
+        if ($relacionamentos->count() > 0) {
+            return redirect()->back()->with('error', 'Esta descrição está relacionado a algum débito e não pode ser excluído.');
+        }
+
         $descricao_debito->delete();
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 
