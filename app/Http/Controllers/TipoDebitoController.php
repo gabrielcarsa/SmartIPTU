@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TipoDebito;
+use App\Models\Debito;
+use App\Models\ContaReceber;
+use App\Models\ContaPagar;
+
+
 
 class TipoDebitoController extends Controller
 {
@@ -15,6 +20,11 @@ class TipoDebitoController extends Controller
 
     //CADASTRO DE TIPO DE DEBITOS
     function cadastrar($usuario, Request $request){
+
+        //Validar para não salvar descrição
+        $validated = $request->validate([
+            'descricao' => 'required',
+        ]);
 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
@@ -30,6 +40,18 @@ class TipoDebitoController extends Controller
     //EXCLUIR TIPO DE DEBITO
     function excluir($id){
         $tipo_debito = TipoDebito::find($id);
+
+        //Verifica se existe
+        if (!$tipo_debito) {
+            return redirect()->back()->with('error', 'Tipo de débito não encontrado.');
+        }
+
+        // Verifique se existem relacionamentos
+        $relacionamentos = Debito::where('tipo_debito_id', $tipo_debito->id)->get();
+        if ($relacionamentos->count() > 0) {
+            return redirect()->back()->with('error', 'Este tipo de débito está relacionado a alguma conta ou débito e não pode ser excluído.');
+        }
+
         $tipo_debito->delete();
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 

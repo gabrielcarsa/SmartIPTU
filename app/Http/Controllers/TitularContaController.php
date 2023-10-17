@@ -56,7 +56,10 @@ class TitularContaController extends Controller
             return redirect()->back()->with('error', 'Titular não encontrado.');
         }
         // Verifique se existem relacionamentos
-        if ($titular_conta->hasOne(ContaReceber::class) || $titular_conta->hasOne(ContaPagar::class) || $titular_conta->hasOne(Debito::class)) {
+        $relacionamentosDebito = Debito::where('titular_conta_id', $titular_conta->id)->get();
+        $relacionamentosReceber = ContaReceber::where('titular_conta_id', $titular_conta->id)->get();
+        $relacionamentosPagar = ContaPagar::where('titular_conta_id', $titular_conta->id)->get();
+        if ($relacionamentosDebito->count() > 0 || $relacionamentosReceber->count() > 0  || $relacionamentosPagar->count() > 0 ) {
             return redirect()->back()->with('error', 'Este Titular está relacionado a alguma conta e não pode ser excluído.');
         }
 
