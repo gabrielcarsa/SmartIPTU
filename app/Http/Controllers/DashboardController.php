@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Cliente;
 use App\Models\TitularConta;
 use App\Models\Empreendimento;
+use App\Models\TipoDebito;
 
 
 class DashboardController extends Controller
@@ -183,11 +184,17 @@ class DashboardController extends Controller
             ->groupBy('e.nome')
             ->get();*/
 
+            $tipo_debitos = TipoDebito::limit(4)->get();
+
             $lotesEmpreendimentos = DB::table('empreendimento as e')
             ->select(
                 'e.nome as empreendimento',
                 DB::raw('COUNT(DISTINCT l.id) as total_lotes'),
-                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 1 THEN l.id END) as total_lotes_ajuizados')
+                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 1 THEN l.id END) as total_lotes_1'),
+                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 2 THEN l.id END) as total_lotes_2'),
+                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 3 THEN l.id END) as total_lotes_3'),
+                DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 4 THEN l.id END) as total_lotes_4'),
+
             )
             ->join('quadra as q', 'e.id', '=', 'q.empreendimento_id')
             ->join('lote as l', 'q.id', '=', 'l.quadra_id')
@@ -195,14 +202,14 @@ class DashboardController extends Controller
             ->groupBy('e.nome')
             ->orderBy('e.nome', 'ASC')
             ->get();
-        //dd($lotesEmpreendimentos);
 
         $data = [
             'total_titular_conta' => $total_titular_conta,
             'titulares_contas' => $data,
             'debitosEmpresaCliente' => $debitosEmpresaCliente,
             'receberPorAnos' => $receberPorAnos->toArray(),
-            'lotesEmpreendimentos' => $lotesEmpreendimentos
+            'lotesEmpreendimentos' => $lotesEmpreendimentos,
+            'tipo_debitos' => $tipo_debitos
         ];
 
 

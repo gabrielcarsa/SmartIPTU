@@ -32,10 +32,10 @@
                         <thead>
                             <tr class="text-left">
                                 <th scope="col">Empreendimento</th>
-                                <th scope="col">Qtnd. de lotes Ajuizados</th>
-                                <th scope="col">Qtnd. de lotes Dívida Ativa</th>
-                                <th scope="col">Qtnd. de lotes Negativado</th>
-                                <th scope="col">Qtnd. de lotes feito Parcelamento</th>
+                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][0]->descricao}}</th>
+                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][1]->descricao}}</th>
+                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][2]->descricao}}</th>
+                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][3]->descricao}}</th>
                                 <th scope="col">Total Lotes</th>
                             </tr>
                         </thead>
@@ -43,10 +43,10 @@
                         @foreach($data['lotesEmpreendimentos'] as $resultado)
                             <tr class="resultados-table text-left">
                                 <td scope="row">{{$resultado->empreendimento}}</td>
-                                <td scope="row">{{$resultado->total_lotes_ajuizados}}</td>
-                                <td scope="row">hd</td>
-                                <td scope="row">hd</td>
-                                <td scope="row">hd</td>
+                                <td scope="row">{{$resultado->total_lotes_1}}</td>
+                                <td scope="row">{{$resultado->total_lotes_2}}</td>
+                                <td scope="row">{{$resultado->total_lotes_3}}</td>
+                                <td scope="row">{{$resultado->total_lotes_4}}</td>
                                 <td scope="row">{{ $resultado->total_lotes }}</td>
                             </tr>
                         @endforeach
@@ -124,7 +124,7 @@ new Chart(graficoDebitosTitulares, {
 });
 
 new Chart(graficoDividaClienteEmpresa, {
-    type: 'doughnut',
+    type: 'pie',
     data: {
         labels: labels_graficoDividaClienteEmpresa,
         datasets: [{
