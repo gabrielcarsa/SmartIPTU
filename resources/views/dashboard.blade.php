@@ -15,9 +15,17 @@
         </div>
         <div class="col">
             <div class="card">
-                <h5 class="card-header">Mais informações</h5>
+                <h5 class="card-header">Relatar problemas</h5>
                 <div class="card-body">
-                    <p>67 981368324</p>
+                    <form action="" method="get">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Escreva sua mensagem para o suporte</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary w-100">Enviar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
