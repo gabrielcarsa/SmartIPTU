@@ -69,6 +69,9 @@
                         <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
                                     money_off
                                 </span>Contas a pagar</a></li>
+                        <li><a href="{{ route('movimentacao_financeira') }}"><span class="material-symbols-outlined">
+                                    currency_exchange
+                                </span>Movimentação Financeira</a></li>
                     </ul>
                 </div>
 

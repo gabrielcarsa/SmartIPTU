@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <form action="" method="get">
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">Escreva sua mensagem para o suporte</label>
+                            <label for="exampleFormControlTextarea1" class="form-label">Escreva erros ou problemas do sistema</label>
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
                         <div class="col-12">

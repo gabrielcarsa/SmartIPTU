@@ -17,6 +17,7 @@ use App\Http\Controllers\CategoriaReceberController;
 use App\Http\Controllers\CategoriaPagarController;
 use App\Http\Controllers\TitularContaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MovimentacaoFinanceiraController;
 
 
 
@@ -151,6 +152,9 @@ Route::middleware([
         Route::get('/categoria_receber',[CategoriaReceberController::class, 'categoria_receber'])->name('categoria_receber');
         Route::post('/categoria_receber/cadastrar/{usuario}',[CategoriaReceberController::class, 'cadastrar']);
         Route::get('/categoria_receber/excluir/{id}',[CategoriaReceberController::class, 'excluir']);
+
+        //ROTAS MOVIMENTAÇÃO FINANCEIRA
+        Route::get('/movimentacao_financeira',[MovimentacaoFinanceiraController::class, 'movimentacao_financeira'])->name('movimentacao_financeira');
 
 
 });

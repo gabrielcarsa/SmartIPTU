@@ -194,11 +194,11 @@ class DashboardController extends Controller
                 DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 2 THEN l.id END) as total_lotes_2'),
                 DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 3 THEN l.id END) as total_lotes_3'),
                 DB::raw('COUNT(DISTINCT CASE WHEN d.tipo_debito_id = 4 THEN l.id END) as total_lotes_4'),
-
             )
             ->join('quadra as q', 'e.id', '=', 'q.empreendimento_id')
             ->join('lote as l', 'q.id', '=', 'l.quadra_id')
             ->leftJoin('debito as d', 'l.id', '=', 'd.lote_id')
+            ->leftJoin('parcela as p', 'd.id', '=', 'p.debito_id')
             ->groupBy('e.nome')
             ->orderBy('e.nome', 'ASC')
             ->get();
