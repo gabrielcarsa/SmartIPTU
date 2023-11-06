@@ -29,7 +29,7 @@
     <div class="card-body">
         <form class="row g-3" action="/movimentacao_financeira/listar" method="get" autocomplete="off">
             @csrf
-            <div class="col-md-6">
+            <div class="col-md-2">
                 <label for="inputData" class="form-label">Data da movimentação</label>
                 <input type="date" name="data" value="{{request('data')}}" class="form-control" id="inputData">
             </div>
@@ -46,7 +46,9 @@
 
 
 <div class="card">
-    <h5 class="card-header">Movimentação</h5>
+    <h5 class="card-header">
+        Movimentação Financeira{!! isset($data['saldo_atual']) ? " do dia <strong>" . \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
+    </h5>
     @if(isset($movimentacao))
     <div class="card-footer">
         <a class="btn btn-add"
