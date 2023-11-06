@@ -100,6 +100,19 @@ ul a:hover{
     padding: 0;
     margin: 0;
 }
+.card-saldo {
+    margin: 10px 30px;
+    font-size: 18px;
+}
+#saldo{
+    font-size: 18px;
+    font-weight: 800;
+    border-width: 1px 1px 1px 0px;
+    border-color: #8f8f8f;
+    border-radius: 6px;
+    border-style: solid;
+    padding: 5px;
+}
 .btn-acao-listagem{
     text-decoration: none;
     padding: 5px 10px;

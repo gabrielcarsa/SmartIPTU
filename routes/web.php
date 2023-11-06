@@ -155,6 +155,7 @@ Route::middleware([
 
         //ROTAS MOVIMENTAÇÃO FINANCEIRA
         Route::get('/movimentacao_financeira',[MovimentacaoFinanceiraController::class, 'movimentacao_financeira'])->name('movimentacao_financeira');
+        Route::get('/movimentacao_financeira/listar',[MovimentacaoFinanceiraController::class, 'listar']);
 
 
 });

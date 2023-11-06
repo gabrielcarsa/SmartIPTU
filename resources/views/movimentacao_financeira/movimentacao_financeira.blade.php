@@ -47,10 +47,29 @@
 
 <div class="card">
     <h5 class="card-header">Movimentação</h5>
-    @if(isset($clientes))
+    @if(isset($movimentacao))
     <div class="card-footer">
-        <a class="btn btn-add" href="../movimentacao_financeira/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
+        <a class="btn btn-add"
+            href="../movimentacao_financeira/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
+    </div>
+    <div class="card-saldo">
+        <div class="row">
+            <div class="col">
+                @if(isset($data['saldo_anterior']))
+                <p>Saldo Inicial:
+                    <span id="saldo">R$ {{number_format($data['saldo_anterior'][0]->saldo, 2, ',', '.')}}</span>
+                </p>
+                @endif
+            </div>
+            <div class="col text-right">
+                @if(isset($data['saldo_atual']))
+                <p>Saldo em Banco:
+                    <span id="saldo">R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</span>
+                </p>
+                @endif
+            </div>
+        </div>
     </div>
     @endif
     <div class="card-body">
@@ -66,28 +85,32 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($clientes))
-                @foreach ($clientes as $cliente)
+                @if(isset($movimentacao))
+                @foreach ($movimentacao as $mov)
                 <tr>
-                    <th scope="row">{{$cliente->id}}</th>
-                    @if($cliente->tipo_cadastro == 0)
-                    <td>{{$cliente->nome}}</td>
-                    <td>{{$cliente->cpf}}</td>
+                    <th scope="row">{{$mov->id}}</th>
+                    @if($mov->tipo_cadastro == 0)
+                    <td>{{$mov->nome}}</td>
                     @else
-                    <td>{{$cliente->razao_social}}</td>
-                    <td>{{$cliente->cnpj}}</td>
+                    <td>{{$mov->razao_social}}</td>
                     @endif
-                    <td>{{$cliente->telefone1}}</td>
-                    <td>{{$cliente->email}}</td>
-                    <td><a href="editar/{{$cliente->id}}" class="btn-acao-listagem-secundary">Ver/Editar</a></td>
+                    <td>{{$mov->descricao}}</td>
+                    @if($mov->tipo_movimentacao == 0)
+                    <td>{{$mov->valor}}</td>
+                    <td></td>
+                    @else
+                    <td></td>
+                    <td>{{$mov->valor}}</td>
+                    @endif
+                    <td><a href="editar/{{$mov->id}}" class="btn-acao-listagem-secundary">Ver/Editar</a></td>
                 </tr>
                 @endforeach
                 @endif
             </tbody>
         </table>
-        @if(isset($clientes))
+        @if(isset($movimentacao))
         <div class="card-footer">
-            <p>Exibindo {{$clientes->count()}} de {{ $total_clientes }} registros</p>
+            <p>Exibindo {{$movimentacao->count()}} de {{ $data['total_movimentacao'] }} registros</p>
         </div>
         @endif
 
