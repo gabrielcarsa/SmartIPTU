@@ -91,6 +91,14 @@ ul a:hover{
     margin: 0;
     vertical-align: middle;
 }
+.row-form{
+    margin-bottom: 15px;
+}
+.row-form-destacar{
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #EDEDED;
+}
 
 /*TABLE RESULTADOS*/
 .card{

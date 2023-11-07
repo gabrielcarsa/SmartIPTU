@@ -35,7 +35,7 @@
             </div>
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
-                <a href="/movimentacao_financeira/novo" class="btn-add"><span class="material-symbols-outlined">
+                <a href="{{ route('nova_movimentacao') }}" class="btn-add"><span class="material-symbols-outlined">
                         add
                     </span>Nova Movimentação</a>
             </div>
