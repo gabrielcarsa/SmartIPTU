@@ -37,13 +37,32 @@
             </div>
 
             <div class="row row-form">
+                <div class="col-md-2">
+                    <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo
+                        Movimentação*</label>
+                    <select id="inputTipoMovimentacao" name="tipo_movimentacao" class="form-select form-control">
+                        <option value="0" select>-- Selecione --</option>
+                        <option value="1">Entrada</option>
+                        <option value="2">Saída</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3" id="categoriaField">
+                    <label for="inputCategoria" class="form-label">Categoria*</label>
+                    <select id="inputCategoria" name="categoria_id" class="form-select form-control">
+                        <option value="0" selected>-- Selecione --</option>
+                    </select>
+                </div>
+
                 <div class="col-md-3">
                     <label for="inputCliente" class="form-label">Cliente / Fornecedor*</label>
                     <select id="inputCliente" name="cliente_fornecedor_id"
                         class="form-select form-control @error('cliente_fornecedor_id') is-invalid @enderror">
-                        <option value="0" {{ old('cliente_fornecedor_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                        <option value="0" {{ old('cliente_fornecedor_id') == 0 ? 'selected' : '' }}>-- Selecione --
+                        </option>
                         @foreach ($data['clientes'] as $cliente)
-                        <option value="{{ $cliente->id }}" {{ old('cliente_fornecedor_id') == $cliente->id ? 'selected' : '' }}>
+                        <option value="{{ $cliente->id }}"
+                            {{ old('cliente_fornecedor_id') == $cliente->id ? 'selected' : '' }}>
                             @if(empty($cliente->nome))
                             {{$cliente->razao_social}}
                             @else
@@ -53,26 +72,15 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div class="col-md-3">
-                    <label for="inputDescricao" id="descricao" class="form-label">Descrição*</label>
-                    <input type="text" name="descricao" value="{{ old('descricao') }}"
-                        class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="inputValor" id="valor" class="form-label">Valor da Entrada / Saída*</label>
                     <input type="text" name="valor" value="{{ old('valor') }}"
                         class="form-control @error('valor') is-invalid @enderror" id="inputValor">
                 </div>
-
-                <div class="col-md-3">
-                    <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo
-                        Movimentação*</label>
-                    <select id="inputTipoMovimentacao" name="tipo_movimentacao" class="form-select form-control">
-                        <option value="0" select>-- Selecione --</option>
-                        <option value="1">Entrada</option>
-                        <option value="2">Saída</option>
-                    </select>
+                <div class="col-md-2">
+                    <label for="inputDescricao" id="descricao" class="form-label">Descrição*</label>
+                    <input type="text" name="descricao" value="{{ old('descricao') }}"
+                        class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
                 </div>
             </div>
 
@@ -123,12 +131,68 @@ $(document).ready(function() {
         reverse: true
     });
 
-    // Quando o cliente ou o titular da conta são selecionados
+    // Quando o tipo de movimentação é selecionado é selecionados
+    $('#inputTipoMovimentacao').change(function() {
+        var selectedTipoMovimentacao = $('#inputTipoMovimentacao').val();
+
+        if (selectedTipoMovimentacao > 0) {
+            // Fazer uma solicitação AJAX para obter as categorias do tipo selecionado
+            if (selectedTipoMovimentacao == 1) { //Entrada
+                $.get('/categoria_receber/json', function(data) {
+                    var categoriaField = $('#categoriaField');
+                    var selectCategoria = $('#inputCategoria');
+                    selectCategoria.empty();
+
+                    // Adicionar as opções de categoria
+                    $.each(data, function(key, value) {
+                        selectCategoria.append($('<option>', {
+                            value: value.id,
+                            text: value.descricao
+                        }));
+                    });
+
+                    // Mostrar o campo de categoria
+                    contaBancariaField.show();
+                });
+            } else { //Saída
+                $.get('/categoria_pagar/json', function(data) {
+                    var categoriaField = $('#categoriaField');
+                    var selectCategoria = $('#inputCategoria');
+                    selectCategoria.empty();
+
+                    // Adicionar as opções de categoria
+                    $.each(data, function(key, value) {
+                        selectCategoria.append($('<option>', {
+                            value: value.id,
+                            text: value.descricao
+                        }));
+                    });
+
+                    // Mostrar o campo de categoria
+                    categoriaField.show();
+                });
+            }
+
+        } else {
+            // Se o tipo de movimentacao não for selecionado, ocultar o campo de categoria e defina a opção padrão
+            var categoriaField = $('#categoriaField');
+            var selectCategoria = $('#inputCategoria');
+            selectCategoria.empty();
+
+            selectCategoria.append($('<option>', {
+                value: 0,
+                text: '-- Selecione o Tipo de Movimentação --'
+            }));
+            categoriaField.hide();
+        }
+    });
+
+    // Quando o titular da conta é selecionado
     $('#inputTitularConta').change(function() {
         var selectedTitularContaId = $('#inputTitularConta').val();
 
         if (selectedTitularContaId > 0) {
-            // Fazer uma solicitação AJAX para obter as contas bancárias do cliente e titular da conta selecionados
+            // Fazer uma solicitação AJAX para obter as contas bancárias do titular da conta selecionado
             $.get('/movimentacao_financeira/conta_corrente/' + selectedTitularContaId, function(data) {
                 var contaBancariaField = $('#contaBancariaField');
                 var selectContaBancaria = $('#inputContaCorrente');
@@ -137,7 +201,7 @@ $(document).ready(function() {
                 // Adicionar as opções de contas bancárias
                 $.each(data, function(key, value) {
                     selectContaBancaria.append($('<option>', {
-                        value: key,
+                        value: value.id,
                         text: value.apelido
                     }));
                 });
@@ -146,7 +210,7 @@ $(document).ready(function() {
                 contaBancariaField.show();
             });
         } else {
-            // Se o cliente ou o titular da conta não forem selecionados, ocultar o campo de contas bancárias e defina a opção padrão
+            // Se o titular da conta não for selecionado, ocultar o campo de contas bancárias e defina a opção padrão
             var contaBancariaField = $('#contaBancariaField');
             var selectContaBancaria = $('#inputContaCorrente');
             selectContaBancaria.empty();

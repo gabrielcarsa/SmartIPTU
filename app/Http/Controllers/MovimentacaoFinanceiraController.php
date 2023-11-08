@@ -5,6 +5,10 @@ use App\Models\MovimentacaoFinanceira;
 use App\Models\SaldoDiario;
 use App\Models\Cliente;
 use App\Models\ContaCorrente;
+use App\Models\ContaPagar;
+use App\Models\ContaReceber;
+use App\Models\ParcelaContaPagar;
+use App\Models\ParcelaContaReceber;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -21,11 +25,9 @@ class MovimentacaoFinanceiraController extends Controller
 
         //Datas 
         $dataRef = $request->input('data');
-        $diaAnterior = Carbon::parse($dataRef)->subDay(); // Subtrai um dia da data fornecida
 
-        $saldo_anterior = SaldoDiario::where('data', $diaAnterior->toDateString())->get(); // Saldo do dia anterior
+        $saldo_anterior = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $request->input('data'))->get(); // Saldo anterior
         $saldo_atual = SaldoDiario::where('data', $dataRef)->get(); // Saldo do dia
-
 
         $total_movimentacao = $movimentacao->count();
         $query = DB::table('movimentacao_financeira as mf');
@@ -51,7 +53,7 @@ class MovimentacaoFinanceiraController extends Controller
             'saldo_atual' => $saldo_atual,
             'total_movimentacao' => $total_movimentacao,
         ];
-
+        
         return view('movimentacao_financeira/movimentacao_financeira', compact('movimentacao', 'data'));
     }
 
@@ -89,26 +91,129 @@ class MovimentacaoFinanceiraController extends Controller
         date_default_timezone_set('America/Cuiaba');    
 
         $movimentacao_financeira = new MovimentacaoFinanceira();
-        $movimentacao_financeira->data = $request->input('data');
+        $movimentacao_financeira->data_movimentacao = $request->input('data');
         $movimentacao_financeira->cliente_fornecedor_id = $request->input('cliente_fornecedor_id');
         $movimentacao_financeira->descricao = $request->input('descricao');
-        $movimentacao_financeira->tipo_movimentacao = $request->input('tipo_movimentacao');
         $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
         $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
         
+        // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
+        // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
+        $movimentacao_financeira->tipo_movimentacao = ($request->input('tipo_movimentacao') == 1) ? 0 : 1;
+
         $valor = str_replace(',', '.', $request->input('valor'));
         $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-      
+        $valor_movimentacao = $movimentacao_financeira->valor; //Armazenar em uma variavel o valor da movimentação
+    
         $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
         $movimentacao_financeira->cadastrado_usuario_id = $usuario;
 
-        //Atualizar saldo do dia
+        //Variavel de saldo para manipulacao e verificacao do saldo
+        $saldo = SaldoDiario::where('data', $request->input('data'))->get(); // Saldo do dia
 
-        //Cadastrar no Contas a Pagar ou Receber
+        //Se não houver saldo para aquele dia
+        if(!isset($saldo[0]->saldo)){
+            //Último saldo cadastrado
+            $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $request->input('data'))->first();
+            
+            //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
+            $addSaldo = new SaldoDiario();
+            $addSaldo->saldo = $ultimo_saldo->saldo;
+            $addSaldo->data = $request->input('data');
+            $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
+            $addSaldo->save();
 
-        
+            $saldo = $addSaldo;
+            $valor_desatualizado_saldo =  $saldo->saldo; //Armazenar o ultimo saldo
+
+        }else{//Caso houver saldo para aquele dia
+            $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+        }
+
+        //variavel que será responsavel por alterar-lo
+        $saldo_model = SaldoDiario::where('data', $request->input('data'))->first();
+
+        //Verificar se a movimentação é de entrada ou saída
+        $tipo_movimentacao =$request->input('tipo_movimentacao');
+
+        if($tipo_movimentacao == 1){ // ENTRADA
+
+            //Adicionando categoria
+            $movimentacao_financeira->categoria_receber_id = $request->input('categoria_id');
+
+            //Atualizando o saldo
+            $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+            $saldo_model->save();
+
+            //Atualizar no Contas a Receber
+            $contaReceber = new ContaReceber();
+            $contaReceber->titular_conta_id = $request->input('titular_conta_id');
+            $contaReceber->cliente_id = $request->input('cliente_fornecedor_id');
+            $contaReceber->categoria_receber_id = $request->input('categoria_id');
+            $contaReceber->quantidade_parcela = 1;
+            $contaReceber->data_vencimento = $request->input('data');
+            $contaReceber->valor_parcela = $valor_movimentacao; 
+            $contaReceber->descricao = $request->input('descricao');
+            $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
+            $contaReceber->cadastrado_usuario_id = $usuario;
+            $contaReceber->save();
+
+            // Cadastrar Parcelas
+            $qtd_parcelas = 1;
+            $contaReceber_id = $contaReceber->id;
+            $data_vencimento = $contaReceber->data_vencimento; 
+            $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+
+            $parcela = new ParcelaContaReceber();
+            $parcela->conta_receber_id = $contaReceber_id;
+            $parcela->numero_parcela = 1;
+            $parcela->valor_parcela = $contaReceber->valor;
+            $parcela->cadastrado_usuario_id = $usuario;
+            $parcela->data_vencimento = $data_vencimento;
+            $parcela->save();
+            
+                    
+        }else{ // SAÍDA
+
+            //Adicionando categoria
+            $movimentacao_financeira->categoria_pagar_id = $request->input('categoria_id');
+
+            //Atualizando o saldo
+            $saldo_model->saldo = $valor_desatualizado_saldo - $valor_movimentacao; 
+            $saldo_model->save();
+
+            //Atualizar no Contas a Pagar
+            $contaPagar = new ContaPagar();
+            $contaPagar->titular_conta_id = $request->input('titular_conta_id');
+            $contaPagar->fornecedor_id = $request->input('cliente_fornecedor_id');
+            $contaPagar->categoria_pagar_id = $request->input('categoria_id');
+            $contaPagar->quantidade_parcela = 1;
+            $contaPagar->data_vencimento = $request->input('data');
+            $contaPagar->valor_parcela = $valor_movimentacao; 
+            $contaPagar->descricao = $request->input('descricao');
+            $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
+            $contaPagar->cadastrado_usuario_id = $usuario;
+            $contaPagar->save();
+
+            // Cadastrar Parcelas
+            $qtd_parcelas = 1;
+            $contaPagar_id = $contaPagar->id;
+            $data_vencimento = $contaPagar->data_vencimento; 
+            $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+
+            $parcela = new ParcelaContaPagar();
+            $parcela->conta_pagar_id = $contaPagar_id;
+            $parcela->numero_parcela = 1;
+            $parcela->valor_parcela = $contaPagar->valor;
+            $parcela->cadastrado_usuario_id = $usuario;
+            $parcela->data_vencimento = $data_vencimento;
+            $parcela->save();
+            
+        }
+
+        //salvar movimentação
         $movimentacao_financeira->save();
 
-        return redirect('movimentacao_financeira/listar?'.$movimentacao_financeira->data)->with('success', 'Movimentação cadastrada com sucesso');
+        return redirect('movimentacao_financeira')->with('success', 'Movimentação cadastrada com sucesso');
     }
 }

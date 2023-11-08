@@ -72,7 +72,7 @@ class ContaReceberController extends Controller
         $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
         $contaReceber->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
-        $contaReceber->observacao = $request->input('observacao');
+        $contaReceber->descricao = $request->input('descricao');
         $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
         $contaReceber->cadastrado_usuario_id = $usuario;
         $contaReceber->save();

@@ -54,4 +54,10 @@ class CategoriaReceberController extends Controller
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 
     }
+
+    //RETORNA UM JSON COM A CATEGORIA
+    function categoria_receber_json(){
+        $categoria_receber = CategoriaReceber::all();
+        return response()->json($categoria_receber);
+    }
 }

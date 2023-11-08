@@ -84,7 +84,7 @@ class ContaPagarController extends Controller
         $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
         $contaPagar->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
-        $contaPagar->observacao = $request->input('observacao');
+        $contaPagar->descricao = $request->input('descricao');
         $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
         $contaPagar->cadastrado_usuario_id = $usuario;
         $contaPagar->save();

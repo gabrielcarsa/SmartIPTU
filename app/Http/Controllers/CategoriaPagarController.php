@@ -54,4 +54,10 @@ class CategoriaPagarController extends Controller
         return redirect()->back()->with('success', 'Exclusão realizada com sucesso');
 
     }
+
+    //RETORNA UM JSON COM A CATEGORIA
+    function categoria_pagar_json(){
+        $categoria_pagar = CategoriaPagar::all();
+        return response()->json($categoria_pagar);
+    }
 }

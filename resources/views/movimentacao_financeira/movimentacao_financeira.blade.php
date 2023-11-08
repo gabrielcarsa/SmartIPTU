@@ -46,10 +46,10 @@
 
 
 <div class="card">
-    <h5 class="card-header">
-        Movimentação Financeira{!! isset($data['saldo_atual']) ? " do dia <strong>" . \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
-    </h5>
     @if(isset($movimentacao))
+    <h5 class="card-header">
+        Movimentação Financeira{!! isset($data['saldo_atual'][0]) ? " do dia <strong>" . \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
+    </h5>
     <div class="card-footer">
         <a class="btn btn-add"
             href="../movimentacao_financeira/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
@@ -58,14 +58,14 @@
     <div class="card-saldo">
         <div class="row">
             <div class="col">
-                @if(isset($data['saldo_anterior']))
+                @if(isset($data['saldo_anterior'][0]))
                 <p>Saldo Inicial:
                     <span id="saldo">R$ {{number_format($data['saldo_anterior'][0]->saldo, 2, ',', '.')}}</span>
                 </p>
                 @endif
             </div>
             <div class="col text-right">
-                @if(isset($data['saldo_atual']))
+                @if(isset($data['saldo_atual'][0]))
                 <p>Saldo em Banco:
                     <span id="saldo">R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</span>
                 </p>

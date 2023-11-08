@@ -60,7 +60,7 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <label for="inputDescricao" class="form-label">Descrição*</label>
+                <label for="inputDescricao" class="form-label">Categoria*</label>
                 <select id="inputDescricao" name="categoria_pagar_id"
                     class="form-select form-control @error('categoria_pagar_id') is-invalid @enderror">
                     <option value="0" {{ old('categoria_pagar_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
@@ -73,6 +73,11 @@
                 </select>
             </div>
 
+            <div class="col-md-4">
+                <label for="inputDescricao" id="descricao" class="form-label">Descrição</label>
+                <input type="text" name="descricao" value="{{ old('descricao') }}"
+                    class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
+            </div>
             <div class="col-md-2">
                 <label for="inputQtndParcelas" id="quantidade_parcela" class="form-label">Quantidade de
                     parcelas*</label>
@@ -96,12 +101,6 @@
                 <input type="text" name="valor_entrada" value="{{ old('valor_entrada') }}"
                     class="form-control @error('valor_entrada') is-invalid @enderror" id="inputValorEntrada">
             </div>
-            <div class="col-md-4">
-                <label for="inputObservacao" id="observacao" class="form-label">Observação</label>
-                <input type="text" name="observacao" value="{{ old('observacao') }}"
-                    class="form-control @error('observacao') is-invalid @enderror" id="inputObservacao">
-            </div>
-
             <div class="col-12">
                 <button type="submit" class="btn-submit">
                     Cadastrar

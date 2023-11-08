@@ -147,11 +147,13 @@ Route::middleware([
         Route::get('/categoria_pagar',[CategoriaPagarController::class, 'categoria_pagar'])->name('categoria_pagar');
         Route::post('/categoria_pagar/cadastrar/{usuario}',[CategoriaPagarController::class, 'cadastrar']);
         Route::get('/categoria_pagar/excluir/{id}',[CategoriaPagarController::class, 'excluir']);
+        Route::get('/categoria_pagar/json', [CategoriaPagarController::class, 'categoria_pagar_json']);
 
         //ROTAS CATEGORIA CONTAS A RECEBER
         Route::get('/categoria_receber',[CategoriaReceberController::class, 'categoria_receber'])->name('categoria_receber');
         Route::post('/categoria_receber/cadastrar/{usuario}',[CategoriaReceberController::class, 'cadastrar']);
         Route::get('/categoria_receber/excluir/{id}',[CategoriaReceberController::class, 'excluir']);
+        Route::get('/categoria_receber/json', [CategoriaReceberController::class, 'categoria_receber_json']);
 
         //ROTAS MOVIMENTAÇÃO FINANCEIRA
         Route::get('/movimentacao_financeira',[MovimentacaoFinanceiraController::class, 'movimentacao_financeira'])->name('movimentacao_financeira');
