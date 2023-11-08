@@ -223,8 +223,8 @@ class ContaPagarController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteLotes
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->get();
 
                 }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e Todos titulares
@@ -244,8 +244,8 @@ class ContaPagarController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteLotes
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->where('d.titular_conta_id', $titular_conta_id)
                     ->get();
 
@@ -276,8 +276,8 @@ class ContaPagarController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteOutros
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->get();
 
                 } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e Todos titulares
@@ -296,8 +296,8 @@ class ContaPagarController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteOutros
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->where('cp.titular_conta_id', $titular_conta_id)
                     ->get();
 

@@ -264,6 +264,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Titular a receber</th>
                     <th scope="col">Nº parcela</th>
+                    <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Vencimento</th>
                     <th scope="col">Valor</th>
@@ -281,6 +282,7 @@
                     <td scope="row">{{$resultado->id}}</td>
                     <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
+                    <td>{{$resultado->categoria}}</td>
                     <td>{{$resultado->descricao}}</td>
                     <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
                     <td>R$ {{number_format($resultado->valor_parcela, 2, ',', '.')}}</td>
@@ -305,9 +307,9 @@
                                             {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
                                         <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
-                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
-                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
-                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
+                                        <p>Cadastrado por {{$resultado->cadastrado_por}}</p>
+                                        <p>Alterado por {{$resultado->alterado_por}}</p>
+                                        <p>Baixado por {{$resultado->baixado_por}}</p>
                                     </div>
                                 </div>
                             </div>

@@ -32,7 +32,7 @@ class MovimentacaoFinanceiraController extends Controller
         $total_movimentacao = $movimentacao->count();
         $query = DB::table('movimentacao_financeira as mf');
 
-        // Verifique se o campo "nome" está preenchido no formulário
+        // Verifique se o campo "data" está preenchido no formulário
         if ($request->filled('data')) {
             $query->select(
                 'mf.*',
@@ -167,7 +167,7 @@ class MovimentacaoFinanceiraController extends Controller
             $parcela = new ParcelaContaReceber();
             $parcela->conta_receber_id = $contaReceber_id;
             $parcela->numero_parcela = 1;
-            $parcela->valor_parcela = $contaReceber->valor;
+            $parcela->valor_parcela = $valor_movimentacao;
             $parcela->cadastrado_usuario_id = $usuario;
             $parcela->data_vencimento = $data_vencimento;
             $parcela->save();
@@ -204,7 +204,7 @@ class MovimentacaoFinanceiraController extends Controller
             $parcela = new ParcelaContaPagar();
             $parcela->conta_pagar_id = $contaPagar_id;
             $parcela->numero_parcela = 1;
-            $parcela->valor_parcela = $contaPagar->valor;
+            $parcela->valor_parcela = $valor_movimentacao;
             $parcela->cadastrado_usuario_id = $usuario;
             $parcela->data_vencimento = $data_vencimento;
             $parcela->save();

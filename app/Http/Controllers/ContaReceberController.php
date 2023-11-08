@@ -197,7 +197,8 @@ class ContaReceberController extends Controller
             'p.usuario_baixa_id as parcela_usuario_baixa_id',
             'p.data_alteracao as parcela_data_alteracao',
             'cr.quantidade_parcela as quantidade_parcela',
-            'ctr.descricao as descricao',
+            'cr.descricao as descricao',
+            'ctr.descricao as categoria',
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
@@ -226,8 +227,8 @@ class ContaReceberController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteLotes
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->get();
 
                 }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e Todos titulares
@@ -247,8 +248,8 @@ class ContaReceberController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteLotes
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->where('d.titular_conta_id', $titular_conta_id)
                     ->get();
 
@@ -280,8 +281,8 @@ class ContaReceberController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteOutros
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->get();
 
                 } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e Todos titulares
@@ -301,8 +302,8 @@ class ContaReceberController extends Controller
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
 
                     $resultados = $queryReferenteOutros
-                    ->where('p.data_vencimento', '>', $periodoDe)
-                    ->where('p.data_vencimento', '<', $periodoAte)
+                    ->where('p.data_vencimento', '>=', $periodoDe)
+                    ->where('p.data_vencimento', '<=', $periodoAte)
                     ->where('cr.titular_conta_id', $titular_conta_id)
                     ->get();
 
