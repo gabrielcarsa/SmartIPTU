@@ -1,90 +1,168 @@
 @extends('layouts/app')
 @section('conteudo')
 
-<h1>Dashboard</h1><br>
-
-<div class="container text-center">
-    <div class="row">
-        <div class="col-8">
-            <div class="card">
-                <h5 class="card-header">Débitos a receber de clientes</h5>
-                <div class="card-body">
-                    <canvas id="graficoReceberDebitos"></canvas>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(255, 179, 0);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        money_off
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Contas a Pagar Hoje</h3>
+                    <p>R$ 2.352,12</p>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <h5 class="card-header">Relatar problemas</h5>
-                <div class="card-body">
-                    <form action="" method="get">
-                        <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">Escreva erros ou problemas do sistema</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div class="col-md-3">
+        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(148, 216, 45);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        attach_money
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Contas a Receber Hoje</h3>
+                    <p>R$ 2.352,12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(250, 82, 82);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        trending_down
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Pagamentos Atrasados</h3>
+                    <p>R$ 2.352,12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(255, 248, 91);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        gavel
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Total de Débitos de IPTUs</h3>
+                    <p>R$ 2.352,12</p>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <h5 class="card-header">Débitos a receber de clientes</h5>
+            <div class="card-body">
+                <canvas id="graficoReceberDebitos"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-ranking">
+                <h4>Ranking Média Maiores Saídas por Categoria ao Mês</h4>
+                <div>
+                    <div class="linha-ranking">
+                        <p>Pagamento de Exemplo</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 75%">18.000,00/mês</div>
                         </div>
-                        <div class="col-12">
-                            <button type="button" class="btn btn-primary w-100">Enviar</button>
+                    </div>
+                    <div class="linha-ranking">
+                        <p>Pagamento de Exemplo</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 40%">11.000,00/mês</div>
                         </div>
-                    </form>
+                    </div><div class="linha-ranking">
+                        <p>Pagamento de Exemplo</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 25%">6.080,00/mês</div>
+                        </div>
+                    </div><div class="linha-ranking">
+                        <p>Pagamento de Exemplo</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 7%">2.000,00/mês</div>
+                        </div>
+                    </div><div class="linha-ranking">
+                        <p>Pagamento de Exemplo</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 2%">760,00/mês</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <h5 class="card-header">Lotes</h5>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr class="text-left">
-                                <th scope="col">Empreendimento</th>
-                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][0]->descricao}}</th>
-                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][1]->descricao}}</th>
-                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][2]->descricao}}</th>
-                                <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][3]->descricao}}</th>
-                                <th scope="col">Total Lotes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($data['lotesEmpreendimentos'] as $resultado)
-                            <tr class="resultados-table text-left">
-                                <td scope="row">{{$resultado->empreendimento}}</td>
-                                <td scope="row">{{$resultado->total_lotes_1}}</td>
-                                <td scope="row">{{$resultado->total_lotes_2}}</td>
-                                <td scope="row">{{$resultado->total_lotes_3}}</td>
-                                <td scope="row">{{$resultado->total_lotes_4}}</td>
-                                <td scope="row">{{ $resultado->total_lotes }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <h5 class="card-header">Lotes</h5>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr class="text-left">
+                            <th scope="col">Empreendimento</th>
+                            <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][0]->descricao}}</th>
+                            <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][1]->descricao}}</th>
+                            <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][2]->descricao}}</th>
+                            <th scope="col">Qtnd. de lotes {{$data['tipo_debitos'][3]->descricao}}</th>
+                            <th scope="col">Total Lotes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($data['lotesEmpreendimentos'] as $resultado)
+                        <tr class="resultados-table text-left">
+                            <td scope="row">{{$resultado->empreendimento}}</td>
+                            <td scope="row">{{$resultado->total_lotes_1}}</td>
+                            <td scope="row">{{$resultado->total_lotes_2}}</td>
+                            <td scope="row">{{$resultado->total_lotes_3}}</td>
+                            <td scope="row">{{$resultado->total_lotes_4}}</td>
+                            <td scope="row">{{ $resultado->total_lotes }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <h5 class="card-header">Débitos referentes a Clientes e Empresa</h5>
-                <div class="card-body">
-                    <canvas id="graficoDividaClienteEmpresa"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <h5 class="card-header">Total de Contas a Pagar por titular (não incluso débitos de IPTU)</h5>
-                <div class="card-body">
-                    <canvas id="graficoDebitosTitulares"></canvas>
-                </div>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <h5 class="card-header">Débitos referentes a Clientes e Empresa</h5>
+            <div class="card-body">
+                <canvas id="graficoDividaClienteEmpresa"></canvas>
             </div>
         </div>
     </div>
-
-
+    <div class="col">
+        <div class="card">
+            <h5 class="card-header">Total de Contas a Pagar por titular (não incluso débitos de IPTU)</h5>
+            <div class="card-body">
+                <canvas id="graficoDebitosTitulares"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 

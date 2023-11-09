@@ -4,6 +4,39 @@
 
 <h2>Movimentação Financeira</h2>
 
+<div class="row">
+    <div class="col-md-3">
+        <div class="card-movimentacao d-flex align-items-center" style="background-color:RGB(0, 218, 255);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        attach_money
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Entradas de Hoje</h3>
+                    <p>R$ 2.352,12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-movimentacao d-flex align-items-center" style="background-color:RGB(250, 82, 82);">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="material-symbols-outlined">
+                        money_off
+                    </span>
+                </div>
+                <div class="col-md-8 align-self-center">
+                    <h3>Saídas de Hoje</h3>
+                    <p>R$ 2.352,12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if(session('success'))
 <div class="alert alert-success">
     {{ session('success') }}

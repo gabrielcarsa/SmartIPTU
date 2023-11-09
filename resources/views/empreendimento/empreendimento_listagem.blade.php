@@ -9,10 +9,16 @@
 @endif
 
 <h2>Empreendimento</h2>
+<p>
+    - a fazer: validações; - Movimentacao (editar e colocar categoria e valid); - No contas ao pagar/receber mudar na
+    movimentação; - validacoes; - dashboard; - conta bancaria do titular; - estornar parcelas; - exportar relatorios
+</p>
+
 <a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Novo</a>
+    
 <div class="card">
     <h5 class="card-header">Empreendimentos cadastrados</h5>
     @if(isset($empreendimentos))
@@ -42,7 +48,8 @@
                     <td>{{$empreendimento->cidade}}, {{$empreendimento->estado}}</td>
                     <td>
                         <a class="btn-acao-listagem" href="empreendimento/gestao/{{$empreendimento->id}}">Gestão</a>
-                        <a class="btn-acao-listagem-secundary" href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
+                        <a class="btn-acao-listagem-secundary"
+                            href="empreendimento/editar/{{$empreendimento->id}}">Ver/Editar</a>
                     </td>
                 </tr>
                 @endforeach

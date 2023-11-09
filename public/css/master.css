@@ -1,15 +1,23 @@
+/*-----
+GERAL
+-----*/
+
 body{
     background-color: #F3F4F6 !important;
     font-family: 'Inter', sans-serif !important;
 }
 
-/*MENU NAVEGAÇÃO*/
+/*-----
+MENU NAVEGAÇÃO
+-----*/
 
 .navbar{
     background-color: #FFF;
 }
 
-/*OFFCANVAS*/
+/*-----
+OFFCANVAS
+-----*/
 
 .btn-sidebar{
     margin-right: 15px;
@@ -53,7 +61,9 @@ ul a:hover{
     margin: 5px;
 }
 
-/*CONTENT*/
+/*-----
+CONTENT
+-----*/
 .content{
     margin: 80px 40px;
 }
@@ -62,7 +72,48 @@ ul a:hover{
     margin: 20px 10px;
 }
 
-/*FORMS*/
+/*-----
+DASHBOARD
+-----*/
+.graficoDashboard{
+    background-color: #FFF;
+    width: 500px;
+}
+.card-dashboard{
+    margin: 0 0 30px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 0.5em;
+    padding: 20px;
+}
+.card-dashboard span{
+    font-size: 100px;
+}
+.card-dashboard h3{
+    font-weight: 500;
+    font-size: 20px;
+    color: #000;
+}
+.card-ranking{
+    padding: 15px;
+}
+.card-ranking h4{
+    font-size: 20px;
+    font-weight: 700;
+}
+.linha-ranking{
+    border: 1px solid #a5a5a5;
+    padding:10px 15px;
+    border-radius: 0.5em;
+    margin: 5px;
+}
+.linha-ranking p{
+    font-size: 15px;
+    font-weight: 600;
+}
+/*-----
+FORMS
+-----*/
+
 .card-header{
     background-color: #424250 !important;
     color: #FFF !important;
@@ -100,7 +151,10 @@ ul a:hover{
     background-color: #EDEDED;
 }
 
-/*TABLE RESULTADOS*/
+/*-----
+TABLE RESULTADOS
+-----*/
+
 .card{
     margin-bottom: 20px;
 }
@@ -218,7 +272,9 @@ ul a:hover{
     margin-right: 5px;
 }
 
-/*CALENDARIO*/
+/*-----
+CALENDARIO
+-----*/
 
 /* Estilize os nomes dos dias da semana */
 .fc-col-header-cell-cushion {
@@ -249,10 +305,20 @@ ul a:hover{
     font-weight: 700;
 }
 
-/*DASHBOARD*/
-.graficoDashboard{
-    background-color: #FFF;
-    width: 500px;
+/*-----
+MOVIMENTAÇÃO
+-----*/
+.card-movimentacao{
+    margin: 0 0 30px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 0.5em;
+    padding: 20px;
 }
-
-
+.card-movimentacao span{
+    font-size: 80px;
+}
+.card-movimentacao h3{
+    font-weight: 500;
+    font-size: 18px;
+    color: #000;
+}
