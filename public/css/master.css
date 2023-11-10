@@ -271,6 +271,20 @@ TABLE RESULTADOS
     color: #424250;
     margin-right: 5px;
 }
+.btn-icone-listagem{
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    background-color: rgb(255, 168, 7);
+    border-color: rgba(27, 31, 35, 0.15);
+    border-width: 1px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border-radius: 0.3em;
+    color: #fff;
+}
+.btn-icone-listagem span{
+    font-size: 20px;
+}
 
 /*-----
 CALENDARIO

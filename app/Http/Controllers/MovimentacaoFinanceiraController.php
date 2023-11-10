@@ -16,7 +16,26 @@ use Carbon\Carbon;
 class MovimentacaoFinanceiraController extends Controller
 {
     function movimentacao_financeira(){
-        return view('movimentacao_financeira/movimentacao_financeira');
+        $today = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+
+        //Soma das entradas do dia atual
+        $entradas = DB::table('movimentacao_financeira')
+            ->whereDate('data_movimentacao', $today)
+            ->where('tipo_movimentacao', 0)
+            ->sum('valor');
+
+        //Soma das saidas do dia atual
+        $saidas = DB::table('movimentacao_financeira')
+            ->whereDate('data_movimentacao', $today)
+            ->where('tipo_movimentacao', 1)
+            ->sum('valor');
+
+        $data = [
+            'entradas' => $entradas,
+            'saidas' => $saidas
+        ];
+
+        return view('movimentacao_financeira/movimentacao_financeira', compact('data'));
     }
 
      // LISTAGEM DE MOVIMENTAÇÃO FINANCEIRA
@@ -90,6 +109,10 @@ class MovimentacaoFinanceiraController extends Controller
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
+        $request->merge([
+            'valor' => str_replace(['.', ','], ['', '.'], $request->input('valor')),
+        ]);
+
         $movimentacao_financeira = new MovimentacaoFinanceira();
         $movimentacao_financeira->data_movimentacao = $request->input('data');
         $movimentacao_financeira->cliente_fornecedor_id = $request->input('cliente_fornecedor_id');
@@ -103,7 +126,7 @@ class MovimentacaoFinanceiraController extends Controller
 
         $valor = str_replace(',', '.', $request->input('valor'));
         $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-        $valor_movimentacao = $movimentacao_financeira->valor; //Armazenar em uma variavel o valor da movimentação
+        $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
     
         $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
         $movimentacao_financeira->cadastrado_usuario_id = $usuario;

@@ -130,7 +130,8 @@ $(document).ready(function() {
     $('#inputValor').mask('000.000.000.000.000,00', {
         reverse: true
     });
-
+});
+$(document).ready(function() {
     // Quando o tipo de movimentação é selecionado é selecionados
     $('#inputTipoMovimentacao').change(function() {
         var selectedTipoMovimentacao = $('#inputTipoMovimentacao').val();

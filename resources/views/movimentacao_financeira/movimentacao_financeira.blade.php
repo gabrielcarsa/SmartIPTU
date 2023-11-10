@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-8 align-self-center">
                     <h3>Entradas de Hoje</h3>
-                    <p>R$ 2.352,12</p>
+                    <p>R$ {{isset($data['entradas']) ? number_format($data['entradas'], 2, ',', '.') : '0'}}</p>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-md-8 align-self-center">
                     <h3>Saídas de Hoje</h3>
-                    <p>R$ 2.352,12</p>
+                    <p>R$ {{isset($data['saidas']) ? number_format($data['saidas'], 2, ',', '.') : '0'}}</p>
                 </div>
             </div>
         </div>
@@ -81,7 +81,8 @@
 <div class="card">
     @if(isset($movimentacao))
     <h5 class="card-header">
-        Movimentação Financeira{!! isset($data['saldo_atual'][0]) ? " do dia <strong>" . \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
+        Movimentação Financeira{!! isset($data['saldo_atual'][0]) ? " do dia <strong>" .
+            \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
     </h5>
     <div class="card-footer">
         <a class="btn btn-add"
@@ -125,19 +126,31 @@
                 <tr>
                     <th scope="row">{{$mov->id}}</th>
                     @if($mov->tipo_cadastro == 0)
-                    <td>{{$mov->nome}}</td>
+                    <td class="align-middle">{{$mov->nome}}</td>
                     @else
-                    <td>{{$mov->razao_social}}</td>
+                    <td class="align-middle">{{$mov->razao_social}}</td>
                     @endif
-                    <td>{{$mov->descricao}}</td>
+                    <td class="align-middle">{{$mov->descricao}}</td>
                     @if($mov->tipo_movimentacao == 0)
-                    <td>{{$mov->valor}}</td>
-                    <td></td>
+                    <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle"></td>
                     @else
-                    <td></td>
-                    <td>{{$mov->valor}}</td>
+                    <td class="align-middle"></td>
+                    <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     @endif
-                    <td><a href="editar/{{$mov->id}}" class="btn-acao-listagem-secundary">Ver/Editar</a></td>
+                    <td class="d-flex align-items-center">
+                        <a href="editar/{{$mov->id}}" class="btn-icone-listagem">
+                            <span class="material-symbols-outlined">
+                                edit
+                            </span>
+                        </a>
+                        <a href="editar/{{$mov->id}}" class="btn-icone-listagem" style="background-color: rgb(248, 66, 66);">
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+                        </a>
+                    </td>
+                    
                 </tr>
                 @endforeach
                 @endif
