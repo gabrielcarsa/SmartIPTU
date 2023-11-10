@@ -34,7 +34,7 @@
                         class="form-control @error('data') is-invalid @enderror" id="inputData">
                 </div>
                 <div class="col-md-2 adicionar-linha d-flex align-items-center ms-auto">
-                    <a href="" id="adicionarMovimentacao">+</a>
+                    <a href="" id="adicionarMovimentacao">+ Nova linha</a>
                 </div>
             </div>
             <hr>
@@ -42,7 +42,8 @@
                 <div class="col-md-2">
                     <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo
                         Movimentação*</label>
-                    <select id="inputTipoMovimentacao" name="tipo_movimentacao" class="form-select form-control">
+                    <select id="inputTipoMovimentacao" name="movimentacoes[0][tipo_movimentacao]"
+                        class="form-select form-control">
                         <option value="0" select>-- Selecione --</option>
                         <option value="1">Entrada</option>
                         <option value="2">Saída</option>
@@ -51,14 +52,14 @@
 
                 <div class="col-md-3" id="categoriaField">
                     <label for="inputCategoria" class="form-label">Categoria*</label>
-                    <select id="inputCategoria" name="categoria_id" class="form-select form-control">
+                    <select id="inputCategoria" name="movimentacoes[0][categoria_id]" class="form-select form-control">
                         <option value="0" selected>-- Selecione --</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
                     <label for="inputCliente" class="form-label">Cliente / Fornecedor*</label>
-                    <select id="inputCliente" name="cliente_fornecedor_id"
+                    <select id="inputCliente" name="movimentacoes[0][cliente_fornecedor_id]"
                         class="form-select form-control @error('cliente_fornecedor_id') is-invalid @enderror">
                         <option value="0" {{ old('cliente_fornecedor_id') == 0 ? 'selected' : '' }}>-- Selecione --
                         </option>
@@ -76,12 +77,12 @@
                 </div>
                 <div class="col-md-2">
                     <label for="inputValor" id="valor" class="form-label">Valor da Entrada / Saída*</label>
-                    <input type="text" name="valor" value="{{ old('valor') }}"
+                    <input type="text" name="movimentacoes[0][valor]" value="{{ old('valor') }}"
                         class="form-control @error('valor') is-invalid @enderror" id="inputValor">
                 </div>
                 <div class="col-md-2">
                     <label for="inputDescricao" id="descricao" class="form-label">Descrição*</label>
-                    <input type="text" name="descricao" value="{{ old('descricao') }}"
+                    <input type="text" name="movimentacoes[0][descricao]" value="{{ old('descricao') }}"
                         class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
                 </div>
             </div>
@@ -129,13 +130,17 @@
 
 <script>
 $(document).ready(function() {
-    $('#inputValor').mask('000.000.000.000.000,00', {
-        reverse: true
+    $(document).on('change', 'input[name^="movimentacoes["][name$="[valor]"]', function() {
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).mask('000.000.000.000.000,00', {
+            reverse: true
+        });
     });
 });
 $(document).ready(function() {
-     // Adiciona uma nova linha de movimentação ao clicar em "+"
-     $('#adicionarMovimentacao').click(function(e) {
+
+    // Adiciona uma nova linha de movimentação ao clicar em "+"
+    $(document).on('click', '#adicionarMovimentacao', function(e) {
         e.preventDefault();
 
         // Clona a div de movimentação
@@ -144,22 +149,26 @@ $(document).ready(function() {
         // Limpa os valores dos campos clonados
         novaMovimentacao.find('input, select').val('');
 
+        // Incrementa os índices dos campos clonados para garantir que o Laravel os interprete como um array
+        novaMovimentacao.find('[name^="movimentacoes"]').each(function() {
+            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $('.movimentacao').length + ']');
+            $(this).attr('name', newName);
+        });
+
         // Adiciona a nova div de movimentação no final do formulário
         $('.movimentacao:last').after(novaMovimentacao);
     });
 
-   
-    
-    // Quando o tipo de movimentação é selecionado é selecionados
-    $('#inputTipoMovimentacao').change(function() {
-        var selectedTipoMovimentacao = $('#inputTipoMovimentacao').val();
+    // Quando o tipo de movimentação é selecionado
+    $(document).on('change', 'select[name^="movimentacoes["][name$="[tipo_movimentacao]"]', function() {
+        var selectedTipoMovimentacao = $(this).val();
+        var categoriaField = $(this).closest('.movimentacao').find('#categoriaField');
+        var selectCategoria = $(this).closest('.movimentacao').find('#inputCategoria');
 
         if (selectedTipoMovimentacao > 0) {
             // Fazer uma solicitação AJAX para obter as categorias do tipo selecionado
-            if (selectedTipoMovimentacao == 1) { //Entrada
+            if (selectedTipoMovimentacao == 1) { // Entrada
                 $.get('/categoria_receber/json', function(data) {
-                    var categoriaField = $('#categoriaField');
-                    var selectCategoria = $('#inputCategoria');
                     selectCategoria.empty();
 
                     // Adicionar as opções de categoria
@@ -171,12 +180,10 @@ $(document).ready(function() {
                     });
 
                     // Mostrar o campo de categoria
-                    contaBancariaField.show();
+                    categoriaField.show();
                 });
-            } else { //Saída
+            } else { // Saída
                 $.get('/categoria_pagar/json', function(data) {
-                    var categoriaField = $('#categoriaField');
-                    var selectCategoria = $('#inputCategoria');
                     selectCategoria.empty();
 
                     // Adicionar as opções de categoria
@@ -191,20 +198,16 @@ $(document).ready(function() {
                     categoriaField.show();
                 });
             }
-
         } else {
             // Se o tipo de movimentacao não for selecionado, ocultar o campo de categoria e defina a opção padrão
-            var categoriaField = $('#categoriaField');
-            var selectCategoria = $('#inputCategoria');
-            selectCategoria.empty();
-
-            selectCategoria.append($('<option>', {
+            selectCategoria.empty().append($('<option>', {
                 value: 0,
                 text: '-- Selecione o Tipo de Movimentação --'
             }));
             categoriaField.hide();
         }
     });
+
 
     // Quando o titular da conta é selecionado
     $('#inputTitularConta').change(function() {
