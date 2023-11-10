@@ -24,7 +24,6 @@
     @endif
 
     <div class="card-body">
-
         <form class="" action="{{ '/movimentacao_financeira/cadastrar/' . Auth::user()->id }}" method="post"
             autocomplete="off">
             @csrf
@@ -34,9 +33,12 @@
                     <input type="date" name="data" value="{{ old('data') }}"
                         class="form-control @error('data') is-invalid @enderror" id="inputData">
                 </div>
+                <div class="col-md-2 adicionar-linha d-flex align-items-center ms-auto">
+                    <a href="" id="adicionarMovimentacao">+</a>
+                </div>
             </div>
-
-            <div class="row row-form">
+            <hr>
+            <div class="row row-form movimentacao">
                 <div class="col-md-2">
                     <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo
                         Movimentação*</label>
@@ -83,7 +85,7 @@
                         class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
                 </div>
             </div>
-
+            <hr>
             <div class="row row-form row-form-destacar">
                 <div class="col-md-4">
                     <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
@@ -132,6 +134,22 @@ $(document).ready(function() {
     });
 });
 $(document).ready(function() {
+     // Adiciona uma nova linha de movimentação ao clicar em "+"
+     $('#adicionarMovimentacao').click(function(e) {
+        e.preventDefault();
+
+        // Clona a div de movimentação
+        var novaMovimentacao = $('.movimentacao:first').clone();
+
+        // Limpa os valores dos campos clonados
+        novaMovimentacao.find('input, select').val('');
+
+        // Adiciona a nova div de movimentação no final do formulário
+        $('.movimentacao:last').after(novaMovimentacao);
+    });
+
+   
+    
     // Quando o tipo de movimentação é selecionado é selecionados
     $('#inputTipoMovimentacao').change(function() {
         var selectedTipoMovimentacao = $('#inputTipoMovimentacao').val();
