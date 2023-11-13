@@ -373,7 +373,7 @@ class ContaPagarController extends Controller
 
                 //Se houver parcelas pagas redireciona de volta
                 if($parcela->situacao == 1){
-                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o pagamento!');
                 }
             }
 
@@ -445,7 +445,7 @@ class ContaPagarController extends Controller
 
                 //Se houver parcelas pagas redireciona de volta
                 if($parcela->situacao == 1){
-                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o pagamento!');
                 }
             }
 
@@ -513,14 +513,13 @@ class ContaPagarController extends Controller
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
 
-
             //Verificar se há parcelas pagas
             foreach($checkboxesSelecionados as $parcelaId) {
                 $parcela = ParcelaContaPagar::find($parcelaId);
 
                 //Se houver parcelas pagas redireciona de volta
                 if($parcela->situacao == 1){
-                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o pagamento!');
                 }
             }
 

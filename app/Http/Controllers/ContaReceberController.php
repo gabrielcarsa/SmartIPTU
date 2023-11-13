@@ -371,6 +371,16 @@ class ContaReceberController extends Controller
 
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas já recebidas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas já recebidas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já recebidas estornar o recebimento!');
+                }
+            }
     
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
@@ -432,6 +442,16 @@ class ContaReceberController extends Controller
 
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas já recebidas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas já recebidas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já recebidas estornar o recebimento!');
+                }
+            }
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
@@ -495,6 +515,18 @@ class ContaReceberController extends Controller
 
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+
+            //Verificar se há parcelas já recebidas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas já recebidas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já recebidas estornar o recebimento!');
+                }
+            }
+
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
