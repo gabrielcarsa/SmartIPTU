@@ -91,7 +91,7 @@
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('titular_conta') }}"><span class="material-symbols-outlined">
                                     person_pin
-                                </span>Titular da Conta</a></li>
+                                </span>Central de Contas</a></li>
                         <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
                                     request_quote
                                 </span>Tipo de Débitos</a></li>
