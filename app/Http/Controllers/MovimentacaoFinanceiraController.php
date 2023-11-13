@@ -208,6 +208,7 @@ class MovimentacaoFinanceiraController extends Controller
                 $parcela = new ParcelaContaReceber();
                 $parcela->conta_receber_id = $contaReceber_id;
                 $parcela->numero_parcela = 1;
+                $parcela->situacao = 1;
                 $parcela->valor_parcela = $valor_movimentacao;
                 $parcela->cadastrado_usuario_id = $usuario;
                 $parcela->data_vencimento = $data_vencimento;
@@ -245,6 +246,7 @@ class MovimentacaoFinanceiraController extends Controller
                 $parcela = new ParcelaContaPagar();
                 $parcela->conta_pagar_id = $contaPagar_id;
                 $parcela->numero_parcela = 1;
+                $parcela->situacao = 1;
                 $parcela->valor_parcela = $valor_movimentacao;
                 $parcela->cadastrado_usuario_id = $usuario;
                 $parcela->data_vencimento = $data_vencimento;
