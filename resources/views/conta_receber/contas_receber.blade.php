@@ -306,7 +306,7 @@
                                         <p>Recebimento em:
                                             {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
                                         <p>Cadastrado por {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por {{$resultado->alterado_por}}</p>
                                         <p>Baixado por {{$resultado->baixado_por}}</p>

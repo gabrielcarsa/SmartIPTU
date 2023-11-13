@@ -199,24 +199,26 @@ class ParcelaController extends Controller
     function definir_baixar_parcela($user_id, Request $request){
         $origem = $request->input('origem'); //controle para redirecionar para lugar correto
 
-        $valor_pago = str_replace(',', '.', $request->input('valor_pago'));
-        $request->merge(['valor_pago' => $valor_pago]);
+         //Transformar em formato correto para salvar no BD e validação
+         $request->merge([
+            'valor' => str_replace(['.', ','], ['', '.'], $request->get('valor', [])),
+        ]);
 
         $validated = $request->validate([
-            'data_recebimento.*' => 'required|date',
-            'valor_pago.*' => 'required|numeric|min:0.1',
+            'data.*' => 'required|date',
+            'valor.*' => 'required|numeric|min:0.1',
         ]);
 
         $idParcelas = $request->get('id_parcela', []);
-        $valorPago = $request->get('valor_pago', []);
-        $dataRecebimento = $request->get('data_recebimento', []);
+        $valor = $request->get('valor', []);
+        $data = $request->get('data', []);
     
         $i = 0;
         foreach ($idParcelas as $id) {
             // Process each $id here
             $parcela = Parcela::find($id);
-            $parcela->valor_pago = $valorPago[$i];
-            $parcela->data_recebimento = $dataRecebimento[$i];
+            $parcela->valor_pago = $valor[$i];
+            $parcela->data_recebimento = $data[$i];
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;

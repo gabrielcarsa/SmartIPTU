@@ -187,7 +187,7 @@ class ContaPagarController extends Controller
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
             'p.valor_pago as parcela_valor_pago',
-            'p.data_recebimento as data_recebimento',
+            'p.data_pagamento as data_pagamento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
             'p.alterado_usuario_id as parcela_alterado_usuario_id',
@@ -395,6 +395,11 @@ class ContaPagarController extends Controller
 
     //REAJUSTAR PARCELAS
     function reajustar($user_id, Request $request){
+        //Transformar em formato correto para salvar no BD e validação
+        $request->merge([
+            'valor_unico' => str_replace(['.', ','], ['', '.'], $request->get('valor_unico')),
+        ]);
+
         $validated = $request->validate([
             'valor_unico' => 'required|numeric|min:0.1',
         ]);
@@ -514,20 +519,30 @@ class ContaPagarController extends Controller
     //BAIXAR PARCELAS
     function definir_baixar_parcela($user_id, Request $request){
 
+        //Transformar em formato correto para salvar no BD e validação
+        $request->merge([
+            'valor' => str_replace(['.', ','], ['', '.'], $request->get('valor', [])),
+        ]);
+
+        //Validação
         $validated = $request->validate([
-            'data_recebimento.*' => 'required|date',
-            'valor_pago.*' => 'required|numeric|min:0.1',
+            'data.*' => 'required|date',
+            'valor.*' => 'required|numeric|min:0.1',
         ]);
 
         $idParcelas = $request->get('id_parcela', []);
-        $valorPago = $request->get('valor_pago', []);
-        $dataRecebimento = $request->get('data_recebimento', []);
+        $valorPago = $request->get('valor', []);
+        $dataPagamento = $request->get('data', []);
     
         $i = 0;
         foreach ($idParcelas as $id) {
             $parcela = ParcelaContaPagar::find($id);
+
+            $valor = str_replace(',', '.', $valorPago[$i]);
+            $parcela->valor_pago = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
+
             $parcela->valor_pago = $valorPago[$i];
-            $parcela->data_recebimento = $dataRecebimento[$i];
+            $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;

@@ -16,17 +16,17 @@ use Carbon\Carbon;
 class MovimentacaoFinanceiraController extends Controller
 {
     function movimentacao_financeira(){
-        $today = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+        $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
         //Soma das entradas do dia atual
         $entradas = DB::table('movimentacao_financeira')
-            ->whereDate('data_movimentacao', $today)
+            ->whereDate('data_movimentacao', $hoje)
             ->where('tipo_movimentacao', 0)
             ->sum('valor');
 
         //Soma das saidas do dia atual
         $saidas = DB::table('movimentacao_financeira')
-            ->whereDate('data_movimentacao', $today)
+            ->whereDate('data_movimentacao', $hoje)
             ->where('tipo_movimentacao', 1)
             ->sum('valor');
 
@@ -40,6 +40,20 @@ class MovimentacaoFinanceiraController extends Controller
 
      // LISTAGEM DE MOVIMENTAÇÃO FINANCEIRA
      function listar(Request $request){
+        $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+
+        //Soma das entradas do dia atual
+        $entradas = DB::table('movimentacao_financeira')
+            ->whereDate('data_movimentacao', $hoje)
+            ->where('tipo_movimentacao', 0)
+            ->sum('valor');
+
+        //Soma das saidas do dia atual
+        $saidas = DB::table('movimentacao_financeira')
+            ->whereDate('data_movimentacao', $hoje)
+            ->where('tipo_movimentacao', 1)
+            ->sum('valor');
+
         $movimentacao = MovimentacaoFinanceira::all();
 
         //Datas 
@@ -71,6 +85,8 @@ class MovimentacaoFinanceiraController extends Controller
             'saldo_anterior' => $saldo_anterior,
             'saldo_atual' => $saldo_atual,
             'total_movimentacao' => $total_movimentacao,
+            'entradas' => $entradas,
+            'saidas' => $saidas
         ];
         
         return view('movimentacao_financeira/movimentacao_financeira', compact('movimentacao', 'data'));

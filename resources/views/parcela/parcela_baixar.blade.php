@@ -33,8 +33,8 @@
                         <th scope="col">ID</th>
                         <th scope="col">Valor</th>
                         <th scope="col">Data Vencimento</th>
-                        <th scope="col">Valor Recebido</th>
-                        <th scope="col">Data Recebimento</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Data</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,14 +60,14 @@
                                 id="inputDataVencimentoParcelas">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor_pago[]" value="{{ old('valor_pago.' . $index) != null ?  old('valor_pago.' . $index) : '' }}"
-                                class="form-control valor_pago @error('valor_pago.' . $index) is-invalid @enderror"
-                                id="inputValorPago">
+                            <input type="text" name="valor[]" value="{{ old('valor.' . $index) != null ?  old('valor.' . $index) : '' }}"
+                                class="form-control valor_pago @error('valor.' . $index) is-invalid @enderror"
+                                id="inputValor">
                         </th>
                         <th scope="row">
-                            <input type="date" name="data_recebimento[]"
-                                value="{{ old('data_recebimento.' . $index) != null ?  old('data_recebimento.' . $index) : '' }}"
-                                class="form-control @error('data_recebimento.' . $index) is-invalid @enderror" id="">
+                            <input type="date" name="data[]"
+                                value="{{ old('data.' . $index) != null ?  old('data.' . $index) : '' }}"
+                                class="form-control @error('data.' . $index) is-invalid @enderror" id="">
                         </th>
                         <th scope="row">
 
@@ -95,7 +95,7 @@
 
 <script>
   $(document).ready(function() {
-    $('input.valor_pago').mask('000.000.000.000.000,00', { reverse: true });
+    $('#inputValor').mask('000.000.000.000.000,00', { reverse: true });
   });
 </script>
 

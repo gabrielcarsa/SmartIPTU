@@ -243,10 +243,10 @@
                                     aria-labelledby="heading{{$resultado->id}}"
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
-                                        <p>Recebimento em:
+                                        <p>Pago em:
                                             {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                                        <p>Valor Pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>
@@ -305,10 +305,10 @@
                                     aria-labelledby="heading{{$resultado->id}}"
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
-                                        <p>Recebimento em:
-                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                        <p>Pago em:
+                                            {{\Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                                        <p>Valor pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>
