@@ -366,8 +366,20 @@ class ContaPagarController extends Controller
 
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
-    
+
+            //Verificar se há parcelas pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaPagar::find($parcelaId);
+
+                //Se houver parcelas pagas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                }
+            }
+
             $parcelas = [];
+
+            //Select nas parcelas
             foreach ($checkboxesSelecionados as $parcelaId) {
                 $parcelas[] = DB::table('parcela_conta_pagar as p')
                 ->select(
@@ -425,7 +437,18 @@ class ContaPagarController extends Controller
             $checkboxesSelecionados = $request->input('checkboxes');
 
             // Converta os valores dos checkboxes em um array
-            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados);
+            
+            //Verificar se há parcelas pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaPagar::find($parcelaId);
+
+                //Se houver parcelas pagas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                }
+            }
+
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
@@ -484,11 +507,22 @@ class ContaPagarController extends Controller
        
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
-             // Recupere os valores dos checkboxes da consulta da URL
+            // Recupere os valores dos checkboxes da consulta da URL
             $checkboxesSelecionados = $request->input('checkboxes');
 
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+
+            //Verificar se há parcelas pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaPagar::find($parcelaId);
+
+                //Se houver parcelas pagas redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já pagas estornar o recebimento!');
+                }
+            }
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
