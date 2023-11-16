@@ -198,6 +198,9 @@ class MovimentacaoFinanceiraController extends Controller
                 $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
                 $contaReceber->cadastrado_usuario_id = $usuario;
                 $contaReceber->save();
+
+                //Vincular Conta com Movimentacao
+                $movimentacao_financeira->conta_receber_id = $contaReceber->id;
     
                 // Cadastrar Parcelas
                 $qtd_parcelas = 1;
@@ -236,6 +239,9 @@ class MovimentacaoFinanceiraController extends Controller
                 $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
                 $contaPagar->cadastrado_usuario_id = $usuario;
                 $contaPagar->save();
+
+                //Vincular Conta com Movimentacao
+                $movimentacao_financeira->conta_pagar_id = $contaPagar->id;
     
                 // Cadastrar Parcelas
                 $qtd_parcelas = 1;

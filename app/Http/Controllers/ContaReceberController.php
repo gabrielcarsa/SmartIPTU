@@ -8,6 +8,7 @@ use App\Models\ContaReceber;
 use App\Models\ParcelaContaReceber;
 use App\Models\Cliente;
 use App\Models\Parcela;
+use App\Models\MovimentacaoFinanceira;
 use Carbon\Carbon;
 use App\Models\CategoriaReceber;
 use App\Http\Requests\ContaReceberRequest;
@@ -583,6 +584,18 @@ class ContaReceberController extends Controller
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
             $parcela->save();
+
+             //Selecionar ID do contas a receber
+            $conta_receber_id = $parcela->conta_receber_id;
+            //Verificar vinculo com Movimentação
+            $movimentacoes = MovimentacaoFinanceira::where('conta_receber_id', $conta_receber_id)->get();
+
+            //Se a conta está relacionada a uma movimentação
+            if ($movimentacoes->count() > 0) {
+                
+            }else{
+                
+            }
             $i++;
         }
         return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   
