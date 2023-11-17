@@ -114,6 +114,7 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Cliente / Fornecedor</th>
+                    <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Valor da Entrada</th>
                     <th scope="col">Valor da Saída</th>
@@ -129,6 +130,14 @@
                     <td class="align-middle">{{$mov->nome}}</td>
                     @else
                     <td class="align-middle">{{$mov->razao_social}}</td>
+                    @endif
+                    @if($mov->tipo_movimentacao == 0)
+                    <td class="align-middle">{{$mov->categoria_receber}}</td>
+                    <td class="align-middle"></td>
+                    @else
+                    <td class="align-middle"></td>
+                    <td class="align-middle">{{$mov->categoria_pagar}}</td>
+
                     @endif
                     <td class="align-middle">{{$mov->descricao}}</td>
                     @if($mov->tipo_movimentacao == 0)

@@ -69,17 +69,20 @@ class MovimentacaoFinanceiraController extends Controller
         if ($request->filled('data')) {
             $query->select(
                 'mf.*',
+                'cr.descricao as categoria_receber',
+                'cp.descricao as categoria_pagar',
                 'c.nome as nome',
                 'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
             )
+            ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
+            ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
             ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
             ->where('data_movimentacao', '=', '%' . $dataRef);
         }
 
         // Execute a consulta e obtenha os resultados
         $movimentacao = $query->get();
-
 
         $data = [
             'saldo_anterior' => $saldo_anterior,
