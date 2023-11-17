@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TitularConta;
 use App\Models\ContaReceber;
 use App\Models\ParcelaContaReceber;
+use App\Models\SaldoDiario;
 use App\Models\Cliente;
 use App\Models\Parcela;
 use App\Models\MovimentacaoFinanceira;
@@ -351,7 +352,7 @@ class ContaReceberController extends Controller
                 $totalValorPago += $resultado->valor_parcela;
             }
         }
-    
+        
         $data = [
             'resultados' => $resultados,
             'isReferenteLotes' => $isReferenteLotes, 
@@ -590,12 +591,71 @@ class ContaReceberController extends Controller
             //Verificar vinculo com Movimentação
             $movimentacoes = MovimentacaoFinanceira::where('conta_receber_id', $conta_receber_id)->get();
 
+            //Obter titular da conta
+            $contaReceber = ContaReceber::find($conta_receber_id);
+
             //Se a conta está relacionada a uma movimentação
             if ($movimentacoes->count() > 0) {
                 
-            }else{
+            }else{ //Se não estiver relacionado
+
+                $movimentacao_financeira = new MovimentacaoFinanceira();
+                $movimentacao_financeira->cliente_fornecedor_id = $contaReceber->cliente_id;
+                $movimentacao_financeira->descricao = $contaReceber->descricao;
+                $movimentacao_financeira->data_movimentacao = $dataRecebimento[$i];
+                $movimentacao_financeira->titular_conta_id = $contaReceber->titular_conta_id;
+                $movimentacao_financeira->conta_corrente_id = 1; //Alterar
                 
+                // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
+                // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
+                $movimentacao_financeira->tipo_movimentacao = 0; //Contas a Receber é Entrada
+        
+                $valor = str_replace(',', '.', $valorRecebido[$i]);
+                $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
+                $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
+            
+                $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
+                $movimentacao_financeira->cadastrado_usuario_id = $user_id;
+        
+                //Variavel de saldo para manipulacao e verificacao do saldo
+                $saldo = SaldoDiario::where('data', $dataRecebimento[$i])->get(); // Saldo do dia
+        
+                //Se não houver saldo para aquele dia
+                if(!isset($saldo[0]->saldo)){
+                    //Último saldo cadastrado
+                    $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $dataRecebimento[$i])->first();
+                    
+                    //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
+                    $addSaldo = new SaldoDiario();
+                    $addSaldo->saldo = $ultimo_saldo->saldo;
+                    $addSaldo->data = $dataRecebimento[$i];
+                    $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
+                    $addSaldo->save();
+        
+                    $saldo = $addSaldo;
+                    $valor_desatualizado_saldo =  $saldo->saldo; //Armazenar o ultimo saldo
+        
+                }else{//Caso houver saldo para aquele dia
+                    $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+                }
+        
+                //variavel que será responsavel por alterar-lo
+                $saldo_model = SaldoDiario::where('data', $dataRecebimento[$i])->first();
+        
+                //Adicionando categoria
+                $movimentacao_financeira->categoria_receber_id = $contaReceber->categoria_receber_id;
+
+                //Atualizando o saldo
+                $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+                $saldo_model->save();
+
+                //Vincular Conta com Movimentacao
+                $movimentacao_financeira->conta_receber_id = $contaReceber->id;
+    
+                //salvar movimentação
+                $movimentacao_financeira->save();
             }
+
             $i++;
         }
         return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   

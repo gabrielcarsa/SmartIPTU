@@ -304,7 +304,7 @@
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
                                         <p>Recebimento em:
-                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                            {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
                                         <p>Valor recebido: R$ {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
                                         <p>Cadastrado por {{$resultado->cadastrado_por}}</p>
