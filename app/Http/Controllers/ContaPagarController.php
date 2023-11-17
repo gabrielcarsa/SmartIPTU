@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\SaldoDiario;
+use App\Models\MovimentacaoFinanceira;
 use App\Models\CategoriaPagar;
 use App\Models\ContaPagar;
 use App\Models\ParcelaContaPagar;
@@ -580,6 +582,77 @@ class ContaPagarController extends Controller
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
             $parcela->save();
+
+             //Selecionar ID do contas a pagar
+             $conta_pagar_id = $parcela->conta_pagar_id;
+             //Verificar vinculo com Movimentação
+             $movimentacoes = MovimentacaoFinanceira::where('conta_pagar_id', $conta_pagar_id)->get();
+ 
+             //Obter titular da conta
+             $contaPagar = ContaPagar::find($conta_pagar_id);
+ 
+             //Se a conta está relacionada a uma movimentação
+             if ($movimentacoes->count() > 0) {
+                 
+             }else{ //Se não estiver relacionado
+ 
+                $movimentacao_financeira = new MovimentacaoFinanceira();
+                $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
+                $movimentacao_financeira->descricao = $contaPagar->descricao;
+                $movimentacao_financeira->data_movimentacao = $dataPagamento[$i];
+                $movimentacao_financeira->titular_conta_id = $contaPagar->titular_conta_id;
+                $movimentacao_financeira->conta_corrente_id = 1; //Alterar
+                
+                // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
+                // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
+                $movimentacao_financeira->tipo_movimentacao = 1; //Contas a Pagar é Saida
+        
+                $valor = str_replace(',', '.', $valorPago[$i]);
+                $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
+                $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
+            
+                $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
+                $movimentacao_financeira->cadastrado_usuario_id = $user_id;
+        
+                //Variavel de saldo para manipulacao e verificacao do saldo
+                $saldo = SaldoDiario::where('data', $dataPagamento[$i])->get(); // Saldo do dia
+        
+                //Se não houver saldo para aquele dia
+                if(!isset($saldo[0]->saldo)){
+                    //Último saldo cadastrado
+                    $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $dataPagamento[$i])->first();
+                    
+                    //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
+                    $addSaldo = new SaldoDiario();
+                    $addSaldo->saldo = $ultimo_saldo->saldo;
+                    $addSaldo->data = $dataPagamento[$i];
+                    $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
+                    $addSaldo->save();
+        
+                    $saldo = $addSaldo;
+                    $valor_desatualizado_saldo =  $saldo->saldo; //Armazenar o ultimo saldo
+        
+                }else{//Caso houver saldo para aquele dia
+                    $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+                }
+        
+                //variavel que será responsavel por alterar-lo
+                $saldo_model = SaldoDiario::where('data', $dataPagamento[$i])->first();
+        
+                //Adicionando categoria
+                $movimentacao_financeira->categoria_pagar_id = $contaPagar->categoria_pagar_id;
+
+                //Atualizando o saldo
+                $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+                $saldo_model->save();
+
+                //Vincular Conta com Movimentacao
+                $movimentacao_financeira->conta_pagar_id = $contaPagar->id;
+    
+                //salvar movimentação
+                $movimentacao_financeira->save();
+             }
+
             $i++;
         }
         return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   

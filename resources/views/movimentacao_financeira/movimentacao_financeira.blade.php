@@ -131,15 +131,15 @@
                     @else
                     <td class="align-middle">{{$mov->razao_social}}</td>
                     @endif
+
                     @if($mov->tipo_movimentacao == 0)
                     <td class="align-middle">{{$mov->categoria_receber}}</td>
-                    <td class="align-middle"></td>
                     @else
-                    <td class="align-middle"></td>
                     <td class="align-middle">{{$mov->categoria_pagar}}</td>
-
                     @endif
+
                     <td class="align-middle">{{$mov->descricao}}</td>
+
                     @if($mov->tipo_movimentacao == 0)
                     <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
@@ -147,15 +147,11 @@
                     <td class="align-middle"></td>
                     <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     @endif
+                    
                     <td class="d-flex align-items-center">
                         <a href="editar/{{$mov->id}}" class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
-                                edit
-                            </span>
-                        </a>
-                        <a href="editar/{{$mov->id}}" class="btn-icone-listagem" style="background-color: rgb(248, 66, 66);">
-                            <span class="material-symbols-outlined">
-                                delete
+                                visibility
                             </span>
                         </a>
                     </td>

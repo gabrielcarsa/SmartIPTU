@@ -352,7 +352,7 @@ class ContaReceberController extends Controller
                 $totalValorPago += $resultado->valor_parcela;
             }
         }
-        
+
         $data = [
             'resultados' => $resultados,
             'isReferenteLotes' => $isReferenteLotes, 
@@ -586,7 +586,7 @@ class ContaReceberController extends Controller
             $parcela->situacao = 1;
             $parcela->save();
 
-             //Selecionar ID do contas a receber
+            //Selecionar ID do contas a receber
             $conta_receber_id = $parcela->conta_receber_id;
             //Verificar vinculo com Movimentação
             $movimentacoes = MovimentacaoFinanceira::where('conta_receber_id', $conta_receber_id)->get();
