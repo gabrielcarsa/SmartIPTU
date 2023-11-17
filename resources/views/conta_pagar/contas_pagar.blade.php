@@ -244,7 +244,7 @@
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
                                         <p>Pago em:
-                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                            {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
                                         </p>
                                         <p>Valor Pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
@@ -306,7 +306,7 @@
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
                                         <p>Pago em:
-                                            {{\Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
+                                            {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
                                         </p>
                                         <p>Valor pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>

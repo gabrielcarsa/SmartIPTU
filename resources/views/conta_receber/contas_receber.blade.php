@@ -147,7 +147,7 @@
             </div>
 
             <div class="col-md-3">
-                <label for="" class="form-label">A Receber refente</label><br>
+                <label for="" class="form-label">A Receber referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
                         id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}>
@@ -242,7 +242,7 @@
                                     data-bs-parent="#accordion{{$resultado->id}}">
                                     <div class="accordion-body">
                                         <p>Recebimento em:
-                                            {{\Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                                            {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
                                         <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
