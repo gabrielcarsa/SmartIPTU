@@ -148,14 +148,23 @@
                     <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     @endif
                     
+                    @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
-                        <a href="editar/{{$mov->id}}" class="btn-icone-listagem">
+                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&referenteOutros=on" class="btn-icone-listagem">
+                            <span class="material-symbols-outlined">
+                                visibility 
+                            </span>
+                        </a>
+                    </td>
+                    @else
+                    <td class="d-flex align-items-center">
+                        <a href="" class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
                             </span>
                         </a>
                     </td>
-                    
+                    @endif
                 </tr>
                 @endforeach
                 @endif

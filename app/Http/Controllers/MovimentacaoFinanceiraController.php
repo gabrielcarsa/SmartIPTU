@@ -63,6 +63,7 @@ class MovimentacaoFinanceiraController extends Controller
         $saldo_atual = SaldoDiario::where('data', $dataRef)->get(); // Saldo do dia
 
         $total_movimentacao = $movimentacao->count();
+
         $query = DB::table('movimentacao_financeira as mf');
 
         // Verifique se o campo "data" está preenchido no formulário
@@ -74,10 +75,14 @@ class MovimentacaoFinanceiraController extends Controller
                 'c.nome as nome',
                 'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
+                'pr.id as id_parcela_receber', 
+                'pg.id as id_parcela_pagar'
             )
             ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
             ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
             ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
+            ->leftjoin('parcela_conta_receber as pr', 'pr.conta_receber_id', '=', 'mf.conta_receber_id')
+            ->leftjoin('parcela_conta_pagar as pg', 'pg.conta_pagar_id',  '=', 'mf.conta_pagar_id')
             ->where('data_movimentacao', '=', '%' . $dataRef);
         }
 
@@ -148,7 +153,7 @@ class MovimentacaoFinanceiraController extends Controller
             $valor = str_replace(',', '.', $movimentacaoData['valor']);
             $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
-        
+            dd($valor_movimentacao);
             $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
             $movimentacao_financeira->cadastrado_usuario_id = $usuario;
     
