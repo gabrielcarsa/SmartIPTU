@@ -137,16 +137,15 @@ class ContaReceberController extends Controller
         $idParcela = $request->input('idParcela');
 
     
-
         //select referente a parcelas de contas a receber de lotes
-        $queryReferenteLotes = DB::table('parcela as p')
+        $queryReferenteLotes = DB::table('parcela_conta_receber as p')
         ->select( 
             'p.id as id',
             'p.numero_parcela as numero_parcela',
             'p.data_vencimento as data_vencimento',
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
-            'p.valor_pago as parcela_valor_pago',
+            'p.valor_recebido as parcela_valor_pago',
             'p.data_recebimento as data_recebimento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
@@ -159,6 +158,8 @@ class ContaReceberController extends Controller
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
             'tpd.descricao as tipo_debito_descricao', 
+            'tpd.descricao as tipo_debito_descricao', 
+            'l.id as lote_id',
             'l.lote as lote',
             'l.inscricao_municipal as inscricao',
             'e.nome as empreendimento',
