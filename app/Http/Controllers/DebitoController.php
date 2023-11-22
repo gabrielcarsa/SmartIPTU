@@ -309,8 +309,19 @@ class DebitoController extends Controller
         $data_vencimento = $request->input('data_vencimento'); 
         $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
         $i = 0;
+
+        //Verificar se é parcela a pagar ou receber
+        $empresa = TitularConta::find(1);
+        $lote = Lote::find($request->input('lote_id'));
+
         foreach($idParcelas as $p){
-            $parcela = ParcelaContaReceber::find($p);
+            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+            if($empresa->cliente_id == $lote->cliente_id){
+                $parcela = ParcelaContaPagar::find($p);
+            }else{// Caso contrário é um débito a receber
+                $parcela = ParcelaContaReceber::find($p);
+            }
+
             if($i > 0){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
@@ -319,7 +330,13 @@ class DebitoController extends Controller
             $parcela->save();
             $i++;
         }
-        $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+        //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+        if($empresa->cliente_id == $lote->cliente_id){
+            $parcelaReferencia = ParcelaContaPagar::find($idParcelas[0]);
+        }else{// Caso contrário é um débito a receber
+            $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+        }
+        
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
 
