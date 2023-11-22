@@ -248,9 +248,9 @@ class DebitoController extends Controller
             }
     
             $parcelas = [];
-            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-            if($empresa->cliente_id == $lote->cliente_id){
-                foreach ($checkboxesSelecionados as $parcelaId) {
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                if($empresa->cliente_id == $lote->cliente_id){
                     $parcelas[] = DB::table('parcela_conta_pagar as p')
                     ->select(
                         'p.id as id',
@@ -267,9 +267,7 @@ class DebitoController extends Controller
                     ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
                     ->where('p.id', $parcelaId)
                     ->get();
-                }
-            }else{// Caso contrário é um débito a receber
-                foreach ($checkboxesSelecionados as $parcelaId) {
+                }else{// Caso contrário é um débito a receber
                     $parcelas[] = DB::table('parcela_conta_receber as p')
                     ->select(
                         'p.id as id',
@@ -336,7 +334,7 @@ class DebitoController extends Controller
         }else{// Caso contrário é um débito a receber
             $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
         }
-        
+
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
 
@@ -360,9 +358,18 @@ class DebitoController extends Controller
             // Converta os valores dos checkboxes em um array
             $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
 
+            //Verificar se é parcela a pagar ou receber
+            $empresa = TitularConta::find(1);
+            $lote = Lote::find($request->input('lote_id'));
+
             //Verificar se há parcelas já recebidas
             foreach($checkboxesSelecionados as $parcelaId) {
-                $parcela = ParcelaContaReceber::find($parcelaId);
+                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                if($empresa->cliente_id == $lote->cliente_id){
+                    $parcela = ParcelaContaPagar::find($parcelaId);
+                }else{// Caso contrário é um débito a receber
+                    $parcela = ParcelaContaReceber::find($parcelaId);
+                }
 
                 //Se houver parcelas já recebidas redireciona de volta
                 if($parcela->situacao == 1){
@@ -373,22 +380,43 @@ class DebitoController extends Controller
 
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
-                $parcelas[] = DB::table('parcela_conta_receber as p')
-                ->select(
-                    'p.id as id',
-                    'p.numero_parcela as numero_parcela',
-                    'p.data_vencimento as data_vencimento',
-                    'p.valor_parcela as valor_parcela',
-                    'p.situacao as situacao_parcela',
-                    'd.id as debito_id',
-                    'd.quantidade_parcela as debito_quantidade_parcela',
-                    'd.descricao_debito_id as debito_descricao_debito_id',  
-                    'dd.descricao as descricao',       
-                )
-                ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
-                ->where('p.id', $parcelaId)
-                ->get();
+                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                if($empresa->cliente_id == $lote->cliente_id){
+                    $parcelas[] = DB::table('parcela_conta_pagar as p')
+                    ->select(
+                        'p.id as id',
+                        'p.numero_parcela as numero_parcela',
+                        'p.data_vencimento as data_vencimento',
+                        'p.valor_parcela as valor_parcela',
+                        'p.situacao as situacao_parcela',
+                        'd.id as debito_id',
+                        'd.quantidade_parcela as debito_quantidade_parcela',
+                        'd.descricao_debito_id as debito_descricao_debito_id',  
+                        'dd.descricao as descricao',       
+                    )
+                    ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                    ->where('p.id', $parcelaId)
+                    ->get();
+
+                }else{// Caso contrário é um débito a receber
+                    $parcelas[] = DB::table('parcela_conta_receber as p')
+                    ->select(
+                        'p.id as id',
+                        'p.numero_parcela as numero_parcela',
+                        'p.data_vencimento as data_vencimento',
+                        'p.valor_parcela as valor_parcela',
+                        'p.situacao as situacao_parcela',
+                        'd.id as debito_id',
+                        'd.quantidade_parcela as debito_quantidade_parcela',
+                        'd.descricao_debito_id as debito_descricao_debito_id',  
+                        'dd.descricao as descricao',       
+                    )
+                    ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                    ->where('p.id', $parcelaId)
+                    ->get();
+                }
             }
             return view('parcela/parcela_baixar', compact('parcelas'));
 
@@ -414,22 +442,29 @@ class DebitoController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valor = $request->get('valor', []);
         $data = $request->get('data', []);
+
+        //Verificar se é parcela a pagar ou receber
+        $empresa = TitularConta::find(1);
+        $lote = Lote::find($request->input('lote_id'));
     
         $i = 0;
         foreach ($idParcelas as $id) {
-            // Process each $id here
-            $parcela = ParcelaContaReceber::find($id);
-            $parcela->valor_recebido = $valor[$i];
-            $parcela->data_recebimento = $data[$i];
+            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+            if($empresa->cliente_id == $lote->cliente_id){
+                $parcela = ParcelaContaPagar::find($id);
+                $parcela->valor_pago = $valor[$i];
+                $parcela->data_pagamento = $data[$i];
+            }else{// Caso contrário é um débito a receber
+                $parcela = ParcelaContaReceber::find($id);
+                $parcela->valor_recebido = $valor[$i];
+                $parcela->data_recebimento = $data[$i];
+            }
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
-            $parcela->save();
 
             //Selecionar ID do contas a receber
             $debito_id = $parcela->debito_id;
-            //Verificar vinculo com Movimentação
-            $movimentacoes = MovimentacaoFinanceira::where('debito_id', $debito_id)->get();
 
             //Obter debito
             $debitoReceber = Debito::find($debito_id);
@@ -438,10 +473,9 @@ class DebitoController extends Controller
             $descricao_debito = DescricaoDebito::find($debitoReceber->descricao_debito_id);
 
             //Se debito está relacionado a uma movimentação
-            if ($movimentacoes->count() > 0) {
+            if ($parcela->movimentacao_financeira_id != null) {
                 
             }else{ //Se não estiver relacionado
-
                 $movimentacao_financeira = new MovimentacaoFinanceira();
 
                 //Pegar lote referente ao debito
@@ -454,7 +488,7 @@ class DebitoController extends Controller
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
                 // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
-                $movimentacao_financeira->tipo_movimentacao = 0; //Contas a Receber é Entrada
+                $movimentacao_financeira->tipo_movimentacao = $empresa->cliente_id == $lote->cliente_id ? 1 : 0; 
         
                 $valor_corrigido = str_replace(',', '.', $valor[$i]);
                 $movimentacao_financeira->valor = (double) $valor_corrigido; // Converter a string diretamente para um número em ponto flutuante
@@ -494,21 +528,36 @@ class DebitoController extends Controller
                 //variavel que será responsavel por alterar-lo
                 $saldo_model = SaldoDiario::where('data', $data[$i])->first();
 
-                //Atualizando o saldo
-                $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                if($empresa->cliente_id == $lote->cliente_id){
+                    //Atualizando o saldo
+                    $saldo_model->saldo = $valor_desatualizado_saldo - $valor_movimentacao;         
+                }else{// Caso contrário é um débito a receber
+                    //Atualizando o saldo
+                    $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+                }
                 $saldo_model->save();
 
                 //Vincular Conta com Movimentacao
                 $movimentacao_financeira->debito_id = $debitoReceber->id;
-    
+
                 //salvar movimentação
                 $movimentacao_financeira->save();
-            }
 
+                //Vincular parcela com Movimentação
+                $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
+
+            }
+            $parcela->save();
             $i++;
         }
        
-        $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+        //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+        if($empresa->cliente_id == $lote->cliente_id){
+            $parcelaReferencia = ParcelaContaPagar::find($idParcelas[0]);      
+        }else{// Caso contrário é um débito a receber
+            $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+        }
         $debito = Debito::find($parcelaReferencia->debito_id);
         $lote_id = $debito->lote_id;
         if($origem == "lote_gestao"){
