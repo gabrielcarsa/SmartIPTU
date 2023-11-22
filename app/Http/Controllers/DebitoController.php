@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Debito;
 use App\Models\ParcelaContaReceber;
+use App\Models\ParcelaContaPagar;
 use App\Models\DescricaoDebito;
 use App\Models\Lote;
 use App\Models\TitularConta;
@@ -63,9 +64,16 @@ class DebitoController extends Controller
         $data_vencimento = $debito->data_vencimento; 
         $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
         $valor_entrada = $debito->valor_entrada;
+        $empresa = TitularConta::find(1);
+        $lote = Lote::find($debito->lote_id);
 
         for($i = 1; $i <= $qtd_parcelas; $i++){
-            $parcela = new ParcelaContaReceber();
+            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+            if($empresa->cliente_id == $lote->cliente_id){
+                $parcela = new ParcelaContaPagar();
+            }else{// Caso contrário é um débito a receber
+                $parcela = new ParcelaContaReceber();
+            }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             $parcela->valor_parcela = $debito->valor_parcela;

@@ -7,6 +7,7 @@ use App\Models\Lote;
 use App\Models\Quadra;
 use App\Models\User;
 use App\Models\Debito;
+use App\Models\TitularConta;
 use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
@@ -139,48 +140,97 @@ class LoteController extends Controller
 
     //RETORNA VIEW PARA GESTÃO DO LOTE
     function gestao($id){
-        $resultados = DB::table('lote AS l')
-        ->select(
-            'l.id AS lote_id',
-            'l.lote',
-            'l.inscricao_municipal',
-            'q.id AS quadra_id',
-            'q.nome AS quadra_nome',
-            'd.id AS debito_id',
-            'd.data_cadastro AS debito_data_cadastro',
-            'd.data_alteracao AS debito_data_alteracao',
-            'd.valor_parcela AS valor_parcela_debito',
-            'd.quantidade_parcela AS quantidade_parcela_debito',
-            'e.id AS empreendimento_id',
-            'e.nome AS empreendimento_nome',
-            'td.id AS tipo_debito_id',
-            'td.descricao AS tipo_debito_descricao',
-            'dd.id AS descricao_debito_id',
-            'dd.descricao AS descricao_debito_descricao',
-            'p.id AS parcela_id',
-            'p.valor_parcela AS valor_parcela',
-            'p.valor_recebido AS valor_pago_parcela',
-            'p.data_recebimento AS data_recebimento_parcela',
-            'p.data_vencimento AS data_vencimento_parcela',
-            'p.numero_parcela AS numero_parcela',
-            'p.situacao AS situacao_parcela',
-            'cliente.nome AS nome_cliente',
-            'cliente.razao_social AS razao_social_cliente',
-            'users_cadastrado.name AS cadastrado_usuario_nome',
-            'users_alterado.name AS alterado_usuario_nome'
-        )
-        ->join('quadra AS q', 'l.quadra_id', '=', 'q.id')
-        ->join('empreendimento AS e', 'q.empreendimento_id', '=', 'e.id')
-        ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
-        ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
-        ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
-        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
-        ->leftJoin('parcela_conta_receber AS p', 'd.id', '=', 'p.debito_id')
-        ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
-        ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
-        ->where('l.id', $id)
-        ->orderBy('data_vencimento_parcela', 'ASC') 
-        ->get();
+        $empresa = TitularConta::find(1);
+        $lote = Lote::find($id);
+        //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+        if($empresa->cliente_id == $lote->cliente_id){
+            $resultados = DB::table('lote AS l')
+            ->select(
+                'l.id AS lote_id',
+                'l.lote',
+                'l.inscricao_municipal',
+                'q.id AS quadra_id',
+                'q.nome AS quadra_nome',
+                'd.id AS debito_id',
+                'd.data_cadastro AS debito_data_cadastro',
+                'd.data_alteracao AS debito_data_alteracao',
+                'd.valor_parcela AS valor_parcela_debito',
+                'd.quantidade_parcela AS quantidade_parcela_debito',
+                'e.id AS empreendimento_id',
+                'e.nome AS empreendimento_nome',
+                'td.id AS tipo_debito_id',
+                'td.descricao AS tipo_debito_descricao',
+                'dd.id AS descricao_debito_id',
+                'dd.descricao AS descricao_debito_descricao',
+                'p.id AS parcela_id',
+                'p.valor_parcela AS valor_parcela',
+                'p.valor_pago AS valor_pago_parcela',
+                'p.data_pagamento AS data_recebimento_parcela',
+                'p.data_vencimento AS data_vencimento_parcela',
+                'p.numero_parcela AS numero_parcela',
+                'p.situacao AS situacao_parcela',
+                'cliente.nome AS nome_cliente',
+                'cliente.razao_social AS razao_social_cliente',
+                'users_cadastrado.name AS cadastrado_usuario_nome',
+                'users_alterado.name AS alterado_usuario_nome'
+            )
+            ->join('quadra AS q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento AS e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
+            ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
+            ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
+            ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
+            ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
+            ->leftJoin('parcela_conta_pagar AS p', 'd.id', '=', 'p.debito_id')
+            ->where('l.id', $id)
+            ->orderBy('data_vencimento_parcela', 'ASC') 
+            ->get();
+        }else{// Caso contrário é um débito a receber
+            $resultados = DB::table('lote AS l')
+            ->select(
+                'l.id AS lote_id',
+                'l.lote',
+                'l.inscricao_municipal',
+                'q.id AS quadra_id',
+                'q.nome AS quadra_nome',
+                'd.id AS debito_id',
+                'd.data_cadastro AS debito_data_cadastro',
+                'd.data_alteracao AS debito_data_alteracao',
+                'd.valor_parcela AS valor_parcela_debito',
+                'd.quantidade_parcela AS quantidade_parcela_debito',
+                'e.id AS empreendimento_id',
+                'e.nome AS empreendimento_nome',
+                'td.id AS tipo_debito_id',
+                'td.descricao AS tipo_debito_descricao',
+                'dd.id AS descricao_debito_id',
+                'dd.descricao AS descricao_debito_descricao',
+                'p.id AS parcela_id',
+                'p.valor_parcela AS valor_parcela',
+                'p.valor_recebido AS valor_pago_parcela',
+                'p.data_recebimento AS data_recebimento_parcela',
+                'p.data_vencimento AS data_vencimento_parcela',
+                'p.numero_parcela AS numero_parcela',
+                'p.situacao AS situacao_parcela',
+                'cliente.nome AS nome_cliente',
+                'cliente.razao_social AS razao_social_cliente',
+                'users_cadastrado.name AS cadastrado_usuario_nome',
+                'users_alterado.name AS alterado_usuario_nome'
+            )
+            ->join('quadra AS q', 'l.quadra_id', '=', 'q.id')
+            ->join('empreendimento AS e', 'q.empreendimento_id', '=', 'e.id')
+            ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
+            ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
+            ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
+            ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+            ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
+            ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
+            ->leftJoin('parcela_conta_receber AS p', 'd.id', '=', 'p.debito_id')
+            ->where('l.id', $id)
+            ->orderBy('data_vencimento_parcela', 'ASC') 
+            ->get();
+
+        }
 
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
