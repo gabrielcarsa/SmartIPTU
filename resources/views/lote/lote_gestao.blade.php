@@ -229,7 +229,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
