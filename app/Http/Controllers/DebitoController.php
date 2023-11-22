@@ -312,8 +312,8 @@ class DebitoController extends Controller
     
             $parcelas = [];
             foreach ($checkboxesSelecionados as $parcelaId) {
-                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-                if($empresa->cliente_id == $lote->cliente_id){
+                //Verificar origem para definir tipo de parcela
+                if($request->input('origem') == "contas_pagar"){
                     $parcelas[] = DB::table('parcela_conta_pagar as p')
                     ->select(
                         'p.id as id',
@@ -330,23 +330,60 @@ class DebitoController extends Controller
                     ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
                     ->where('p.id', $parcelaId)
                     ->get();
-                }else{// Caso contrário é um débito a receber
+                }else if($request->input('origem') == "contas_receber"){
                     $parcelas[] = DB::table('parcela_conta_receber as p')
-                    ->select(
-                        'p.id as id',
-                        'p.numero_parcela as numero_parcela',
-                        'p.data_vencimento as data_vencimento',
-                        'p.valor_parcela as valor_parcela',
-                        'p.situacao as situacao_parcela',
-                        'd.id as debito_id',
-                        'd.quantidade_parcela as debito_quantidade_parcela',
-                        'd.descricao_debito_id as debito_descricao_debito_id',  
-                        'dd.descricao as descricao',       
-                    )
-                    ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
-                    ->where('p.id', $parcelaId)
-                    ->get();
+                        ->select(
+                            'p.id as id',
+                            'p.numero_parcela as numero_parcela',
+                            'p.data_vencimento as data_vencimento',
+                            'p.valor_parcela as valor_parcela',
+                            'p.situacao as situacao_parcela',
+                            'd.id as debito_id',
+                            'd.quantidade_parcela as debito_quantidade_parcela',
+                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'dd.descricao as descricao',       
+                        )
+                        ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->where('p.id', $parcelaId)
+                        ->get();
+                }else{
+                    //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                    if($empresa->cliente_id == $lote->cliente_id){
+                        $parcelas[] = DB::table('parcela_conta_pagar as p')
+                        ->select(
+                            'p.id as id',
+                            'p.numero_parcela as numero_parcela',
+                            'p.data_vencimento as data_vencimento',
+                            'p.valor_parcela as valor_parcela',
+                            'p.situacao as situacao_parcela',
+                            'd.id as debito_id',
+                            'd.quantidade_parcela as debito_quantidade_parcela',
+                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'dd.descricao as descricao',       
+                        )
+                        ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->where('p.id', $parcelaId)
+                        ->get();
+                    }else{// Caso contrário é um débito a receber
+                        $parcelas[] = DB::table('parcela_conta_receber as p')
+                        ->select(
+                            'p.id as id',
+                            'p.numero_parcela as numero_parcela',
+                            'p.data_vencimento as data_vencimento',
+                            'p.valor_parcela as valor_parcela',
+                            'p.situacao as situacao_parcela',
+                            'd.id as debito_id',
+                            'd.quantidade_parcela as debito_quantidade_parcela',
+                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'dd.descricao as descricao',       
+                        )
+                        ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
+                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->where('p.id', $parcelaId)
+                        ->get();
+                    }
                 }
             }
             
@@ -371,18 +408,24 @@ class DebitoController extends Controller
         $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
         $i = 0;
 
-        //Verificar se é parcela a pagar ou receber
-        $empresa = TitularConta::find(1);
-        $lote = Lote::find($request->input('lote_id'));
-
         foreach($idParcelas as $p){
-            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-            if($empresa->cliente_id == $lote->cliente_id){
+            //Verificar origem para definir tipo de parcela
+            if($request->input('origem') == "contas_pagar"){
                 $parcela = ParcelaContaPagar::find($p);
-            }else{// Caso contrário é um débito a receber
+            }else if($request->input('origem') == "contas_receber"){
                 $parcela = ParcelaContaReceber::find($p);
+            }else{
+            //Verificar se é parcela a pagar ou receber
+                $empresa = TitularConta::find(1);
+                $lote = Lote::find($request->input('lote_id'));
+                //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+                if($empresa->cliente_id == $lote->cliente_id){
+                    $parcela = ParcelaContaPagar::find($p);
+                }else{// Caso contrário é um débito a receber
+                    $parcela = ParcelaContaReceber::find($p);
+                }
             }
-
+            
             if($i > 0){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
@@ -391,11 +434,19 @@ class DebitoController extends Controller
             $parcela->save();
             $i++;
         }
-        //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-        if($empresa->cliente_id == $lote->cliente_id){
+        
+        //Verificar origem para definir tipo de parcela
+        if($request->input('origem') == "contas_pagar"){
             $parcelaReferencia = ParcelaContaPagar::find($idParcelas[0]);
-        }else{// Caso contrário é um débito a receber
+        }else if($request->input('origem') == "contas_receber"){
             $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+        }else{
+            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+            if($empresa->cliente_id == $lote->cliente_id){
+                $parcelaReferencia = ParcelaContaPagar::find($idParcelas[0]);
+            }else{// Caso contrário é um débito a receber
+                $parcelaReferencia = ParcelaContaReceber::find($idParcelas[0]);
+            }
         }
 
         $debito = Debito::find($parcelaReferencia->debito_id);
