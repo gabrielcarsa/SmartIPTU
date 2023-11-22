@@ -136,7 +136,7 @@ class ContaPagarController extends Controller
     
 
         //select referente a parcelas de contas a pagar de lotes
-        $queryReferenteLotes = DB::table('parcela as p')
+        $queryReferenteLotes = DB::table('parcela_conta_pagar as p')
         ->select( 
             'p.id as id',
             'p.numero_parcela as numero_parcela',
@@ -144,7 +144,7 @@ class ContaPagarController extends Controller
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
             'p.valor_pago as parcela_valor_pago',
-            'p.data_recebimento as data_pagamento',
+            'p.data_pagamento as data_pagamento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
             'p.alterado_usuario_id as parcela_alterado_usuario_id',

@@ -9,7 +9,7 @@ class CalendarioController extends Controller
 {
     public function index()
     {
-        $eventosDebitos = DB::table('parcela as p')
+        $eventosDebitos = DB::table('parcela_conta_pagar as p')
         ->select( 
             'p.id as id',
             'p.numero_parcela as numero_parcela',
