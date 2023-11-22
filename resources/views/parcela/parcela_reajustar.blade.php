@@ -25,7 +25,7 @@
 
     <div class="card-body">
         <form class="row g-3"
-            action="{{ isset($parcelaReceberOutros) ? '/contas_receber/definir_reajuste/' . Auth::user()->id : (isset($parcelaPagarOutros) ? '/contas_pagar/definir_reajuste/' . Auth::user()->id : '/parcela/definir_reajuste/' . Auth::user()->id . '?origem=' . request()->input('origem')) }}"
+            action="{{ isset($parcelaReceberOutros) ? '/contas_receber/definir_reajuste/' . Auth::user()->id : (isset($parcelaPagarOutros) ? '/contas_pagar/definir_reajuste/' . Auth::user()->id : '/parcela/definir_reajuste/' . Auth::user()->id . '?origem=' . request()->input('origem').'&lote_id=' . request()->input('lote_id')) }}"
             method="post" autocomplete="off">
             @csrf
             <div class="col-md-4">
