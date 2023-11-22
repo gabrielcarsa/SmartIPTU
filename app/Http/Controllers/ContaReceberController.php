@@ -591,7 +591,7 @@ class ContaReceberController extends Controller
             //Verificar vinculo com Movimentação
             $movimentacoes = MovimentacaoFinanceira::where('conta_receber_id', $conta_receber_id)->get();
 
-            //Obter titular da conta
+            //Obter conta a receber
             $contaReceber = ContaReceber::find($conta_receber_id);
 
             //Se a conta está relacionada a uma movimentação
@@ -624,10 +624,15 @@ class ContaReceberController extends Controller
                 if(!isset($saldo[0]->saldo)){
                     //Último saldo cadastrado
                     $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $dataRecebimento[$i])->first();
-                    
+
                     //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                     $addSaldo = new SaldoDiario();
-                    $addSaldo->saldo = $ultimo_saldo->saldo;
+                   //Se saldo for null
+                    if($ultimo_saldo == null){
+                        $addSaldo->saldo = 0;
+                    }else{
+                        $addSaldo->saldo = $ultimo_saldo->saldo;
+                    }
                     $addSaldo->data = $dataRecebimento[$i];
                     $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
                     $addSaldo->save();

@@ -7,7 +7,6 @@ use App\Models\Lote;
 use App\Models\Quadra;
 use App\Models\User;
 use App\Models\Debito;
-use App\Models\Parcela;
 use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
@@ -160,7 +159,7 @@ class LoteController extends Controller
             'dd.descricao AS descricao_debito_descricao',
             'p.id AS parcela_id',
             'p.valor_parcela AS valor_parcela',
-            'p.valor_pago AS valor_pago_parcela',
+            'p.valor_recebido AS valor_pago_parcela',
             'p.data_recebimento AS data_recebimento_parcela',
             'p.data_vencimento AS data_vencimento_parcela',
             'p.numero_parcela AS numero_parcela',
@@ -176,7 +175,7 @@ class LoteController extends Controller
         ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
         ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
         ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
-        ->leftJoin('parcela AS p', 'd.id', '=', 'p.debito_id')
+        ->leftJoin('parcela_conta_receber AS p', 'd.id', '=', 'p.debito_id')
         ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
         ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
         ->where('l.id', $id)

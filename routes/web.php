@@ -82,15 +82,12 @@ Route::middleware([
         //ROTAS DEBITO
         Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
         Route::post('/debito/cadastrar/{usuario}/{lote_id}',[DebitoController::class, 'cadastrar']);
-
-
-        //ROTAS PARCELA
-        Route::get('/parcela/reajustar',[ParcelaController::class, 'reajustar_view'])->name('parcela_reajustar');
-        Route::post('/parcela/definir_reajuste/{usuario}',[ParcelaController::class, 'reajustar']);
-        Route::get('/parcela/alterar_vencimento',[ParcelaController::class, 'alterar_vencimento'])->name('alterar_vencimento');
-        Route::post('/parcela/definir_data_vencimento/{usuario}',[ParcelaController::class, 'definir_alteracao_data']);
-        Route::get('/parcela/baixar_parcela',[ParcelaController::class, 'baixar_parcela_view'])->name('baixar_parcela');
-        Route::post('/parcela/definir_baixar_parcela/{usuario}',[ParcelaController::class, 'definir_baixar_parcela']);
+        Route::get('/parcela/reajustar',[DebitoController::class, 'reajustar_view'])->name('parcela_reajustar');
+        Route::post('/parcela/definir_reajuste/{usuario}',[DebitoController::class, 'reajustar']);
+        Route::get('/parcela/alterar_vencimento',[DebitoController::class, 'alterar_vencimento'])->name('alterar_vencimento');
+        Route::post('/parcela/definir_data_vencimento/{usuario}',[DebitoController::class, 'definir_alteracao_data']);
+        Route::get('/parcela/baixar_parcela',[DebitoController::class, 'baixar_parcela_view'])->name('baixar_parcela');
+        Route::post('/parcela/definir_baixar_parcela/{usuario}',[DebitoController::class, 'definir_baixar_parcela']);
 
 
         //ROTAS PRESCRIÇÃO
