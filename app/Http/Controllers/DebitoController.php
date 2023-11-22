@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Debito;
-use App\Models\Parcela;
+use App\Models\ParcelaContaReceber;
 use App\Models\DescricaoDebito;
 use App\Models\TipoDebito;
 use Carbon\Carbon;
@@ -60,7 +60,7 @@ class DebitoController extends Controller
         $valor_entrada = $debito->valor_entrada;
 
         for($i = 1; $i <= $qtd_parcelas; $i++){
-            $parcela = new Parcela();
+            $parcela = new ParcelaContaReceber();
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             $parcela->valor_parcela = $debito->valor_parcela;
