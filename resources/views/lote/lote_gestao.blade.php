@@ -247,7 +247,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -264,7 +264,7 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao";
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
