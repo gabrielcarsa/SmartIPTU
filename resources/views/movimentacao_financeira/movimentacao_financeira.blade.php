@@ -150,7 +150,7 @@
                     
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
-                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&referenteOutros=on" class="btn-icone-listagem">
+                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}" class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility 
                             </span>
@@ -158,7 +158,7 @@
                     </td>
                     @else
                     <td class="d-flex align-items-center">
-                        <a href="" class="btn-icone-listagem">
+                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_pagar}}&{{$mov->parcela_pagar_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}" class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
                             </span>
