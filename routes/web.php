@@ -18,6 +18,7 @@ use App\Http\Controllers\CategoriaPagarController;
 use App\Http\Controllers\TitularContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovimentacaoFinanceiraController;
+use App\Http\Controllers\ContaCorrenteController;
 
 
 
@@ -135,8 +136,9 @@ Route::middleware([
         Route::post('/titular_conta/cadastrar/{usuario}',[TitularContaController::class, 'cadastrar']);
         Route::get('/titular_conta/excluir/{id}',[TitularContaController::class, 'excluir']);
 
-        //ROTAS PARA TITULAR DA CONTA
+        //ROTAS PARA CONTA CORRENTE
         Route::get('/conta_corrente/{titular_id}',[ContaCorrenteController::class, 'listar']);
+        Route::post('/conta_corrente/novo/{titular_id}',[ContaCorrenteController::class, 'novo']);
 
         //ROTAS DESCRIÇÃO DÉBITO
         Route::get('/descricao_debito',[DescricaoDebitoController::class, 'descricao_debito'])->name('descricao_debito');
