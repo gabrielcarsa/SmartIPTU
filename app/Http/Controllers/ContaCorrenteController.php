@@ -14,27 +14,29 @@ class ContaCorrenteController extends Controller
     }
 
     //RETORNA VIEW PARA CADASTRO DE CONTA CORRENTE
-    function novo(){
+    function novo($titular_id){
         return view('conta_corrente/conta_corrente_novo', compact('titular_id'));
     }
 
     //CADASTRO DE CONTA CORRENTE
-    function cadastro(){
-
-        // Validar campos
-        $validated = $request->validated();
+    function cadastrar(Request $request, $titular_id, $usuario){
 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
-        $empreendimento = new Empreendimento();
-        $empreendimento->nome = $request->input('nome');
-        $empreendimento->matricula = $request->input('matricula');
-        $empreendimento->cidade = $request->input('cidade');
-        $empreendimento->estado = $request->input('estado');
-        $empreendimento->data_cadastro = date('d-m-Y h:i:s a', time());
-        $empreendimento->cadastrado_usuario_id = $usuario;
-        $empreendimento->save();
-        return redirect('empreendimento')->with('success', 'Empreendimento cadastrado com sucesso');
+        $conta_corrente = new ContaCorrente();
+        $conta_corrente->apelido = $request->input('apelido');
+        $conta_corrente->banco = $request->input('banco');
+        $conta_corrente->agencia = $request->input('agencia');
+        $conta_corrente->digito_agencia = $request->input('digitoAgencia');
+        $conta_corrente->carteira = $request->input('carteira');
+        $conta_corrente->dias_baixa = $request->input('baixa');
+        $conta_corrente->numero_conta = $request->input('numeroConta');
+        $conta_corrente->digito_conta = $request->input('digitoConta');
+        $conta_corrente->titular_conta_id = $titular_id;
+        $conta_corrente->data_cadastro = date('d-m-Y h:i:s a', time());
+        $conta_corrente->cadastrado_usuario_id = $usuario;
+        $conta_corrente->save();
+        return redirect('conta_corrente/'.$titular_id)->with('success', 'Conta Corrente cadastrada com sucesso');
     }
 }

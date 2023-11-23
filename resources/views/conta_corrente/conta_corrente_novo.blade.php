@@ -4,9 +4,9 @@
 
 <h2>
     @if (isset($empreendimento))
-    Alterar Empreendimento
+    Alterar Conta 
     @else
-    Novo Empreendimento
+    Nova Conta
     @endif
 </h2>
 
@@ -66,32 +66,51 @@
         @endif
 
         <form class="row g-3"
-            action="{{ isset($empreendimento) ? '/empreendimento/alterar/' . $empreendimento->id . '/' . Auth::user()->id : '/empreendimento/cadastrar/' . Auth::user()->id }}"
+            action="{{ isset($conta) ? '/conta_corrente/alterar/' . $conta->id . '/' . Auth::user()->id : '/conta_corrente/cadastrar/' . $titular_id . '/' . Auth::user()->id }}"
             method="post" autocomplete="off">
             @csrf
-            <div class="col-md-3" id="campoNome">
-                <label for="inputNome" id="nome" class="form-label">Nome*</label>
-                <input type="text" name="nome" value="{{isset($empreendimento) ? $empreendimento->nome : old('empreendimento')}}"
-                    class="form-control @error('nome') is-invalid @enderror" id="inputNome">
+            <div class="col-md-4">
+                <label for="inputApelido" id="apelido" class="form-label">Apelido*</label>
+                <input type="text" name="apelido" value="{{isset($conta) ? $conta->apelido : old('apelido')}}"
+                    class="form-control @error('apelido') is-invalid @enderror" id="inputApelido">
             </div>
-            <div class="col-md-3" id="campoMatricula">
-                <label for="inputMatricula" id="matricula" class="form-label">Matrícula*</label>
-                <input type="text" name="matricula"
-                    value="{{isset($empreendimento) ? $empreendimento->matricula : old('matricula')}}"
-                    class="form-control @error('matricula') is-invalid @enderror" id="inputMatricula">
-            </div>
-            <div class="col-md-3">
-                <label for="inputCidade" class="form-label">Cidade*</label>
-                <input type="text" name="cidade"
-                    value="{{isset($empreendimento) ? $empreendimento->cidade: old('cidade') }}"
-                    class="form-control @error('cidade') is-invalid @enderror" id="inputCidade">
+            <div class="col-md-4">
+                <label for="inputBanco" id="banco" class="form-label">Banco*</label>
+                <input type="text" name="banco"
+                    value="{{isset($conta) ? $conta->banco : old('banco')}}"
+                    class="form-control @error('banco') is-invalid @enderror" id="inputBanco">
             </div>
             <div class="col-md-3">
-                <label for="inputEstado" class="form-label">Estado*</label>
-                <input type="text" name="estado"
-                    value="{{isset($empreendimento) ? $empreendimento->estado : old('estado') }}"
-                    class="form-control @error('estado') is-invalid @enderror" id="inputEstado">
+                <label for="inputAgencia" class="form-label">Agência*</label>
+                <input type="text" name="agencia" value="{{isset($conta) ? $conta->agencia: old('agencia') }}"
+                    class="form-control @error('agencia') is-invalid @enderror" id="inputAgencia">
             </div>
+            <div class="col-md-1">
+                <label for="inputDigitoAgencia" class="form-label">Digito agência*</label>
+                <input type="text" name="digitoAgencia" value="{{isset($conta) ? $conta->digitoAgencia : old('digitoAgencia') }}"
+                    class="form-control @error('digitoAgencia') is-invalid @enderror" id="inputDigitoAgencia">
+            </div>
+            <div class="col-md-3">
+                <label for="inputCarteira" id="carteira" class="form-label">Carteira*</label>
+                <input type="text" name="carteira" value="{{isset($conta) ? $conta->carteira : old('carteira')}}"
+                    class="form-control @error('carteira') is-invalid @enderror" id="inputCarteira">
+            </div>
+            <div class="col-md-2">
+                <label for="inputBaixa" id="baixa" class="form-label">Dias para baixa*</label>
+                <input type="text" name="baixa" value="{{isset($conta) ? $conta->baixa : old('baixa')}}"
+                    class="form-control @error('baixa') is-invalid @enderror" id="inputBaixa">
+            </div>
+            <div class="col-md-3">
+                <label for="inputNumeroConta" id="numeroConta" class="form-label">Número da Conta*</label>
+                <input type="text" name="numeroConta" value="{{isset($conta) ? $conta->numeroConta : old('numeroConta')}}"
+                    class="form-control @error('numeroConta') is-invalid @enderror" id="inputBanco">
+            </div>
+            <div class="col-md-1">
+                <label for="inputDigitoConta" class="form-label">Digito conta*</label>
+                <input type="text" name="digitoConta" value="{{isset($conta) ? $conta->digitoConta : old('digitoConta')}}"
+                    class="form-control @error('digitoConta') is-invalid @enderror" id="inputDigitoConta">
+            </div>
+            
             <div class="col-12">
                 <button type="submit" class="btn-submit">
                     @if (isset($empreendimento))

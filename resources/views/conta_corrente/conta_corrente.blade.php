@@ -48,7 +48,7 @@
                 <tr>
                     <th scope="row">{{$conta->id}}</th>
                     <td>{{$conta->apelido}} </td>
-                    <td>{{$conta->agencia}} / {{$conta->digito}}</td>
+                    <td>{{$conta->agencia}} / {{$conta->digito_agencia}}</td>
                     <td>{{$conta->banco}} </td>
                     <td>
                         <a class="btn-acao-listagem-danger" href="titular_conta/excluir/{{$conta->id}}">Excluir</a>
