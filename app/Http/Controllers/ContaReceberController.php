@@ -580,23 +580,19 @@ class ContaReceberController extends Controller
 
             $valor = str_replace(',', '.', $valorRecebido[$i]);
             $parcela->valor_recebido = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-
             $parcela->data_recebimento = $dataRecebimento[$i];
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
-            $parcela->save();
 
             //Selecionar ID do contas a receber
             $conta_receber_id = $parcela->conta_receber_id;
-            //Verificar vinculo com Movimentação
-            $movimentacoes = MovimentacaoFinanceira::where('conta_receber_id', $conta_receber_id)->get();
-
+            
             //Obter conta a receber
             $contaReceber = ContaReceber::find($conta_receber_id);
 
             //Se a conta está relacionada a uma movimentação
-            if ($movimentacoes->count() > 0) {
+            if ($parcela->movimentacao_financeira_id != null) {
                 
             }else{ //Se não estiver relacionado
 
@@ -628,6 +624,7 @@ class ContaReceberController extends Controller
 
                     //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                     $addSaldo = new SaldoDiario();
+
                    //Se saldo for null
                     if($ultimo_saldo == null){
                         $addSaldo->saldo = 0;
@@ -660,8 +657,12 @@ class ContaReceberController extends Controller
     
                 //salvar movimentação
                 $movimentacao_financeira->save();
-            }
 
+                //Vincular parcela com Movimentação
+                $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
+
+            }
+            $parcela->save();
             $i++;
         }
         return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   

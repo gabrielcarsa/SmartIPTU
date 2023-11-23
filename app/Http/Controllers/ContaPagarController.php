@@ -575,26 +575,21 @@ class ContaPagarController extends Controller
 
             $valor = str_replace(',', '.', $valorPago[$i]);
             $parcela->valor_pago = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-
-            $parcela->valor_pago = $valorPago[$i];
             $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = date('d-m-Y h:i:s a', time());
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
-            $parcela->save();
 
              //Selecionar ID do contas a pagar
              $conta_pagar_id = $parcela->conta_pagar_id;
-             //Verificar vinculo com Movimentação
-             $movimentacoes = MovimentacaoFinanceira::where('conta_pagar_id', $conta_pagar_id)->get();
- 
+             
              //Obter titular da conta
              $contaPagar = ContaPagar::find($conta_pagar_id);
  
-             //Se a conta está relacionada a uma movimentação
-             if ($movimentacoes->count() > 0) {
-                 
-             }else{ //Se não estiver relacionado
+               //Se a conta está relacionada a uma movimentação
+            if ($parcela->movimentacao_financeira_id != null) {
+                
+            }else{ //Se não estiver relacionado
  
                 $movimentacao_financeira = new MovimentacaoFinanceira();
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
@@ -624,7 +619,13 @@ class ContaPagarController extends Controller
                     
                     //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                     $addSaldo = new SaldoDiario();
-                    $addSaldo->saldo = $ultimo_saldo->saldo;
+
+                    //Se saldo for null
+                    if($ultimo_saldo == null){
+                        $addSaldo->saldo = 0;
+                    }else{
+                        $addSaldo->saldo = $ultimo_saldo->saldo;
+                    }
                     $addSaldo->data = $dataPagamento[$i];
                     $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
                     $addSaldo->save();
@@ -643,7 +644,7 @@ class ContaPagarController extends Controller
                 $movimentacao_financeira->categoria_pagar_id = $contaPagar->categoria_pagar_id;
 
                 //Atualizando o saldo
-                $saldo_model->saldo = $valor_desatualizado_saldo + $valor_movimentacao; 
+                $saldo_model->saldo = $valor_desatualizado_saldo - $valor_movimentacao; 
                 $saldo_model->save();
 
                 //Vincular Conta com Movimentacao
@@ -651,8 +652,12 @@ class ContaPagarController extends Controller
     
                 //salvar movimentação
                 $movimentacao_financeira->save();
+
+                //Vincular parcela com Movimentação
+                $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
              }
 
+            $parcela->save();
             $i++;
         }
         return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   

@@ -130,12 +130,21 @@
 
 <script>
 $(document).ready(function() {
-    $(document).on('change', 'input[name^="movimentacoes["][name$="[valor]"]', function() {
+    $(document).on('input', 'input[name^="movimentacoes["][name$="[valor]"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+        
         // Adicione a máscara apenas ao input de valor relacionado à mudança
-        $(this).mask('000.000.000.000.000,00', {
-            reverse: true
-        });
+        $(this).val(mask(unmaskedValue));
     });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    }
 });
 $(document).ready(function() {
 

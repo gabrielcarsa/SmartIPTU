@@ -76,13 +76,16 @@ class MovimentacaoFinanceiraController extends Controller
                 'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
                 'pr.id as id_parcela_receber', 
-                'pg.id as id_parcela_pagar'
+                'pr.id as id_parcela_receber', 
+                'pr.debito_id as parcela_receber_debito', 
+                'pg.id as id_parcela_pagar',
+                'pg.debito_id as parcela_pagar_debito', 
             )
             ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
             ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
             ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
-            ->leftjoin('parcela_conta_receber as pr', 'pr.conta_receber_id', '=', 'mf.conta_receber_id')
-            ->leftjoin('parcela_conta_pagar as pg', 'pg.conta_pagar_id',  '=', 'mf.conta_pagar_id')
+            ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
+            ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
             ->where('data_movimentacao', '=', '%' . $dataRef);
         }
 
@@ -153,7 +156,7 @@ class MovimentacaoFinanceiraController extends Controller
             $valor = str_replace(',', '.', $movimentacaoData['valor']);
             $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
-            dd($valor_movimentacao);
+            
             $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
             $movimentacao_financeira->cadastrado_usuario_id = $usuario;
     
@@ -167,7 +170,12 @@ class MovimentacaoFinanceiraController extends Controller
                 
                 //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                 $addSaldo = new SaldoDiario();
-                $addSaldo->saldo = $ultimo_saldo->saldo;
+                //Se saldo for null
+                if($ultimo_saldo == null){
+                    $addSaldo->saldo = 0;
+                }else{
+                    $addSaldo->saldo = $ultimo_saldo->saldo;
+                }
                 $addSaldo->data = $request->input('data');
                 $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
                 $addSaldo->save();
@@ -221,9 +229,10 @@ class MovimentacaoFinanceiraController extends Controller
                 $parcela->numero_parcela = 1;
                 $parcela->situacao = 1;
                 $parcela->valor_parcela = $valor_movimentacao;
+                $parcela->valor_recebido = $valor_movimentacao;
                 $parcela->cadastrado_usuario_id = $usuario;
                 $parcela->data_vencimento = $data_vencimento;
-                $parcela->save();
+                $parcela->data_recebimento = $request->input('data');
                 
                         
             }else{ // SAÍDA
@@ -261,15 +270,22 @@ class MovimentacaoFinanceiraController extends Controller
                 $parcela->conta_pagar_id = $contaPagar_id;
                 $parcela->numero_parcela = 1;
                 $parcela->situacao = 1;
+                $parcela->valor_pago = $valor_movimentacao;
                 $parcela->valor_parcela = $valor_movimentacao;
                 $parcela->cadastrado_usuario_id = $usuario;
                 $parcela->data_vencimento = $data_vencimento;
-                $parcela->save();
-                
+                $parcela->data_pagamento = $request->input('data');
+
             }
     
             //salvar movimentação
             $movimentacao_financeira->save();
+
+            //Vincular parcela com movimentação
+            $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
+
+            //salvar parcela
+            $parcela->save();   
         }
 
         return redirect('movimentacao_financeira')->with('success', 'Movimentação cadastrada com sucesso');

@@ -699,6 +699,7 @@ class DebitoController extends Controller
         
                 //variavel que será responsavel por alterar-lo
                 $saldo_model = SaldoDiario::where('data', $data[$i])->first();
+                
                 if($request->input('origem') == "contas_pagar"){
                     $saldo_model->saldo = $valor_desatualizado_saldo - $valor_movimentacao;            
                 }else if($request->input('origem') == "contas_receber"){
