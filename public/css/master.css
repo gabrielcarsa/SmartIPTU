@@ -348,3 +348,13 @@ MOVIMENTAÇÃO
     font-size: 18px;
     color: #000;
 }
+.entradaMovimentacao{
+    background-color: #66a80f !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+}
+.saidaMovimentacao{
+    background-color: #e03131 !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+}

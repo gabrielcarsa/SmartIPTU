@@ -72,6 +72,7 @@ class MovimentacaoFinanceiraController extends Controller
                 'mf.*',
                 'cr.descricao as categoria_receber',
                 'cp.descricao as categoria_pagar',
+                'td.descricao as tipo_debito',
                 'c.nome as nome',
                 'c.tipo_cadastro as tipo_cadastro',
                 'c.razao_social as razao_social',
@@ -83,10 +84,12 @@ class MovimentacaoFinanceiraController extends Controller
             )
             ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
             ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
+            ->leftjoin('tipo_debito as td', 'mf.tipo_debito_id', '=', 'td.id')
             ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
             ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
             ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
-            ->where('data_movimentacao', '=', '%' . $dataRef);
+            ->where('data_movimentacao', '=', '%' . $dataRef)
+            ->orderBy('id');
         }
 
         // Execute a consulta e obtenha os resultados

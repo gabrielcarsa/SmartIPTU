@@ -649,6 +649,7 @@ class DebitoController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $lote->cliente_id;
                 $movimentacao_financeira->descricao = $descricao_debito->descricao;
                 $movimentacao_financeira->data_movimentacao = $data[$i];
+                $movimentacao_financeira->tipo_debito_id = $debito->tipo_debito_id;
                 $movimentacao_financeira->titular_conta_id = $debito->titular_conta_id;
                 $movimentacao_financeira->conta_corrente_id = 1; //Alterar
                 

@@ -109,7 +109,7 @@
     </div>
     @endif
     <div class="card-body">
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -133,19 +133,19 @@
                     @endif
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->categoria_receber}}</td>
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}</td>
                     @else
-                    <td class="align-middle">{{$mov->categoria_pagar}}</td>
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}</td>
                     @endif
 
                     <td class="align-middle">{{$mov->descricao}}</td>
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle entradaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
                     @else
                     <td class="align-middle"></td>
-                    <td class="align-middle">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     @endif
                     
                     @if($mov->tipo_movimentacao == 0)
