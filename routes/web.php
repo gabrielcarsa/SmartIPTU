@@ -135,6 +135,9 @@ Route::middleware([
         Route::post('/titular_conta/cadastrar/{usuario}',[TitularContaController::class, 'cadastrar']);
         Route::get('/titular_conta/excluir/{id}',[TitularContaController::class, 'excluir']);
 
+        //ROTAS PARA TITULAR DA CONTA
+        Route::get('/conta_corrente/{titular_id}',[ContaCorrenteController::class, 'listar']);
+
         //ROTAS DESCRIÇÃO DÉBITO
         Route::get('/descricao_debito',[DescricaoDebitoController::class, 'descricao_debito'])->name('descricao_debito');
         Route::post('/descricao_debito/cadastrar/{usuario}',[DescricaoDebitoController::class, 'cadastrar']);

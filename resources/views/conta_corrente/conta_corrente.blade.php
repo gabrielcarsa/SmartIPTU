@@ -2,7 +2,7 @@
 
 @section('conteudo')
 
-<h2>Central de Contas</h2>
+<h2>Conta Corrente</h2>
 
 <div class="card">
     <h5 class="card-header">Cadastrar uma conta de titular</h5>
@@ -79,7 +79,6 @@
                         @endif
                     </td>
                     <td>
-                        <a class="btn-acao-listagem" href="conta_corrente/{{$titular->id}}">Conta Corrente</a>
                         <a class="btn-acao-listagem-danger" href="titular_conta/excluir/{{$titular->id}}">Excluir</a>
                     </td>
                 </tr>
