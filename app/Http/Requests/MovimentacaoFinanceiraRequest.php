@@ -11,7 +11,7 @@ class MovimentacaoFinanceiraRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class MovimentacaoFinanceiraRequest extends FormRequest
     public function rules(): array
     {
         return [
-           
+            'data' => 'required|date',
+            'titular_conta_id' => 'required|numeric|min:1',
+            'conta_corrente_id' => 'required|numeric|min:1',
         ];
     }
 }

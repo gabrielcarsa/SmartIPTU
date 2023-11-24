@@ -10,6 +10,7 @@ use App\Models\ContaReceber;
 use App\Models\TitularConta;
 use App\Models\ParcelaContaPagar;
 use App\Models\ParcelaContaReceber;
+use App\Http\Requests\MovimentacaoFinanceiraRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -65,7 +66,6 @@ class MovimentacaoFinanceiraController extends Controller
         $conta_corrente = $request->input('conta_corrente');
         $dataRef = $request->input('data');
 
-      
 
         //Soma das entradas do dia atual
         $entradas = DB::table('movimentacao_financeira')
@@ -184,14 +184,24 @@ class MovimentacaoFinanceiraController extends Controller
     }
 
     //CADASTRAR MOVIMENTAÇÃO
-    function cadastrar($usuario, Request $request){
+    function cadastrar($usuario, MovimentacaoFinanceiraRequest $request){
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
         
         // Salve as movimentações
         foreach ($request->input('movimentacoes') as $movimentacaoData) {
+         
             $request->merge([
                 'valor' => str_replace(['.', ','], ['', '.'], $movimentacaoData['valor']),
+            ]);
+
+            //Validar
+            $validated = $request->validate([
+                "movimentacoes.*.tipo_movimentacao" => 'required|numeric|min:1',
+                "movimentacoes.*.categoria_id" => 'required|numeric|min:1',
+                "movimentacoes.*.cliente_fornecedor_id" => 'required|numeric|min:1',
+                "movimentacoes.*.valor" => 'required|min:0.1',
+                "movimentacoes.*.descricao" => 'nullable|string|max:255',
             ]);
 
             $movimentacao_financeira = new MovimentacaoFinanceira();
@@ -205,9 +215,9 @@ class MovimentacaoFinanceiraController extends Controller
             // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
             $movimentacao_financeira->tipo_movimentacao = ($movimentacaoData['tipo_movimentacao'] == 1) ? 0 : 1;
     
-            $valor = str_replace(',', '.', $movimentacaoData['valor']);
-            $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-            $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
+            $valor = floatval(str_replace(',', '.', str_replace('.', '', $movimentacaoData['valor'])));
+            $movimentacao_financeira->valor = $valor; // Converter a string diretamente para um número em ponto flutuante
+            $valor_movimentacao = $valor; //Armazenar em uma variavel o valor da movimentação
             
             $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
             $movimentacao_financeira->cadastrado_usuario_id = $usuario;
@@ -350,6 +360,7 @@ class MovimentacaoFinanceiraController extends Controller
 
             //salvar parcela
             $parcela->save();   
+
         }
 
         return redirect('movimentacao_financeira')->with('success', 'Movimentação cadastrada com sucesso');

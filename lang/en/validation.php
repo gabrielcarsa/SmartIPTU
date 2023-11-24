@@ -216,7 +216,11 @@ return [
         'data' => 'Data',
         'titular_conta_id' => 'Titular da Conta',
         'conta_corrente_id' => 'Conta Corrente',
-
+        'movimentacoes.*.tipo_movimentacao' => 'Tipo de Movimentação',
+        'movimentacoes.*.categoria_id' => 'Categoria',
+        'movimentacoes.*.cliente_fornecedor_id' => 'Cliente / Fornecedor',
+        'movimentacoes.*.valor' => 'Valor',
+        'movimentacoes.*.descricao' => 'Descrição',
 
     ],
 
