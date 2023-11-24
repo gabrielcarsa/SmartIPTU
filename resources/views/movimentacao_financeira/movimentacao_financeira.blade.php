@@ -66,6 +66,30 @@
                 <label for="inputData" class="form-label">Data da movimentação</label>
                 <input type="date" name="data" value="{{request('data')}}" class="form-control" id="inputData">
             </div>
+            <div class="col-md-3">
+                <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
+                <select id="inputTitularConta" name="titulares_conta"
+                    class="form-select form-control @error('titulares_conta') is-invalid @enderror">
+                    <option value="0" {{ old('titulares_conta') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                    @foreach ($data['titulares_conta'] as $titular)
+                    <option value="{{ $titular->id }}" {{ old('titulares_conta') == $titular->id ? 'selected' : '' }}>
+                        @if(empty($titular->nome))
+                        {{$titular->razao_social}}
+                        @else
+                        {{$titular->nome}}
+                        @endif
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3" id="CampoContaCorrente">
+                <label for="inputContaCorrente" class="form-label">Conta Corrente*</label>
+                <select id="inputContaCorrente" name="conta" class="form-select form-control">
+                    <option value="0" selected>-- Selecione --</option>
+                </select>
+            </div>
+
             <div class="col-12">
                 <button type="submit" class="btn-submit">Consultar</button>
                 <a href="{{ route('nova_movimentacao') }}" class="btn-add"><span class="material-symbols-outlined">
@@ -133,9 +157,11 @@
                     @endif
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}</td>
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}
+                    </td>
                     @else
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}</td>
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}
+                    </td>
                     @endif
 
                     <td class="align-middle">{{$mov->descricao}}</td>
@@ -147,18 +173,20 @@
                     <td class="align-middle"></td>
                     <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     @endif
-                    
+
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
-                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}" class="btn-icone-listagem">
+                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                            class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
-                                visibility 
+                                visibility
                             </span>
                         </a>
                     </td>
                     @else
                     <td class="d-flex align-items-center">
-                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_pagar}}&{{$mov->parcela_pagar_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}" class="btn-icone-listagem">
+                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_pagar}}&{{$mov->parcela_pagar_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                            class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
                             </span>
@@ -178,6 +206,48 @@
 
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+
+    // Quando o titular da conta é selecionado
+    $('#inputTitularConta').change(function() {
+        var selectedTitularContaId = $('#inputTitularConta').val();
+
+        if (selectedTitularContaId > 0) {
+            // Fazer uma solicitação AJAX para obter as contas bancárias do titular da conta selecionado
+            $.get('/movimentacao_financeira/conta_corrente/' + selectedTitularContaId, function(data) {
+                var contaBancariaField = $('#CampoContaCorrente');
+                var selectContaBancaria = $('#inputContaCorrente');
+                selectContaBancaria.empty();
+
+                // Adicionar as opções de contas bancárias
+                $.each(data, function(key, value) {
+                    selectContaBancaria.append($('<option>', {
+                        value: value.id,
+                        text: value.apelido
+                    }));
+                });
+
+                // Mostrar o campo de contas bancárias
+                contaBancariaField.show();
+            });
+        } else {
+            // Se o titular da conta não for selecionado, ocultar o campo de contas bancárias e defina a opção padrão
+            var contaBancariaField = $('#CampoContaCorrente');
+            var selectContaBancaria = $('#inputContaCorrente');
+            selectContaBancaria.empty();
+            selectContaBancaria.append($('<option>', {
+                value: 0,
+                text: '-- Selecione o Titular da Conta --'
+            }));
+            contaBancariaField.hide();
+        }
+    });
+});
+</script>
 
 
 @endsection

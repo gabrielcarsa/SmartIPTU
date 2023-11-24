@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\ContaCorrente;
 use App\Models\ContaPagar;
 use App\Models\ContaReceber;
+use App\Models\TitularConta;
 use App\Models\ParcelaContaPagar;
 use App\Models\ParcelaContaReceber;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,20 @@ class MovimentacaoFinanceiraController extends Controller
             ->where('tipo_movimentacao', 1)
             ->sum('valor');
 
+        //Selecionar Titulares de Conta
+        $titulares_conta = DB::table('titular_conta as tc')
+        ->select(
+            'tc.*',
+            'c.nome as nome',
+            'c.razao_social as razao_social'
+        )
+        ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
+        ->get();
+
+       // dd($titulares_conta);
+
         $data = [
+            'titulares_conta' => $titulares_conta,
             'entradas' => $entradas,
             'saidas' => $saidas
         ];
@@ -102,7 +116,7 @@ class MovimentacaoFinanceiraController extends Controller
             'entradas' => $entradas,
             'saidas' => $saidas
         ];
-        
+        dd($data);
         return view('movimentacao_financeira/movimentacao_financeira', compact('movimentacao', 'data'));
     }
 
@@ -292,5 +306,33 @@ class MovimentacaoFinanceiraController extends Controller
         }
 
         return redirect('movimentacao_financeira')->with('success', 'Movimentação cadastrada com sucesso');
+    }
+
+     //EXPORTANDO TABELA PARA PDF
+     function relatorio_pdf(Request $request){
+        $movimentacoes = MovimentacaoFinanceira::all();
+        $total_clientes = $movimentacoes->count();
+        $query = MovimentacaoFinanceira::query();
+
+        // Verifique se o campo "nome" está preenchido no formulário
+        if ($request->filled('nome')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('nome', 'ilike', '%' . $request->input('nome') . '%')
+                    ->orWhere('razao_social', 'ilike', '%' . $request->input('nome') . '%');
+            });
+        }
+    
+        // Verifique se o campo "cpf_cnpj" está preenchido no formulário
+        if ($request->filled('cpf_cnpj')) {
+            $query->where(function ($subquery) use ($request) {
+                $subquery->where('cpf', 'ilike', '%' . $request->input('cpf_cnpj') . '%')
+                    ->orWhere('cnpj', 'ilike', '%' . $request->input('cpf_cnpj') . '%');
+            });
+        }
+    
+        // Execute a consulta e obtenha os resultados
+        $clientes = $query->get();
+        $pdf = PDF::loadView('cliente.cliente_relatorio_pdf', ['clientes' => $clientes]);
+        return $pdf->download('cliente_relatorio.pdf');
     }
 }
