@@ -631,12 +631,19 @@ class ContaReceberController extends Controller
                 $movimentacao_financeira->cadastrado_usuario_id = $user_id;
         
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', $dataRecebimento[$i])->get(); // Saldo do dia
+                $saldo = SaldoDiario::where('data', $dataRecebimento[$i])
+                ->where('titular_conta_id', $request->input('titular_conta_id'))
+                ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                ->get(); // Saldo do dia
         
                 //Se não houver saldo para aquele dia
                 if(!isset($saldo[0]->saldo)){
                     //Último saldo cadastrado
-                    $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $dataRecebimento[$i])->first();
+                    $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')
+                    ->where('titular_conta_id', $request->input('titular_conta_id'))
+                    ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                    ->where('data', '<', $dataRecebimento[$i])
+                    ->first();
 
                     //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                     $addSaldo = new SaldoDiario();
@@ -661,7 +668,10 @@ class ContaReceberController extends Controller
                 }
         
                 //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataRecebimento[$i])->first();
+                $saldo_model = SaldoDiario::where('data', $dataRecebimento[$i])
+                ->where('titular_conta_id', $request->input('titular_conta_id'))
+                ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                ->first();
         
                 //Adicionando categoria
                 $movimentacao_financeira->categoria_receber_id = $contaReceber->categoria_receber_id;

@@ -116,6 +116,7 @@ class MovimentacaoFinanceiraController extends Controller
             ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
             ->where('data_movimentacao', '=', '%' . $dataRef)
             ->where('mf.titular_conta_id', '=', $titular)
+            ->where('mf.conta_corrente_id', '=', $conta_corrente)
             ->orderBy('id');
         }
 
@@ -202,12 +203,19 @@ class MovimentacaoFinanceiraController extends Controller
             $movimentacao_financeira->cadastrado_usuario_id = $usuario;
     
             //Variavel de saldo para manipulacao e verificacao do saldo
-            $saldo = SaldoDiario::where('data', $request->input('data'))->get(); // Saldo do dia
+            $saldo = SaldoDiario::where('data', $request->input('data'))
+            ->where('titular_conta_id', $request->input('titular_conta_id'))
+            ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+            ->get(); // Saldo do dia
     
             //Se não houver saldo para aquele dia
             if(!isset($saldo[0]->saldo)){
                 //Último saldo cadastrado
-                $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $request->input('data'))->first();
+                $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')
+                ->where('data', '<', $request->input('data'))
+                ->where('titular_conta_id', $request->input('titular_conta_id'))
+                ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                ->first();
                 
                 //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
                 $addSaldo = new SaldoDiario();
@@ -231,7 +239,10 @@ class MovimentacaoFinanceiraController extends Controller
             }
     
             //variavel que será responsavel por alterar-lo
-            $saldo_model = SaldoDiario::where('data', $request->input('data'))->first();
+            $saldo_model = SaldoDiario::where('data', $request->input('data'))
+            ->where('titular_conta_id', $request->input('titular_conta_id'))
+            ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+            ->first();
     
             //Verificar se a movimentação é de entrada ou saída
             $tipo_movimentacao = $movimentacaoData['tipo_movimentacao'];
