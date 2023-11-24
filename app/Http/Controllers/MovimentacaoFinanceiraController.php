@@ -217,6 +217,8 @@ class MovimentacaoFinanceiraController extends Controller
                 }else{
                     $addSaldo->saldo = $ultimo_saldo->saldo;
                 }
+                $addSaldo->titular_conta_id = $request->input('titular_conta_id');
+                $addSaldo->conta_corrente_id = $request->input('conta_corrente_id');
                 $addSaldo->data = $request->input('data');
                 $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
                 $addSaldo->save();
