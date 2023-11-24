@@ -11,6 +11,7 @@ use App\Models\TitularConta;
 use App\Models\ParcelaContaPagar;
 use App\Models\ParcelaContaReceber;
 use App\Http\Requests\MovimentacaoFinanceiraRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -368,29 +369,91 @@ class MovimentacaoFinanceiraController extends Controller
 
      //EXPORTANDO TABELA PARA PDF
      function relatorio_pdf(Request $request){
-        $movimentacoes = MovimentacaoFinanceira::all();
-        $total_clientes = $movimentacoes->count();
-        $query = MovimentacaoFinanceira::query();
 
-        // Verifique se o campo "nome" está preenchido no formulário
-        if ($request->filled('nome')) {
-            $query->where(function ($subquery) use ($request) {
-                $subquery->where('nome', 'ilike', '%' . $request->input('nome') . '%')
-                    ->orWhere('razao_social', 'ilike', '%' . $request->input('nome') . '%');
-            });
-        }
-    
-        // Verifique se o campo "cpf_cnpj" está preenchido no formulário
-        if ($request->filled('cpf_cnpj')) {
-            $query->where(function ($subquery) use ($request) {
-                $subquery->where('cpf', 'ilike', '%' . $request->input('cpf_cnpj') . '%')
-                    ->orWhere('cnpj', 'ilike', '%' . $request->input('cpf_cnpj') . '%');
-            });
-        }
+        $titular = $request->input('titular');
+        $conta_corrente = $request->input('conta_corrente');
+        $dataRef = $request->input('data');
+
+        // Saldo anterior
+        $saldo_anterior = SaldoDiario::orderBy('data', 'desc')
+        ->where('data', '<', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); 
+
+        $saldo_atual = SaldoDiario::where('data', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); // Saldo do dia
+
+
+        $query = DB::table('movimentacao_financeira as mf');
+        $query->select(
+            'mf.*',
+            'cr.descricao as categoria_receber',
+            'cp.descricao as categoria_pagar',
+            'td.descricao as tipo_debito',
+            'c.nome as nome',
+            'c.tipo_cadastro as tipo_cadastro',
+            'c.razao_social as razao_social',
+            'pr.id as id_parcela_receber', 
+            'pr.id as id_parcela_receber', 
+            'pr.debito_id as parcela_receber_debito', 
+            'pg.id as id_parcela_pagar',
+            'pg.debito_id as parcela_pagar_debito', 
+            'tc.id as titular_conta_id',
+            'c2.nome as nome_titular',
+            'c2.razao_social as razao_social_titular',
+            'cc.apelido as conta_corrente'
+        )
+        ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
+        ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
+        ->leftjoin('tipo_debito as td', 'mf.tipo_debito_id', '=', 'td.id')
+        ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
+        ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
+        ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
+        ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
+        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
+        ->join('conta_corrente as cc', 'mf.conta_corrente_id', '=', 'cc.id')
+        ->where('data_movimentacao', '=', '%' . $dataRef)
+        ->where('mf.titular_conta_id', '=', $titular)
+        ->where('mf.conta_corrente_id', '=', $conta_corrente)
+        ->orderBy('id');
     
         // Execute a consulta e obtenha os resultados
-        $clientes = $query->get();
-        $pdf = PDF::loadView('cliente.cliente_relatorio_pdf', ['clientes' => $clientes]);
-        return $pdf->download('cliente_relatorio.pdf');
+        $movimentacao = $query->get();
+
+        // Clone a instância original da consulta para evitar alterações na mesma instância
+        $queryEntradas = clone $query;
+        $querySaidas = clone $query;
+
+        // Adicione esta linha para somar os valores com tipo de movimentação 0 (entrada)
+        $valorEntradas = $queryEntradas->where('tipo_movimentacao', 0)->sum('valor');
+
+        // Adicione esta linha para somar os valores com tipo de movimentação 1 (saída)
+        $valorSaidas = $querySaidas->where('tipo_movimentacao', 1)->sum('valor');
+      
+        //Selecionar Titulares de Conta
+        $titulares_conta = DB::table('titular_conta as tc')
+        ->select(
+            'tc.*',
+            'c.nome as nome',
+            'c.razao_social as razao_social'
+        )
+        ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
+        ->get();
+
+        $data = [
+            'titulares_conta' => $titulares_conta,
+            'saldo_anterior' => $saldo_anterior,
+            'saldo_atual' => $saldo_atual,
+            'valorEntradas' => $valorEntradas,
+            'valorSaidas' => $valorSaidas
+        ];
+
+
+        //$pdf = PDF::loadView('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
+        //return $pdf->download('cliente_relatorio.pdf');
+        return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
     }
 }

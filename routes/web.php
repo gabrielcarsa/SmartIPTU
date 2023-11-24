@@ -165,5 +165,6 @@ Route::middleware([
         Route::get('/movimentacao_financeira/novo/',[MovimentacaoFinanceiraController::class, 'novo'])->name('nova_movimentacao');
         Route::get('/movimentacao_financeira/conta_corrente/{titular_conta_id}', [MovimentacaoFinanceiraController::class, 'conta_corrente']);
         Route::post('/movimentacao_financeira/cadastrar/{usuario}',[MovimentacaoFinanceiraController::class, 'cadastrar']);
+        Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
 
 });

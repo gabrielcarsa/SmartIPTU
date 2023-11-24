@@ -110,7 +110,7 @@
     </h5>
     <div class="card-footer">
         <a class="btn btn-add"
-            href="../movimentacao_financeira/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
+            href="../movimentacao_financeira/relatorio_pdf?data={{request('data')}}&titular={{request('titulares_conta')}}&conta_corrente={{request('conta_corrente')}}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
     <div class="card-saldo">
