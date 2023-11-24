@@ -573,7 +573,21 @@ class DebitoController extends Controller
                 }
                
             }
-            return view('parcela/parcela_baixar', compact('parcelas'));
+            $titular_conta = DB::table('titular_conta as t')
+            ->select(
+                't.id as id_titular_conta',
+                't.cliente_id as cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+            )
+            ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+            ->get();
+            
+            $data = [
+                'titular_conta' => $titular_conta,
+            ];
+
+            return view('parcela/parcela_baixar', compact('parcelas', 'data'));
 
         }else{
             return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
@@ -687,6 +701,8 @@ class DebitoController extends Controller
                     }else{
                         $addSaldo->saldo = $ultimo_saldo->saldo;
                     }
+                    $addSaldo->titular_conta_id = $request->input('titular_conta_id');
+                    $addSaldo->conta_corrente_id = $request->input('conta_corrente_id');
                     $addSaldo->data = $data[$i];
                     $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
                     $addSaldo->save();

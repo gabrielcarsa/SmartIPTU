@@ -24,8 +24,9 @@
     @endif
 
     <div class="card-body">
-        <form class="row g-3" action="{{ isset($parcelaReceberOutros) ? '/contas_receber/definir_baixar_parcela/' . Auth::user()->id : (isset($parcelaPagarOutros) ? '/contas_pagar/definir_baixar_parcela/' . Auth::user()->id : '/parcela/definir_baixar_parcela/' . Auth::user()->id . '?origem=' . request()->input('origem').'&lote_id=' . request()->input('lote_id')) }}"
-        method="post" autocomplete="off">
+        <form class="row g-3"
+            action="{{ isset($data['parcelaReceberOutros']) ? '/contas_receber/definir_baixar_parcela/' . Auth::user()->id : (isset($data['parcelaPagarOutros']) ? '/contas_pagar/definir_baixar_parcela/' . Auth::user()->id : '/parcela/definir_baixar_parcela/' . Auth::user()->id . '?origem=' . request()->input('origem').'&lote_id=' . request()->input('lote_id')) }}"
+            method="post" autocomplete="off">
             @csrf
             <table class="table table-striped">
                 <thead>
@@ -48,8 +49,9 @@
                             <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor_parcela" value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly
-                                disabled class="form-control @error('valor_parcela') is-invalid @enderror"
+                            <input type="text" name="valor_parcela"
+                                value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly disabled
+                                class="form-control @error('valor_parcela') is-invalid @enderror"
                                 id="inputValorParcelas">
                         </th>
                         <th scope="row">
@@ -60,7 +62,8 @@
                                 id="inputDataVencimentoParcelas">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor[]" value="{{ old('valor.' . $index) != null ?  old('valor.' . $index) : '' }}"
+                            <input type="text" name="valor[]"
+                                value="{{ old('valor.' . $index) != null ?  old('valor.' . $index) : '' }}"
                                 class="form-control valor_pago @error('valor.' . $index) is-invalid @enderror"
                                 id="inputValor">
                         </th>
@@ -77,8 +80,36 @@
                     @endforeach
                     @endif
                 </tbody>
-
             </table>
+            <hr>
+
+            <div class="row row-form-destacar">
+                <div class="col-md-4">
+                    <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
+                    <select id="inputTitularConta" name="titular_conta_id" class="form-select form-control">
+                        <option value="0" {{ old('titular_conta_id') == 0 ? 'selected' : '' }}>-- Selecione --
+                        </option>
+                        @foreach ($data['titular_conta'] as $t)
+                        <option value="{{ $t->id_titular_conta }}"
+                            {{ old('titular_conta_id') == $t->id_titular_conta ? 'selected' : '' }}>
+                            @if(empty($t->nome))
+                            {{$t->razao_social}}
+                            @else
+                            {{$t->nome}}
+                            @endif
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-4" id="contaBancariaField">
+                    <label for="inputContaCorrente" class="form-label">Conta Corrente*</label>
+                    <select id="inputContaCorrente" name="conta_corrente" class="form-select form-control">
+                        <option value="0" selected> Selecione --</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="col-12">
                 <button type="submit" class="btn-submit">
                     Baixar parcelas
@@ -94,9 +125,48 @@
 
 
 <script>
-  $(document).ready(function() {
-    $('#inputValor').mask('000.000.000.000.000,00', { reverse: true });
-  });
+$(document).ready(function() {
+    $('#inputValor').mask('000.000.000.000.000,00', {
+        reverse: true
+    });
+});
+
+$(document).ready(function() {
+    // Quando o titular da conta é selecionado
+    $('#inputTitularConta').change(function() {
+        var selectedTitularContaId = $('#inputTitularConta').val();
+
+        if (selectedTitularContaId > 0) {
+            // Fazer uma solicitação AJAX para obter as contas bancárias do titular da conta selecionado
+            $.get('/movimentacao_financeira/conta_corrente/' + selectedTitularContaId, function(data) {
+                var contaBancariaField = $('#contaBancariaField');
+                var selectContaBancaria = $('#inputContaCorrente');
+                selectContaBancaria.empty();
+
+                // Adicionar as opções de contas bancárias
+                $.each(data, function(key, value) {
+                    selectContaBancaria.append($('<option>', {
+                        value: value.id,
+                        text: value.apelido
+                    }));
+                });
+
+                // Mostrar o campo de contas bancárias
+                contaBancariaField.show();
+            });
+        } else {
+            // Se o titular da conta não for selecionado, ocultar o campo de contas bancárias e defina a opção padrão
+            var contaBancariaField = $('#contaBancariaField');
+            var selectContaBancaria = $('#inputContaCorrente');
+            selectContaBancaria.empty();
+            selectContaBancaria.append($('<option>', {
+                value: 0,
+                text: '-- Selecione o Titular da Conta --'
+            }));
+            contaBancariaField.hide();
+        }
+    });
+});
 </script>
 
 @endsection
