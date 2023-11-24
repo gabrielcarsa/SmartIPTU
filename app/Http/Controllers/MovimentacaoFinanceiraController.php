@@ -41,8 +41,6 @@ class MovimentacaoFinanceiraController extends Controller
         ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
         ->get();
 
-       // dd($titulares_conta);
-
         $data = [
             'titulares_conta' => $titulares_conta,
             'entradas' => $entradas,
@@ -55,6 +53,9 @@ class MovimentacaoFinanceiraController extends Controller
      // LISTAGEM DE MOVIMENTAÇÃO FINANCEIRA
      function listar(Request $request){
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+        $titular = $request->input('titulares_conta');
+        $conta_corrente = $request->input('conta_corrente');
+        $dataRef = $request->input('data');
 
         //Soma das entradas do dia atual
         $entradas = DB::table('movimentacao_financeira')
@@ -68,10 +69,7 @@ class MovimentacaoFinanceiraController extends Controller
             ->where('tipo_movimentacao', 1)
             ->sum('valor');
 
-        $movimentacao = MovimentacaoFinanceira::all();
-
-        //Datas 
-        $dataRef = $request->input('data');
+        $movimentacao = MovimentacaoFinanceira::all();      
 
         $saldo_anterior = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $request->input('data'))->get(); // Saldo anterior
         $saldo_atual = SaldoDiario::where('data', $dataRef)->get(); // Saldo do dia
@@ -81,7 +79,7 @@ class MovimentacaoFinanceiraController extends Controller
         $query = DB::table('movimentacao_financeira as mf');
 
         // Verifique se o campo "data" está preenchido no formulário
-        if ($request->filled('data')) {
+        if ($request->filled('data') && $request->filled('conta_corrente') && $request->filled('titulares_conta')) {
             $query->select(
                 'mf.*',
                 'cr.descricao as categoria_receber',
@@ -95,6 +93,9 @@ class MovimentacaoFinanceiraController extends Controller
                 'pr.debito_id as parcela_receber_debito', 
                 'pg.id as id_parcela_pagar',
                 'pg.debito_id as parcela_pagar_debito', 
+                'tc.id as titular_conta_id',
+                'c2.nome as nome_titular',
+                'c2.razao_social as razao_social_titular'
             )
             ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
             ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
@@ -102,21 +103,35 @@ class MovimentacaoFinanceiraController extends Controller
             ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
             ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
             ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
+            ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
+            ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
             ->where('data_movimentacao', '=', '%' . $dataRef)
+            ->where('mf.titular_conta_id', '=', $titular)
             ->orderBy('id');
         }
 
         // Execute a consulta e obtenha os resultados
         $movimentacao = $query->get();
 
+        //Selecionar Titulares de Conta
+        $titulares_conta = DB::table('titular_conta as tc')
+        ->select(
+            'tc.*',
+            'c.nome as nome',
+            'c.razao_social as razao_social'
+        )
+        ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
+        ->get();
+
         $data = [
+            'titulares_conta' => $titulares_conta,
             'saldo_anterior' => $saldo_anterior,
             'saldo_atual' => $saldo_atual,
             'total_movimentacao' => $total_movimentacao,
             'entradas' => $entradas,
             'saidas' => $saidas
         ];
-        dd($data);
+
         return view('movimentacao_financeira/movimentacao_financeira', compact('movimentacao', 'data'));
     }
 

@@ -85,7 +85,7 @@
 
             <div class="col-md-3" id="CampoContaCorrente">
                 <label for="inputContaCorrente" class="form-label">Conta Corrente*</label>
-                <select id="inputContaCorrente" name="conta" class="form-select form-control">
+                <select id="inputContaCorrente" name="conta_corrente" class="form-select form-control">
                     <option value="0" selected>-- Selecione --</option>
                 </select>
             </div>
