@@ -71,8 +71,17 @@ class MovimentacaoFinanceiraController extends Controller
 
         $movimentacao = MovimentacaoFinanceira::all();      
 
-        $saldo_anterior = SaldoDiario::orderBy('data', 'desc')->where('data', '<', $request->input('data'))->get(); // Saldo anterior
-        $saldo_atual = SaldoDiario::where('data', $dataRef)->get(); // Saldo do dia
+        // Saldo anterior
+        $saldo_anterior = SaldoDiario::orderBy('data', 'desc')
+        ->where('data', '<', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); 
+
+        $saldo_atual = SaldoDiario::where('data', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); // Saldo do dia
 
         $total_movimentacao = $movimentacao->count();
 
