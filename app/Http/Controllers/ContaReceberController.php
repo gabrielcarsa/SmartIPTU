@@ -616,8 +616,8 @@ class ContaReceberController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaReceber->cliente_id;
                 $movimentacao_financeira->descricao = $contaReceber->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataRecebimento[$i];
-                $movimentacao_financeira->titular_conta_id = $contaReceber->titular_conta_id;
-                $movimentacao_financeira->conta_corrente_id = 1; //Alterar
+                $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
+                $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
                 // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)

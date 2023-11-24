@@ -664,8 +664,8 @@ class DebitoController extends Controller
                 $movimentacao_financeira->descricao = $descricao_debito->descricao;
                 $movimentacao_financeira->data_movimentacao = $data[$i];
                 $movimentacao_financeira->tipo_debito_id = $debito->tipo_debito_id;
-                $movimentacao_financeira->titular_conta_id = $debito->titular_conta_id;
-                $movimentacao_financeira->conta_corrente_id = 1; //Alterar
+                $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
+                $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
                 // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)

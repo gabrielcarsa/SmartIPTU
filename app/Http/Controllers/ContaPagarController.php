@@ -612,8 +612,8 @@ class ContaPagarController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
                 $movimentacao_financeira->descricao = $contaPagar->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataPagamento[$i];
-                $movimentacao_financeira->titular_conta_id = $contaPagar->titular_conta_id;
-                $movimentacao_financeira->conta_corrente_id = 1; //Alterar
+                $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
+                $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
                 // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
