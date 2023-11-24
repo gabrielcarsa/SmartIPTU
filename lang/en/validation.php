@@ -213,7 +213,9 @@ return [
         'valor_pago.*' => 'Valor Pago',
         'refenteLotes' => 'Referente a Lotes',
         'refenteOutros' => 'Referente a Outros',
-
+        'data' => 'Data',
+        'titular_conta_id' => 'Titular da Conta',
+        'conta_corrente_id' => 'Conta Corrente',
 
 
     ],

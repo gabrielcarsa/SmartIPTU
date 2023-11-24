@@ -52,10 +52,20 @@ class MovimentacaoFinanceiraController extends Controller
 
      // LISTAGEM DE MOVIMENTAÇÃO FINANCEIRA
      function listar(Request $request){
+        //Validação
+        $validated = $request->validate([
+            'data' => 'required|date',
+            'titulares_conta' => 'required|numeric|min:1',
+            'conta_corrente' => 'required|numeric|min:1',
+        ]);
+    
+
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
         $titular = $request->input('titulares_conta');
         $conta_corrente = $request->input('conta_corrente');
         $dataRef = $request->input('data');
+
+      
 
         //Soma das entradas do dia atual
         $entradas = DB::table('movimentacao_financeira')
