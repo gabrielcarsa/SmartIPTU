@@ -15,7 +15,7 @@ class DashboardController extends Controller
     function dashboard(){
 
         //Consultas para relacionar debitos e contas a pagar a titulares das contas
-        $debitos_titulares = DB::table('parcela as p')
+        $debitos_titulares = DB::table('parcela_conta_receber as p')
            ->selectRaw('tc.id as id')
            ->selectRaw('SUM(p.valor_parcela) as total_debitos')
            ->selectRaw('NULL as total_contas_pagar')
@@ -78,7 +78,7 @@ class DashboardController extends Controller
     
 
         //select referente a parcelas de contas a pagar de lotes
-        $queryDebitos = DB::table('parcela as p')
+        $queryDebitos = DB::table('parcela_conta_pagar as p')
             ->selectRaw('SUM(p.valor_parcela) as total_debitos')
             ->selectRaw('CASE WHEN c.razao_social IS NOT NULL THEN c.razao_social ELSE c.nome END AS nome_cliente_ou_razao_social')
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
@@ -105,13 +105,14 @@ class DashboardController extends Controller
 
         //Dividir em Débitos de Empresa e Clientes
         foreach ($queryDebitos as $debitos) {
-            
-            if ($debitos->nome_cliente_ou_razao_social == $titular_empresa_principal_nome) {
-                $debitosEmpresa = [
-                    'total_debitos' => $debitos->total_debitos,
-                    'nome_cliente_ou_razao_social' => $debitos->nome_cliente_ou_razao_social,
-                ];
-    
+            if(isset($debitos->nome_cliente_ou_razao_social) && isset($titular_empresa_principal_nome)){
+                if ($debitos->nome_cliente_ou_razao_social == $titular_empresa_principal_nome) {
+                    $debitosEmpresa = [
+                        'total_debitos' => $debitos->total_debitos,
+                        'nome_cliente_ou_razao_social' => $debitos->nome_cliente_ou_razao_social,
+                    ];
+        
+                }
             } else {
                 $debitosValorClientes += $debitos->total_debitos;
             }
@@ -131,7 +132,7 @@ class DashboardController extends Controller
         ];
 
         //Alimentar gráfico de Receber Débitos por ano
-        $receberPorAnos = DB::table('parcela as p')
+        $receberPorAnos = DB::table('parcela_conta_receber as p')
             ->selectRaw("EXTRACT(YEAR FROM p.data_vencimento) as ano_vencimento")
             ->selectRaw('SUM(p.valor_parcela) as total_debitos')
             ->join('debito as d', 'p.debito_id', '=', 'd.id')
@@ -198,7 +199,7 @@ class DashboardController extends Controller
             ->join('quadra as q', 'e.id', '=', 'q.empreendimento_id')
             ->join('lote as l', 'q.id', '=', 'l.quadra_id')
             ->leftJoin('debito as d', 'l.id', '=', 'd.lote_id')
-            ->leftJoin('parcela as p', 'd.id', '=', 'p.debito_id')
+            ->leftJoin('parcela_conta_receber as p', 'd.id', '=', 'p.debito_id')
             ->groupBy('e.nome')
             ->orderBy('e.nome', 'ASC')
             ->get();

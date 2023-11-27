@@ -64,7 +64,7 @@
             @csrf
             <div class="col-md-2">
                 <label for="inputData" class="form-label">Data da movimentação</label>
-                <input type="date" name="data" value="{{request('data')}}" class="form-control" id="inputData">
+                <input type="date" name="data" value="{{request('data')}}" class="form-control @error('data') is-invalid @enderror" id="inputData">
             </div>
             <div class="col-md-3">
                 <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
