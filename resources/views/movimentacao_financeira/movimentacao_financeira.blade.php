@@ -63,16 +63,20 @@
         <form class="row g-3" action="/movimentacao_financeira/listar" method="get" autocomplete="off">
             @csrf
             <div class="col-md-2">
-                <label for="inputData" class="form-label">Data da movimentação</label>
+                <label for="inputData" class="form-label">Data início</label>
                 <input type="date" name="data" value="{{request('data')}}" class="form-control @error('data') is-invalid @enderror" id="inputData">
+            </div>
+            <div class="col-md-2">
+                <label for="inputData" class="form-label">Data fim</label>
+                <input type="date" name="data_fim" value="{{request('data_fim')}}" class="form-control @error('data_fim') is-invalid @enderror" id="inputData">
             </div>
             <div class="col-md-3">
                 <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
                 <select id="inputTitularConta" name="titulares_conta"
                     class="form-select form-control @error('titulares_conta') is-invalid @enderror">
-                    <option value="0" {{ old('titulares_conta') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                    <option value="0">-- Selecione --</option>
                     @foreach ($data['titulares_conta'] as $titular)
-                    <option value="{{ $titular->id }}" {{ old('titulares_conta') == $titular->id ? 'selected' : '' }}>
+                    <option value="{{ $titular->id }}" {{ request('titulares_conta') == $titular->id ? 'selected' : '' }}>
                         @if(empty($titular->nome))
                         {{$titular->razao_social}}
                         @else
@@ -86,7 +90,7 @@
             <div class="col-md-3" id="CampoContaCorrente">
                 <label for="inputContaCorrente" class="form-label">Conta Corrente*</label>
                 <select id="inputContaCorrente" name="conta_corrente" class="form-select form-control">
-                    <option value="0" selected>-- Selecione --</option>
+                    <option value="0">-- Selecione --</option>
                 </select>
             </div>
 
@@ -110,7 +114,7 @@
     </h5>
     <div class="card-footer">
         <a class="btn btn-add"
-            href="../movimentacao_financeira/relatorio_pdf?data={{request('data')}}&titular={{request('titulares_conta')}}&conta_corrente={{request('conta_corrente')}}">PDF</a>
+            href="../movimentacao_financeira/relatorio_pdf?data={{request('data')}}&data_fim={{request('data_fim')}}&titular={{request('titulares_conta')}}&conta_corrente={{request('conta_corrente')}}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
     <div class="card-saldo">
