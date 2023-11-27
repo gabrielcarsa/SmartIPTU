@@ -450,10 +450,8 @@ class MovimentacaoFinanceiraController extends Controller
             'valorEntradas' => $valorEntradas,
             'valorSaidas' => $valorSaidas
         ];
-
-
-        //$pdf = PDF::loadView('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
-        //return $pdf->download('cliente_relatorio.pdf');
-        return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
+        $pdf = PDF::loadView('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
+        return $pdf->download('movimentacao.pdf');
+        //return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
     }
 }

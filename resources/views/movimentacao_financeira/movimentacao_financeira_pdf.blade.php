@@ -6,10 +6,6 @@
     <meta name=viewport content="width=device-width, initial-scale=1">
     <title>Relatório Clientes</title>
 
-    <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
     <style>
     /* Estilo básico para tabelas */
     .table {
@@ -27,6 +23,7 @@
 
     /* Estilo para células de tabela */
     .table td {
+        font-size: 12px;
         padding: 0.75rem;
         vertical-align: top;
         border-top: 1px solid #dee2e6;
@@ -55,24 +52,27 @@
     .table-sm td {
         padding: 0.3rem;
     }
+
+    h4 {
+        font-weight: 900;
+
+    }
     </style>
 </head>
 
 <body>
-    <p>SmartIPTU</p>
+    <p style="font-size: 10px;">SmartIPTU</p>
     <div class="">
-        <h4 class="text-center">Movimentações do dia
-            {{\Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y')}} -
-            {{$movimentacao[0]->conta_corrente}}</h4>
-        <div class="row">
-            <div class="col-md-6">
-                @if($movimentacao[0]->nome_titular != null)
-                <td class="align-middle">{{$movimentacao[0]->nome_titular}}</td>
-                @else
-                <td class="align-middle">{{$movimentacao[0]->razao_social_titular}}</td>
-                @endif
-            </div>
-        </div>
+        <h4 style="text-align: center !important; font-size: 25px;">
+            Movimentações do dia {{\Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y')}} -
+        </h4>
+        @if($movimentacao[0]->nome_titular != null)
+        <p style="font-size: 13px;">{{$movimentacao[0]->nome_titular}}</p>
+        @else
+        <p style="font-size: 13px;">{{$movimentacao[0]->razao_social_titular}}</p>
+        @endif
+        <p style="font-size: 13px;">{{$movimentacao[0]->conta_corrente}}</p>
+
         <table class="table table-striped text-center">
             <thead>
                 <tr>
@@ -131,9 +131,7 @@
         </table>
 
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
-    </script>
+
 </body>
 
 </html>
