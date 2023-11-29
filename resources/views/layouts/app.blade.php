@@ -49,8 +49,7 @@
                             group
                         </span>Cadastro e controle de usuários</a></li>
                 <li>
-                    <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
-                        aria-controls="collapseExample">
+                    <a href="">
                         <span class="material-symbols-outlined">
                             universal_currency_alt
                         </span>Financeiro
@@ -59,7 +58,7 @@
                         </span>
                     </a>
                 </li>
-                <div class="collapse" id="collapseFinanceiro">
+                <div id="collapseFinanceiro">
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
@@ -77,8 +76,7 @@
                 </div>
 
                 <li>
-                    <a data-bs-toggle="collapse" href="#collapseConfiguracoes" role="button" aria-expanded="false"
-                        aria-controls="collapseExample">
+                    <a href="#">
                         <span class="material-symbols-outlined">
                             settings
                         </span>Configurações
@@ -87,7 +85,7 @@
                         </span>
                     </a>
                 </li>
-                <div class="collapse" id="collapseConfiguracoes">
+                <div id="collapseConfiguracoes">
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('titular_conta') }}"><span class="material-symbols-outlined">
                                     person_pin

@@ -60,6 +60,10 @@ ul a:hover{
 .sublist-offcanvas li{
     margin: 5px;
 }
+.sublist-offcanvas li a {
+    font-size: 16px !important;
+
+}
 
 /*-----
 CONTENT
