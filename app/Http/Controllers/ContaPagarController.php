@@ -87,7 +87,7 @@ class ContaPagarController extends Controller
         $contaPagar->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
         $contaPagar->descricao = $request->input('descricao');
-        $contaPagar->data_cadastro = date('d-m-Y h:i:s a', time());
+        $contaPagar->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $contaPagar->cadastrado_usuario_id = $usuario;
         $contaPagar->save();
 
@@ -593,7 +593,7 @@ class ContaPagarController extends Controller
             $valor = str_replace(',', '.', $valorPago[$i]);
             $parcela->valor_pago = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             $parcela->data_pagamento = $dataPagamento[$i];
-            $parcela->data_baixa = date('d-m-Y h:i:s a', time());
+            $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
 
@@ -623,7 +623,7 @@ class ContaPagarController extends Controller
                 $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
                 $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
             
-                $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
+                $movimentacao_financeira->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                 $movimentacao_financeira->cadastrado_usuario_id = $user_id;
         
                 //Variavel de saldo para manipulacao e verificacao do saldo
@@ -654,7 +654,7 @@ class ContaPagarController extends Controller
                     $addSaldo->titular_conta_id = $request->input('titular_conta_id');
                     $addSaldo->conta_corrente_id = $request->input('conta_corrente_id');
                     $addSaldo->data = $dataPagamento[$i];
-                    $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
+                    $addSaldo->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                     $addSaldo->save();
         
                     $saldo = $addSaldo;

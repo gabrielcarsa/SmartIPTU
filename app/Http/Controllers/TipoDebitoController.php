@@ -10,7 +10,6 @@ use App\Models\ContaPagar;
 use Carbon\Carbon;
 
 
-
 class TipoDebitoController extends Controller
 {
     function tipo_debito(){
