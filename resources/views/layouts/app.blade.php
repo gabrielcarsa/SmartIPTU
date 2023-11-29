@@ -37,7 +37,7 @@
             <a href="/dashboard"><img src="{{asset("storage/SmartIPTU.png")}}" width="100px" /></a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body-content">
+        <div class="offcanvas-body-content" style="max-height: 80vh; overflow-y: auto;">
             <ul class="list-offcanvas">
                 <li><a href="/empreendimento">
                         <span class="material-symbols-outlined">pie_chart</span>Gestão de Lotes/Inscrições
