@@ -50,8 +50,8 @@
                         usuários</a>
                 </li>
                 <li>
-                    <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
-                        aria-controls="collapseExample">
+                    <a data-bs-toggle="collapseFinanceira" href="#collapseFinanceiro" role="button" aria-expanded="false"
+                        aria-controls="collapseFinanceira">
                         <span class="material-symbols-outlined">
                             universal_currency_alt
                         </span>Financeiro
@@ -60,7 +60,7 @@
                         </span>
                     </a>
                 </li>
-                <div class="collapse" id="collapseFinanceiro">
+                <div class="collapseFinanceira" id="collapseFinanceiro">
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
