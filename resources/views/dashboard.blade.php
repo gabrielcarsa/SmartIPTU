@@ -111,7 +111,7 @@
     </div>
 </div>
 
-@if($data['tipo_debitos'][0] != null)
+@if(isset($data['tipo_debitos'][0]))
 <div class="row">
     <div class="col">
         <div class="card">
