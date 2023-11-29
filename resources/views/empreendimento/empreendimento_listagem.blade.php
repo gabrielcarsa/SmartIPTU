@@ -9,10 +9,6 @@
 @endif
 
 <h2>Empreendimento</h2>
-<p>
-    - a fazer: validações; - Movimentacao (editar e colocar categoria e valid); - No contas ao pagar/receber mudar na
-    movimentação; - validacoes; - dashboard; - conta bancaria do titular; - estornar parcelas; - exportar relatorios
-</p>
 
 <a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
