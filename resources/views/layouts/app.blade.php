@@ -30,6 +30,7 @@
 <body class="">
 
     @livewire('navigation-menu')
+
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <div class="offcanvas-header">
@@ -38,60 +39,78 @@
         </div>
         <div class="offcanvas-body-content">
             <ul class="list-offcanvas">
-                <li><a href="/empreendimento"><span class="material-symbols-outlined">pie_chart</span>Gestão de
-                        Lotes/Inscrições</a></li>
-                <li><a href="/cliente"><span class="material-symbols-outlined">person_add</span>Cadastro de clientes</a>
+                <li><a href="/empreendimento">
+                        <span class="material-symbols-outlined">pie_chart</span>Gestão de Lotes/Inscrições
+                    </a>
                 </li>
-                <li><a href="/usuario"><span class="material-symbols-outlined">group</span>Cadastro e controle de
-                        usuários</a></li>
+                <li>
+                    <a href="/cliente"><span class="material-symbols-outlined">person_add</span>Cadastro de clientes</a>
+                </li>
+                <li>
+                    <a href="/usuario"><span class="material-symbols-outlined">group</span>Cadastro e controle de
+                        usuários</a>
+                </li>
                 <li>
                     <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
-                        <span class="material-symbols-outlined">universal_currency_alt</span>Financeiro
-                        <span class="material-symbols-outlined">arrow_drop_down</span>
+                        <span class="material-symbols-outlined">
+                            universal_currency_alt
+                        </span>Financeiro
+                        <span class="material-symbols-outlined">
+                            arrow_drop_down
+                        </span>
                     </a>
-                    <div class="collapse" id="collapseFinanceiro">
-                        <ul class="sublist-offcanvas">
-                            <li><a href="{{ route('calendario') }}"><span
-                                        class="material-symbols-outlined">calendar_month</span>Calendário Financeiro</a>
-                            </li>
-                            <li><a href="{{ route('contas_receber') }}"><span
-                                        class="material-symbols-outlined">attach_money</span>Contas a receber</a></li>
-                            <li><a href="{{ route('contas_pagar') }}"><span
-                                        class="material-symbols-outlined">money_off</span>Contas a pagar</a></li>
-                            <li><a href="{{ route('movimentacao_financeira') }}"><span
-                                        class="material-symbols-outlined">currency_exchange</span>Movimentação
-                                    Financeira</a></li>
-                        </ul>
-                    </div>
                 </li>
-
+                <div class="collapse" id="collapseFinanceiro">
+                    <ul class="sublist-offcanvas">
+                        <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
+                                    calendar_month
+                                </span>Calendário Financeiro</a></li>
+                        <li><a href="{{ route('contas_receber') }}"><span class="material-symbols-outlined">
+                                    attach_money
+                                </span>Contas a receber</a></li>
+                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                                    money_off
+                                </span>Contas a pagar</a></li>
+                        <li><a href="{{ route('movimentacao_financeira') }}"><span class="material-symbols-outlined">
+                                    currency_exchange
+                                </span>Movimentação Financeira</a></li>
+                    </ul>
+                </div>
                 <li>
                     <a data-bs-toggle="collapse" href="#collapseConfiguracoes" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
-                        <span class="material-symbols-outlined">settings</span>Configurações
-                        <span class="material-symbols-outlined">arrow_drop_down</span>
+                        <span class="material-symbols-outlined">
+                            settings
+                        </span>Configurações
+                        <span class="material-symbols-outlined">
+                            arrow_drop_down
+                        </span>
                     </a>
-                    <div class="collapse" id="collapseConfiguracoes">
-                        <ul class="sublist-offcanvas">
-                            <li><a href="{{ route('titular_conta') }}"><span
-                                        class="material-symbols-outlined">person_pin</span>Central de Contas</a></li>
-                            <li><a href="{{ route('tipo_debito') }}"><span
-                                        class="material-symbols-outlined">request_quote</span>Tipo de Débitos</a></li>
-                            <li><a href="{{ route('descricao_debito') }}"><span
-                                        class="material-symbols-outlined">description</span>Descrição de Débitos</a>
-                            </li>
-                            <li><a href="{{ route('categoria_pagar') }}"><span
-                                        class="material-symbols-outlined">attach_money</span>Categoria a Pagar</a></li>
-                            <li><a href="{{ route('categoria_receber') }}"><span
-                                        class="material-symbols-outlined">money_off</span>Categoria a Receber</a></li>
-                        </ul>
-                    </div>
                 </li>
+                <div class="collapse" id="collapseConfiguracoes">
+                    <ul class="sublist-offcanvas">
+                        <li><a href="{{ route('titular_conta') }}"><span class="material-symbols-outlined">
+                                    person_pin
+                                </span>Central de Contas</a></li>
+                        <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
+                                    request_quote
+                                </span>Tipo de Débitos</a></li>
+                        <li><a href="{{ route('descricao_debito') }}"><span class="material-symbols-outlined">
+                                    description
+                                </span>Descrição de Débitos</a></li>
+                        <li><a href="{{ route('categoria_pagar') }}"><span class="material-symbols-outlined">
+                                    attach_money
+                                </span>Categoria a Pagar</a></li>
+                        <li><a href="{{ route('categoria_receber') }}"><span class="material-symbols-outlined">
+                                    money_off
+                                </span>Categoria a Receber</a></li>
+                    </ul>
+                </div>
+
             </ul>
         </div>
     </div>
-
 
     <!-- Page Content -->
     @if(Route::is('profile.show'))
