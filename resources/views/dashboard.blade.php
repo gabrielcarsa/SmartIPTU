@@ -111,7 +111,7 @@
     </div>
 </div>
 
-
+@if($data['tipo_debitos'] != null)
 <div class="row">
     <div class="col">
         <div class="card">
@@ -145,6 +145,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <div class="row">
     <div class="col">
