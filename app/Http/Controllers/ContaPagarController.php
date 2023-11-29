@@ -692,4 +692,129 @@ class ContaPagarController extends Controller
         }
         return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
     }
+
+    function estornar_pagamento_view(Request $request){
+          
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+            // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas em aberto, somente pode estornar quando estiveres pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaPagar::find($parcelaId);
+
+                //Se houver parcelas pagas redireciona de volta
+                if($parcela->situacao == 0){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas pagas para estornar o pagamento');
+                }
+            }
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_pagar as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.data_pagamento as data_pagamento',
+                    'p.valor_pago as valor_pago',
+                    'p.situacao as situacao_parcela',
+                    'cp.id as conta_receber_id',
+                    'cp.quantidade_parcela as debito_quantidade_parcela',
+                    'ccp.descricao as descricao',       
+                )
+                ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
+                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            
+            $titular_conta = DB::table('titular_conta as t')
+            ->select(
+                't.id as id_titular_conta',
+                't.cliente_id as cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+            )
+            ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+            ->get();
+
+            $parcelaPagarOutros = true;
+
+            $data = [
+                'titular_conta' => $titular_conta,
+                'parcelaPagarOutros' => $parcelaPagarOutros,
+            ];
+
+            return view('parcela/parcela_estornar_pagamento_recebimento', compact('parcelas', 'data'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    function estornar_pagamento($user_id, Request $request){
+    
+        $idParcelas = $request->get('id_parcela', []);
+        $dataPagamento = $request->get('data_pagamento', []);
+        $valorPago = $request->get('valor_pago', []);
+
+        $i = 0;
+        foreach ($idParcelas as $id) {
+            $parcela = ParcelaContaPagar::find($id);
+            $parcela->valor_pago = null; 
+            $parcela->data_pagamento = null;
+            $parcela->data_baixa = null;
+            $parcela->usuario_baixa_id = $user_id;
+            $parcela->situacao = 0;
+
+            //Selecionar o ID do movimentacao financeira
+            $movimentacao_financeira_id = $parcela->movimentacao_financeira_id;
+            $parcela->movimentacao_financeira_id = null; 
+            
+
+            //Se a conta está relacionada a uma movimentação
+            if ($movimentacao_financeira_id != null) {
+                $movimentacao_financeira = MovimentacaoFinanceira::find($movimentacao_financeira_id);
+
+                //Pegando variáveis necessárias para selecionar e estornar saldo
+                $titular_conta_id = $movimentacao_financeira->titular_conta_id;
+                $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
+
+                //Variavel de saldo para manipulacao e verificacao do saldo
+                $saldo = SaldoDiario::where('data', $dataPagamento[$i])
+                ->where('titular_conta_id', $titular_conta_id)
+                ->where('conta_corrente_id', $conta_corrente_id)
+                ->get(); // Saldo do dia
+
+                $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+                 
+                //variavel que será responsavel por alterar-lo
+                $saldo_model = SaldoDiario::where('data', $dataPagamento[$i])
+                ->where('titular_conta_id', $titular_conta_id)
+                ->where('conta_corrente_id', $conta_corrente_id)
+                ->first();
+
+                $valor = (double) str_replace(',', '.', $valorPago[$i]);
+
+                //Atualizando o saldo
+                $saldo_model->saldo = $valor_desatualizado_saldo + $valor; 
+
+                //Salvando alterações
+                $saldo_model->save();
+                $parcela->save();
+                $movimentacao_financeira->delete();
+
+            }else{ //Se não estiver relacionado
+ 
+            }
+            
+            $i++;
+        }
+        return redirect("contas_pagar")->with('success', 'Estornado pagamento com sucesso'); 
+    }
 }
