@@ -21,8 +21,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/master.css') }}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     @livewireStyles
 
 </head>
@@ -51,8 +50,8 @@
                         usuários</a>
                 </li>
                 <li>
-                    <a data-bs-toggle="collapseFinanceira" href="#collapseFinanceiro" role="button"
-                        aria-expanded="false" aria-controls="collapseExample">
+                    <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
+                        aria-controls="collapseExample">
                         <span class="material-symbols-outlined">
                             universal_currency_alt
                         </span>Financeiro
@@ -61,7 +60,7 @@
                         </span>
                     </a>
                 </li>
-                <div class="collapseFinanceira" id="collapseFinanceiro">
+                <div class="collapse" id="collapseFinanceiro">
                     <ul class="sublist-offcanvas">
                         <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
@@ -128,16 +127,6 @@
         </div>
     </div>
 
-    <script>
-        // Reiniciar a inicialização do Bootstrap
-        document.addEventListener('DOMContentLoaded', function() {
-            var myCollapse = new bootstrap.Collapse(document.getElementById('collapseFinanceiro'));
-            var myOtherCollapse = new bootstrap.Collapse(document.getElementById('outroCollapseID'));
-            // Adicione linhas semelhantes para outros colapsos que você tem
-        });
-    </script>
-
-
     <!-- Page Content -->
     @if(Route::is('profile.show'))
     {{$slot}}
@@ -150,9 +139,8 @@
     @stack('modals')
 
     @livewireScripts
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 </body>
 
 </html>
