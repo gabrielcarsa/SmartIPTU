@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
@@ -21,9 +21,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/master.css') }}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    @livewireStyles
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
+    @livewireStyles
 </head>
 
 <body class="">
@@ -40,15 +41,13 @@
             <ul class="list-offcanvas">
                 <li><a href="/empreendimento">
                         <span class="material-symbols-outlined">pie_chart</span>Gestão de Lotes/Inscrições
-                    </a>
-                </li>
-                <li>
-                    <a href="/cliente"><span class="material-symbols-outlined">person_add</span>Cadastro de clientes</a>
-                </li>
-                <li>
-                    <a href="/usuario"><span class="material-symbols-outlined">group</span>Cadastro e controle de
-                        usuários</a>
-                </li>
+                    </a></li>
+                <li><a href="/cliente"><span class="material-symbols-outlined">
+                            person_add
+                        </span>Cadastro de clientes</a></li>
+                <li><a href="/usuario"><span class="material-symbols-outlined">
+                            group
+                        </span>Cadastro e controle de usuários</a></li>
                 <li>
                     <a data-bs-toggle="collapse" href="#collapseFinanceiro" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
@@ -76,6 +75,7 @@
                                 </span>Movimentação Financeira</a></li>
                     </ul>
                 </div>
+
                 <li>
                     <a data-bs-toggle="collapse" href="#collapseConfiguracoes" role="button" aria-expanded="false"
                         aria-controls="collapseExample">
@@ -107,23 +107,8 @@
                     </ul>
                 </div>
 
+
             </ul>
-            <p class="d-inline-flex gap-1">
-                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
-                    aria-expanded="false" aria-controls="collapseExample">
-                    Link with href
-                </a>
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Button with data-bs-target
-                </button>
-            </p>
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body">
-                    Some placeholder content for the collapse component. This panel is hidden by default but revealed
-                    when the user activates the relevant trigger.
-                </div>
-            </div>
         </div>
     </div>
 
@@ -139,7 +124,9 @@
     @stack('modals')
 
     @livewireScripts
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
 
 </body>
 
