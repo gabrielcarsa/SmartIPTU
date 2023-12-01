@@ -108,32 +108,6 @@
     Central de Informações
 </a>
 
-<table class="table table-striped" id="list-table-1">
-    <thead>
-        <tr>
-            <th scope="col">Tributo</th>
-            <th scope="col" style=" text-align:center">Vencimento</th>
-            <th scope="col" style="text-align:right;">Valor Total</th>
-        </tr>
-    </thead>
-
-    <tbody> 
-        <tr style="background-color:#005588">
-            <td colspan="12" class="titulo-tabela" style="font-weight:bold;color:white;padding-left:11px!important">
-                <i class="fas fa-list-ol"></i> Pagamento Parcelado <span>(2023)</span>
-            </td>
-        </tr>
-        <tr>
-            <td>IMPOSTO TERRITORIAL</td>
-            <td style="text-align:center">10/01/2023</td>
-            <td class="currency" style="padding-right:7px;">124,55</td>
-        </tr>
-    </tbody>
-
-</table>
-
-
-
 @if($resultados[0]->tipo_debito_descricao)
 
 @php

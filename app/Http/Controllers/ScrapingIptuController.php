@@ -29,23 +29,24 @@ class ScrapingIptuController extends Controller
         $form['InscricaoMunicipal'] = $textoInput;
 
         // Log: Verifica se o campo foi preenchido corretamente
-        echo 'Valor do campo InscricaoMunicipal: ' . $form['InscricaoMunicipal']->getValue() . '<br>';
+        //echo 'Valor do campo InscricaoMunicipal: ' . $form['InscricaoMunicipal']->getValue() . '<br>';
 
         // Submete o formulário
         $client->submit($form);
 
         // Log: Verifica a URL após a submissão
-        echo 'URL após submissão: ' . $client->getHistory()->current()->getUri() . '<br>';
-
+        //echo 'URL após submissão: ' . $client->getHistory()->current()->getUri() . '<br>';
 
         // Agora, $client contém a página de destino após a submissão
-        // Faça o scraping na página de destino conforme necessário
+        // scraping na página de destino conforme necessário
         $crawler = $client->request('GET', $urlDestino);
 
-        $crawler->filter('section.dados')->each(function ($section) {
+        $resultadoLote = [];
+
+        $crawler->filter('section.dados')->each(function ($section) use (&$resultadoLote) {
             // Extrai informações da coluna 1
             $col1 = $section->filter('.col-lg-4')->eq(0);
-            $contribuinte = $col1->filter('.dados-dados')->eq(0)->text();
+            $responsabilidade = $col1->filter('.dados-dados')->eq(0)->text();
             $endereco = $col1->filter('.dados-dados')->eq(2)->text();
         
             // Extrai informações da coluna 2
@@ -58,45 +59,74 @@ class ScrapingIptuController extends Controller
             $col3 = $section->filter('.col-lg-4')->eq(2);
             $inscricaoMunicipal = $col3->filter('.dados-dados')->eq(0)->text();
             $situacao = $col3->filter('.dados-dados')->eq(1)->text();
-        
-            // Exibe as informações extraídas
-            echo "Contribuinte: $contribuinte<br>";
-            echo "Endereço: $endereco<br>";
 
-            echo "Bairro: $bairro<br>";
-            echo "Quadra: $quadra<br>";
-            echo "Lote: $lote<br>";
-            echo "Inscrição Municipal: $inscricaoMunicipal<br>";
-            echo "Situação: $situacao<br>";
+            $resultadoLote = [
+                'responsabilidade' => $responsabilidade,
+                'endereco' => $endereco,
+                'bairro' => $bairro,
+                'quadra' => $quadra,
+                'lote' => $lote,
+                'inscricaoMunicipal' => $inscricaoMunicipal,
+            ];
         });
 
-         // Encontrar todas as tabelas com o id começando por "list-table-"
-         $tables = $crawler->filter('table[id^="list-table-"]');
+       
 
-         $result = [];
- 
-         // Iterar sobre todas as tabelas encontradas
-         $tables->each(function ($table) use (&$result) {
-             // Encontrar todas as linhas no corpo da tabela
-             $rows = $table->filter('tbody tr');
- 
-             // Iterar sobre todas as linhas encontradas
-             $rows->each(function ($row) use (&$result) {
-                 // Extrair dados de cada coluna na linha
-                 $tributo = $row->filter('td')->eq(0)->text();
-                 $vencimento = $row->filter('td')->eq(1)->text();
-                 $valorTotal = $row->filter('td')->eq(2)->text();
- 
-                 // Armazenar os dados em um array ou em um banco de dados, conforme necessário
-                 $result[] = [
-                     'tributo' => $tributo,
-                     'vencimento' => $vencimento,
-                     'valor_total' => $valorTotal,
-                 ];
-             });
-         });
- 
-         // Agora $result contém os dados de todas as tabelas
-         dd($result);
+        // Encontrar todas as tabelas com o id começando por "list-table-"
+        $tables = $crawler->filter('table[id^="list-table-"]');
+
+        $resultadoParcela = [];
+
+        // Iterar sobre todas as tabelas encontradas
+        $tables->each(function ($table) use (&$resultadoParcela) {
+            // Encontrar todas as linhas no corpo da tabela
+            $rows = $table->filter('tbody tr');
+
+            // Iterar sobre todas as linhas encontradas
+            $rows->each(function ($row) use (&$resultadoParcela) {
+
+                $titulo = $row->filter('tr')->eq(0)->text();
+                if (
+                    $titulo != "Pagamento Parcelado (2023)" &&
+                    $titulo != "Débitos Protestados" &&
+                    $titulo != "Débitos Negativados" &&
+                    $titulo != "Débitos Inscritos em Dívida Ativa" &&
+                    $titulo != "Débitos Ajuizados"
+                ) {
+                    $titulo = "";
+                }
+                
+
+                $vencimento = "";
+                $descricao_debito = "";
+                $valor_total_parcelamento = "";
+                $valor_total_debitos = "";
+
+                if($row->filter('tr')->eq(0)->filter('td')->eq(3)->count() > 0){
+                    $vencimento = $row->filter('tr')->eq(0)->filter('td')->eq(3)->text(); 
+                }
+                if($row->filter('tr')->eq(0)->filter('td')->eq(1)->count() > 0){
+                    $descricao_debito = $row->filter('tr')->eq(0)->filter('td')->eq(1)->text(); 
+                }
+                if($row->filter('tr')->eq(0)->filter('td')->eq(10)->count() > 0){
+                    $valor_total_parcelamento = $row->filter('tr')->eq(0)->filter('td')->eq(10)->text();
+                }
+                if($row->filter('tr')->eq(0)->filter('td')->eq(9)->count() > 0){
+                    $valor_total_debitos = $row->filter('tr')->eq(0)->filter('td')->eq(9)->text();
+                }
+               
+
+                $resultadoParcela[] = [
+                    'titulo' => $titulo,
+                    'vencimento' => $vencimento,
+                    'descricao_debito' => $descricao_debito,
+                    'valor_total_parcelamento' => $valor_total_parcelamento,
+                    'valor_total_debitos' => $valor_total_debitos,
+                ];
+            });
+        });
+
+        return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote'));
+    
     }
 }
