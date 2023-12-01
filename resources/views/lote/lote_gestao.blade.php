@@ -100,6 +100,39 @@
     </span>
     Prescrições
 </a>
+<a class="btn btn-primary btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        gavel
+    </span>
+    Central de Informações
+</a>
+
+<table class="table table-striped" id="list-table-1">
+    <thead>
+        <tr>
+            <th scope="col">Tributo</th>
+            <th scope="col" style=" text-align:center">Vencimento</th>
+            <th scope="col" style="text-align:right;">Valor Total</th>
+        </tr>
+    </thead>
+
+    <tbody> 
+        <tr style="background-color:#005588">
+            <td colspan="12" class="titulo-tabela" style="font-weight:bold;color:white;padding-left:11px!important">
+                <i class="fas fa-list-ol"></i> Pagamento Parcelado <span>(2023)</span>
+            </td>
+        </tr>
+        <tr>
+            <td>IMPOSTO TERRITORIAL</td>
+            <td style="text-align:center">10/01/2023</td>
+            <td class="currency" style="padding-right:7px;">124,55</td>
+        </tr>
+    </tbody>
+
+</table>
+
+
 
 @if($resultados[0]->tipo_debito_descricao)
 
@@ -229,7 +262,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -247,7 +281,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -264,7 +299,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;

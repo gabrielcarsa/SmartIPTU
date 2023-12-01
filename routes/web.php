@@ -19,9 +19,7 @@ use App\Http\Controllers\TitularContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovimentacaoFinanceiraController;
 use App\Http\Controllers\ContaCorrenteController;
-
-
-
+use App\Http\Controllers\ScrapingIptuController;
 
 
 /*
@@ -169,4 +167,7 @@ Route::middleware([
         Route::post('/movimentacao_financeira/cadastrar/{usuario}',[MovimentacaoFinanceiraController::class, 'cadastrar']);
         Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
 
+        //SCRAPING  
+        Route::get('/scraping',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
+        
 });
