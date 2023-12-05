@@ -137,7 +137,7 @@ class ScrapingIptuController extends Controller
                
             });
         });
-        dd($resultadoParcela);
+        
         return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote'));
     
     }

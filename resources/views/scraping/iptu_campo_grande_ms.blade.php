@@ -31,45 +31,41 @@
 </div>
 @endif
 
-<div class="card-body">
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">Tipo de Débito</th>
-                <th scope="col">Descrição Débito</th>
-                <th scope="col">Data Vencimento</th>
-                <th scope="col">Valor Total</th>
+@if(isset($resultadoParcela))
 
-            </tr>
-        </thead>
-        <tbody>
-            @if(isset($resultadoParcela))
-            @foreach ($resultadoParcela as $parcela)
-            <tr>
-                @if(isset($parcela['titulo']))
-                <td>{{$parcela['titulo']}}</td>
-                @else
-                <td></td>
-                @endif
-                <td>{{$parcela['descricao_debito']}}</td>
-                <td>{{$parcela['vencimento']}}</td>
-                @if($parcela['valor_total_parcelamento'] == "")
-                <td>{{$parcela['valor_total_debitos']}}</td>
-                @else
-                <td>{{$parcela['valor_total_parcelamento']}}</td>
-                @endif
-            </tr>
-            @endforeach
+@foreach ($resultadoParcela as $parcela)
+
+@if(isset($parcela['titulo']))
+<h3>{{$parcela['titulo']}}</h3>
+@endif
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>Descrição do Débito</th>
+            <th>Vencimento</th>
+            <th>Valor Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(isset($parcela['parcelas']))
+        @foreach ($parcela['parcelas'] as $detalheParcela)
+        <tr>
+            <td>{{$detalheParcela['descricao_debito']}}</td>
+            <td>{{$detalheParcela['vencimento']}}</td>
+
+            {{-- Verificando se o valor total do parcelamento está vazio --}}
+            @if($detalheParcela['valor_total_parcelamento'] == "")
+            <td>{{$detalheParcela['valor_total_debitos']}}</td>
+            @else
+            <td>{{$detalheParcela['valor_total_parcelamento']}}</td>
             @endif
-        </tbody>
-    </table>
-    @if(isset($empreendimentos))
-    <div class="card-footer">
-        <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
-    </div>
-    @endif
+        </tr>
+        @endforeach
+        @endif
+    </tbody>
+</table>
+@endforeach
 
-</div>
-
-
+@endif
 @endsection
