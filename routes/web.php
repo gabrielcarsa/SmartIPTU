@@ -168,6 +168,6 @@ Route::middleware([
         Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
 
         //SCRAPING  
-        Route::get('/scraping',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
+        Route::get('/scraping/{inscricao_municipal}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
         
 });

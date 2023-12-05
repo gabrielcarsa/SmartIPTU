@@ -100,7 +100,7 @@
     </span>
     Prescrições
 </a>
-<a class="btn btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
+<a class="btn btn-add" id="central_informacoes" href="{{ route('iptuCampoGrande', ['inscricao_municipal' => $resultados[0]->inscricao_municipal]) }}"
     style="margin-bottom: 20px; background-color:RGB(255, 67, 164) ">
     <span class="material-symbols-outlined">
         smart_toy

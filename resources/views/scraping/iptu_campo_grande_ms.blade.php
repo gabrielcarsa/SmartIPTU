@@ -9,37 +9,63 @@
 @endif
 
 <h2>Central de Informações</h2>
-<p>Dados atualizados obtidos pelo site da prefeitura 01/12/2023 17:15</p>
 
-<a class="btn btn-primary btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
-    style="margin-bottom: 20px; background-color:RGB(254, 254, 34); color:#000">
-    Atualizar banco de dados desse lote
-</a>
+@if(isset($resultadoLote) && $resultadoLote != [])
+<table class="table table-bordered border-primary">
+    <thead>
+        <tr>
+            <th>Responsabilidade</th>
+            <th>Inscrição</th>
+            <th>Bairro</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{$resultadoLote['responsabilidade']}}</td>
+            <td>{{$resultadoLote['inscricaoMunicipal']}}</td>
+            <td>{{$resultadoLote['bairro']}}</td>
+        </tr>
+    </tbody>
+</table>
 
-@if(isset($resultadoLote))
-<div class="row">
+<table class="table table-bordered border-primary">
+    <thead>
+        <tr>
+            <th>Quadra</th>
+            <th>Lote</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Quadra: {{$resultadoLote['quadra']}}</td>
+            <td>Lote: {{$resultadoLote['lote']}}</td>
+        </tr>
+    </tbody>
+</table>
+
+@else
+<p><span class="material-symbols-outlined">
+    warning
+</span> Nenhum débito encontrado, caso exista verifique o número da inscrição no cadastro do lote</p>
+@endif
+
+@if(isset($resultadoParcela) && $resultadoLote != [])
+@foreach ($resultadoParcela as $parcela)
+<hr>
+@if(isset($parcela['titulo']))
+<div class="row" style="padding-top: 20px !important">
     <div class="col-md-6">
-        <p>Responsabilidade: {{$resultadoLote['responsabilidade']}}</p>
-        <p>Inscrição: {{$resultadoLote['inscricaoMunicipal']}}</p>
-        <p>Bairro: {{$resultadoLote['bairro']}}</p>
+        <h3>{{$parcela['titulo']}}</h3>
     </div>
-    <div class="col-md-6">
-        <p>Quadra: {{$resultadoLote['quadra']}}</p>
-        <p>Lote: {{$resultadoLote['lote']}}</p>
+    <div class="col-md-6 text-right">
+        <a class="btn btn-primary btn-add" id="central_informacoes" href="" style="margin-bottom: 20px;">
+            Atualizar débito
+        </a>
     </div>
-
 </div>
 @endif
 
-@if(isset($resultadoParcela))
-
-@foreach ($resultadoParcela as $parcela)
-
-@if(isset($parcela['titulo']))
-<h3>{{$parcela['titulo']}}</h3>
-@endif
-
-<table class="table table-striped table-dark">
+<table class="table table-bordered border-primary text-center">
     <thead>
         <tr>
             <th>Descrição do Débito</th>

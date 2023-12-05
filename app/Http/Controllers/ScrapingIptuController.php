@@ -7,10 +7,10 @@ use Goutte\Client;
 
 class ScrapingIptuController extends Controller
 {
-    public function iptuCampoGrande(Request $request)
+    public function iptuCampoGrande($inscricao_municipal)
     {
         // Texto a ser inserido no campo de input (substitua pelo valor real)
-        $textoInput = "7610210320";
+        $textoInput = $inscricao_municipal;
 
         // URL da página com o formulário
         $urlFormulario = 'https://iptu.campogrande.ms.gov.br/';
@@ -137,7 +137,7 @@ class ScrapingIptuController extends Controller
                
             });
         });
-        
+
         return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote'));
     
     }
