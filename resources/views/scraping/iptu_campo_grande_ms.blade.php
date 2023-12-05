@@ -9,15 +9,25 @@
 @endif
 
 <h2>Central de Informações</h2>
-<p>Dados atualizados obtidos pelo site da prefeitura</p>
+<p>Dados atualizados obtidos pelo site da prefeitura 01/12/2023 17:15</p>
+
+<a class="btn btn-primary btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
+    style="margin-bottom: 20px; background-color:RGB(254, 254, 34); color:#000">
+    Atualizar banco de dados desse lote
+</a>
 
 @if(isset($resultadoLote))
-<div>
-    <p>Responsabilidade: {{$resultadoLote['responsabilidade']}}</p>
-    <p>Inscrição: {{$resultadoLote['inscricaoMunicipal']}}</p>
-    <p>Bairro: {{$resultadoLote['bairro']}}</p>
-    <p>Quadra: {{$resultadoLote['quadra']}}</p>
-    <p>Lote: {{$resultadoLote['lote']}}</p>
+<div class="row">
+    <div class="col-md-6">
+        <p>Responsabilidade: {{$resultadoLote['responsabilidade']}}</p>
+        <p>Inscrição: {{$resultadoLote['inscricaoMunicipal']}}</p>
+        <p>Bairro: {{$resultadoLote['bairro']}}</p>
+    </div>
+    <div class="col-md-6">
+        <p>Quadra: {{$resultadoLote['quadra']}}</p>
+        <p>Lote: {{$resultadoLote['lote']}}</p>
+    </div>
+
 </div>
 @endif
 
@@ -36,7 +46,7 @@
             @if(isset($resultadoParcela))
             @foreach ($resultadoParcela as $parcela)
             <tr>
-                @if($parcela['titulo'] != "")
+                @if(isset($parcela['titulo']))
                 <td>{{$parcela['titulo']}}</td>
                 @else
                 <td></td>

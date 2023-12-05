@@ -100,10 +100,10 @@
     </span>
     Prescrições
 </a>
-<a class="btn btn-primary btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
-    style="margin-bottom: 20px">
+<a class="btn btn-add" id="central_informacoes" href="{{route('iptuCampoGrande')}}"
+    style="margin-bottom: 20px; background-color:RGB(255, 67, 164) ">
     <span class="material-symbols-outlined">
-        gavel
+        smart_toy
     </span>
     Central de Informações
 </a>

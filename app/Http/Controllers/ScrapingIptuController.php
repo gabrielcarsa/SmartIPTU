@@ -76,27 +76,28 @@ class ScrapingIptuController extends Controller
         $tables = $crawler->filter('table[id^="list-table-"]');
 
         $resultadoParcela = [];
+        $parcelas = [];
+        $i = 0;
+        $titulo = [];
 
         // Iterar sobre todas as tabelas encontradas
-        $tables->each(function ($table) use (&$resultadoParcela) {
+        $tables->each(function ($table) use (&$resultadoParcela, &$parcelas, &$i, &$titulo) {
             // Encontrar todas as linhas no corpo da tabela
             $rows = $table->filter('tbody tr');
 
             // Iterar sobre todas as linhas encontradas
-            $rows->each(function ($row) use (&$resultadoParcela) {
+            $rows->each(function ($row) use (&$resultadoParcela, &$parcelas, &$i, &$titulo) {
+                $auxTitulo = $row->filter('tr')->eq(0)->text();
 
-                $titulo = $row->filter('tr')->eq(0)->text();
                 if (
-                    $titulo != "Pagamento Parcelado (2023)" &&
-                    $titulo != "Débitos Protestados" &&
-                    $titulo != "Débitos Negativados" &&
-                    $titulo != "Débitos Inscritos em Dívida Ativa" &&
-                    $titulo != "Débitos Ajuizados"
+                    $auxTitulo == "Pagamento Parcelado (2023)" ||
+                    $auxTitulo == "Débitos Protestados" ||
+                    $auxTitulo == "Débitos Negativados" ||
+                    $auxTitulo == "Débitos Inscritos em Dívida Ativa" ||
+                    $auxTitulo == "Débitos Ajuizados"
                 ) {
-                    $titulo = "";
+                    $titulo[$i] = $auxTitulo;
                 }
-                
-
                 $vencimento = "";
                 $descricao_debito = "";
                 $valor_total_parcelamento = "";
@@ -105,27 +106,38 @@ class ScrapingIptuController extends Controller
                 if($row->filter('tr')->eq(0)->filter('td')->eq(3)->count() > 0){
                     $vencimento = $row->filter('tr')->eq(0)->filter('td')->eq(3)->text(); 
                 }
-                if($row->filter('tr')->eq(0)->filter('td')->eq(1)->count() > 0){
-                    $descricao_debito = $row->filter('tr')->eq(0)->filter('td')->eq(1)->text(); 
-                }
                 if($row->filter('tr')->eq(0)->filter('td')->eq(10)->count() > 0){
                     $valor_total_parcelamento = $row->filter('tr')->eq(0)->filter('td')->eq(10)->text();
                 }
                 if($row->filter('tr')->eq(0)->filter('td')->eq(9)->count() > 0){
                     $valor_total_debitos = $row->filter('tr')->eq(0)->filter('td')->eq(9)->text();
                 }
-               
+                if($row->filter('tr')->eq(0)->filter('td')->eq(1)->count() > 0){
+                    $content = trim($row->filter('tr')->eq(0)->filter('td')->eq(1)->text());
+                    if (preg_match('/[a-zA-Z]/', $content)) {
+                        $descricao_debito = $content;
+                    }else{
+                        $resultadoParcela[$i] = [
+                            'titulo' => $titulo[$i],
+                            'parcelas' => $parcelas,
+                        ];
+                        $i++;
+                        $parcelas = [];
+                    }
+                }
 
-                $resultadoParcela[] = [
-                    'titulo' => $titulo,
-                    'vencimento' => $vencimento,
-                    'descricao_debito' => $descricao_debito,
-                    'valor_total_parcelamento' => $valor_total_parcelamento,
-                    'valor_total_debitos' => $valor_total_debitos,
-                ];
+                if(!empty($vencimento)){
+                    $parcelas[] = [
+                        'vencimento' => $vencimento,
+                        'descricao_debito' => $descricao_debito,
+                        'valor_total_parcelamento' => $valor_total_parcelamento,
+                        'valor_total_debitos' => $valor_total_debitos,
+                    ];
+                }
+               
             });
         });
-
+        dd($resultadoParcela);
         return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote'));
     
     }
