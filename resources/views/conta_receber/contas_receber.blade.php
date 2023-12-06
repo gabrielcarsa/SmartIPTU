@@ -27,6 +27,20 @@
     </span>
     Baixar parcelas
 </a>
+
+<a class="btn btn-primary btn-add" id="estornar_recebimento" href="{{route('estornar_recebimento')}}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        restart_alt
+    </span>
+    Estornar recebimento
+</a>
+
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('baixar_parcela')}}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        delete
+    </span>
+    Estornar parcela
+</a>
 @endif
 
 <div class="card">
@@ -447,6 +461,24 @@ $(document).ready(function() {
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
             var url = "{{ route('receber_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+
+        $("#estornar_recebimento").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('estornar_recebimento') }}?checkboxes=" + checkboxesSelecionados.join(',') +
                 "&origem=contas_receber";
 
             // Redirecione para a URL com os parâmetros

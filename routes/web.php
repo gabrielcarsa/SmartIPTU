@@ -108,6 +108,9 @@ Route::middleware([
         Route::post('/contas_receber/definir_data_vencimento/{usuario}',[ContaReceberController::class, 'definir_alteracao_data']);
         Route::get('/contas_receber/baixar_parcela',[ContaReceberController::class, 'baixar_parcela_view'])->name('receber_baixar_parcela');
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
+        Route::get('/contas_receber/estornar_recebimento',[ContaReceberController::class, 'estornar_recebimento_view'])->name('estornar_recebimento');
+        Route::post('/contas_receber/estornar_recebimento/{usuario}',[ContaReceberController::class, 'estornar_recebimento']);
+
         
         //ROTAS CONTAS PAGAR
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
