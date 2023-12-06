@@ -700,6 +700,7 @@ class ContaReceberController extends Controller
           
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+
             // Recupere os valores dos checkboxes da consulta da URL
             $checkboxesSelecionados = $request->input('checkboxes');
 
@@ -710,7 +711,7 @@ class ContaReceberController extends Controller
             foreach($checkboxesSelecionados as $parcelaId) {
                 $parcela = ParcelaContaReceber::find($parcelaId);
 
-                //Se houver parcelas pagas redireciona de volta
+                //Se houver parcelas em aberto redireciona de volta
                 if($parcela->situacao == 0){
                     return redirect()->back()->with('error', 'Selecione apenas parcelas pagas para estornar o recebimento');
                 }

@@ -694,7 +694,7 @@ class ContaPagarController extends Controller
     }
 
     function estornar_pagamento_view(Request $request){
-          
+        
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
             // Recupere os valores dos checkboxes da consulta da URL
@@ -707,7 +707,7 @@ class ContaPagarController extends Controller
             foreach($checkboxesSelecionados as $parcelaId) {
                 $parcela = ParcelaContaPagar::find($parcelaId);
 
-                //Se houver parcelas pagas redireciona de volta
+                //Se houver parcelas em aberto redireciona de volta
                 if($parcela->situacao == 0){
                     return redirect()->back()->with('error', 'Selecione apenas parcelas pagas para estornar o pagamento');
                 }
