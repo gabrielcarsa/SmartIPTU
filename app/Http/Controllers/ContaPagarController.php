@@ -728,7 +728,7 @@ class ContaPagarController extends Controller
                     'ccp.descricao as descricao',       
                 )
                 ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
-                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->leftJoin('categoria_pagar AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
@@ -760,8 +760,8 @@ class ContaPagarController extends Controller
     function estornar_pagamento($user_id, Request $request){
     
         $idParcelas = $request->get('id_parcela', []);
-        $dataPagamento = $request->get('data_pagamento', []);
-        $valorPago = $request->get('valor_pago', []);
+        $dataPagamento = $request->get('data_pagamento_recebimento', []);
+        $valorPago = $request->get('valor', []);
 
         $i = 0;
         foreach ($idParcelas as $id) {

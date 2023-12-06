@@ -696,11 +696,76 @@ class ContaReceberController extends Controller
         return redirect("contas_receber")->with('success', 'Parcelas baixadas com sucesso');   
     }
 
+    function estornar_recebimento_view(Request $request){
+          
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+            // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas em aberto, somente pode estornar quando estiveres pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas pagas redireciona de volta
+                if($parcela->situacao == 0){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas pagas para estornar o recebimento');
+                }
+            }
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_receber as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.data_recebimento as data_recebimento',
+                    'p.valor_recebido as valor_recebido',
+                    'p.situacao as situacao_parcela',
+                    'cr.id as conta_receber_id',
+                    'cr.quantidade_parcela as debito_quantidade_parcela',
+                    'ccr.descricao as descricao',       
+                )
+                ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
+                ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            
+            $titular_conta = DB::table('titular_conta as t')
+            ->select(
+                't.id as id_titular_conta',
+                't.cliente_id as cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+            )
+            ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+            ->get();
+
+            $parcelaReceberOutros = true;
+
+            $data = [
+                'titular_conta' => $titular_conta,
+                'parcelaReceberOutros' => $parcelaReceberOutros,
+            ];
+
+            return view('parcela/parcela_estornar_pagamento_recebimento', compact('parcelas', 'data'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+
     function estornar_recebimento($user_id, Request $request){
     
         $idParcelas = $request->get('id_parcela', []);
-        $dataRecebimento = $request->get('data_recebimento', []);
-        $valorRecebido = $request->get('valor_recebido', []);
+        $dataRecebimento = $request->get('data_pagamento_recebimento', []);
+        $valorRecebido = $request->get('valor', []);
 
         $i = 0;
         foreach ($idParcelas as $id) {
@@ -744,9 +809,9 @@ class ContaReceberController extends Controller
                 $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 
 
                 //Salvando alterações
-                //$saldo_model->save();
-                //$parcela->save();
-                //$movimentacao_financeira->delete();
+                $saldo_model->save();
+                $parcela->save();
+                $movimentacao_financeira->delete();
 
             }else{ //Se não estiver relacionado
  
@@ -754,6 +819,6 @@ class ContaReceberController extends Controller
             
             $i++;
         }
-        return redirect("contas_pagar")->with('success', 'Estornado recebimento com sucesso'); 
+        return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
     }
 }
