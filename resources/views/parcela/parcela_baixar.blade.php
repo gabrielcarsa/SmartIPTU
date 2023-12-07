@@ -13,6 +13,11 @@
         {{ session('success') }}
     </div>
     @endif
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -129,7 +134,7 @@ $(document).ready(function() {
     $(document).on('input', 'input[name^="valor"]', function() {
         // Remova os caracteres não numéricos
         var unmaskedValue = $(this).val().replace(/\D/g, '');
-        
+
         // Adicione a máscara apenas ao input de valor relacionado à mudança
         $(this).val(mask(unmaskedValue));
     });
@@ -139,7 +144,9 @@ $(document).ready(function() {
         var numberValue = parseFloat(value) / 100;
 
         // Formata o número com vírgula como separador decimal e duas casas decimais
-        return numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
     }
 });
 

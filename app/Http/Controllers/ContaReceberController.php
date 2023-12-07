@@ -589,7 +589,11 @@ class ContaReceberController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorRecebido = $request->get('valor', []);
         $dataRecebimento = $request->get('data', []);
-    
+
+        if($dataRecebimento > date('d-m-Y h:i:s a', time())){
+            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+        }
+     
         $i = 0;
         foreach ($idParcelas as $id) {
             $parcela = ParcelaContaReceber::find($id);

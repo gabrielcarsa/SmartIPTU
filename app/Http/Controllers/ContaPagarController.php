@@ -585,6 +585,10 @@ class ContaPagarController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorPago = $request->get('valor', []);
         $dataPagamento = $request->get('data', []);
+
+        if($dataPagamento > date('d-m-Y h:i:s a', time())){
+            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+        }
     
         $i = 0;
         foreach ($idParcelas as $id) {
@@ -803,7 +807,7 @@ class ContaPagarController extends Controller
 
                 //Atualizando o saldo
                 $saldo_model->saldo = $valor_desatualizado_saldo + $valor; 
-
+  
                 //Salvando alterações
                 $saldo_model->save();
                 $parcela->save();
