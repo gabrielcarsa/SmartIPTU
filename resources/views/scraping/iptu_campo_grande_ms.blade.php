@@ -58,7 +58,7 @@
         <h3>{{$parcela['titulo']}}</h3>
     </div>
     <div class="col-md-6 text-right">
-        <a class="btn btn-primary btn-add" id="central_informacoes" href="" style="margin-bottom: 20px;">
+        <a class="btn btn-primary btn-add" id="central_informacoes" href="{{ route('cadastrar_scraping', ['debito' => json_encode($parcela), 'lote_id' => $lote_id, 'usuario' => Auth::user()->id]) }}" style="margin-bottom: 20px;">
             Atualizar débito
         </a>
     </div>

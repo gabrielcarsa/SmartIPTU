@@ -7,7 +7,7 @@ use Goutte\Client;
 
 class ScrapingIptuController extends Controller
 {
-    public function iptuCampoGrande($inscricao_municipal)
+    public function iptuCampoGrande($inscricao_municipal, $lote_id)
     {
         // Texto a ser inserido no campo de input (substitua pelo valor real)
         $textoInput = $inscricao_municipal;
@@ -138,7 +138,8 @@ class ScrapingIptuController extends Controller
             });
         });
 
-        return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote'));
+
+        return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote', 'lote_id'));
     
     }
 }

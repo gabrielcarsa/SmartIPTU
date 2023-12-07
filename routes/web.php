@@ -87,6 +87,8 @@ Route::middleware([
         Route::post('/parcela/definir_data_vencimento/{usuario}',[DebitoController::class, 'definir_alteracao_data']);
         Route::get('/parcela/baixar_parcela',[DebitoController::class, 'baixar_parcela_view'])->name('baixar_parcela');
         Route::post('/parcela/definir_baixar_parcela/{usuario}',[DebitoController::class, 'definir_baixar_parcela']);
+        Route::get('/debito/cadastrar_scraping',[DebitoController::class, 'cadastrar_scraping'])->name('cadastrar_scraping');
+
 
 
         //ROTAS PRESCRIÇÃO
@@ -171,6 +173,6 @@ Route::middleware([
         Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
 
         //SCRAPING  
-        Route::get('/scraping/{inscricao_municipal}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
+        Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
         
 });
