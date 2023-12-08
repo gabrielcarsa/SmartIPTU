@@ -789,39 +789,54 @@ class DebitoController extends Controller
 
     //CADASTRO DE DÉBITO
     function cadastrar_scraping(Request $request){
-        $debito = json_decode($request->input('debito'), true);
+        $debito_scraping = json_decode($request->input('debito'), true);
         $lote_id = $request->input('lote_id');
         $usuario_id = $request->input('usuario');
 
-        dd($debito);
+        //dd($debito_scraping['parcelas'][0]['vencimento']);
+        //dd($debito_scraping['titulo']);
 
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
         $debito = new Debito();
-        $debito->tipo_debito_id = $request->input('tipo_debito_id');
+
+        $tipo_debito = TipoDebito::where('descricao', 'ilike', '%' . $debito_scraping['titulo'] . '%')->first();
+        $debito->tipo_debito_id = $tipo_debito->id;
         $debito->lote_id = $lote_id;
-        $debito->quantidade_parcela = $request->input('quantidade_parcela');
+        $debito->quantidade_parcela = count($debito_scraping['parcelas']);
         $debito->titular_conta_id = 1;
-        $debito->data_vencimento = $request->input('data_vencimento');
-        $debito->descricao_debito_id = $request->input('descricao_debito_id');
+        $debito->data_vencimento = $debito_scraping['parcelas'][0]['vencimento'];
+        $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
+        $debito->descricao_debito_id = $descricao_debito->id;
         
-        $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
+        if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == "0,00"){
+            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_debitos']);
+        }else if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_debitos'] == "0,00"){
+            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_parcelamento']);
+        }else if(count($debito_scraping['parcelas']) == 0 && $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
+            $valor_entrada = 0;
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
+        }else if(count($debito_scraping['parcelas']) == 0 && $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+            $valor_entrada = 0;
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
+        }
+
         $debito->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
-      
-        $valor_entrada = str_replace(',', '.', $request->input('valor_entrada'));
         $debito->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
-        $debito->observacao = $request->input('observacao');
+        $debito->observacao = null;
         $debito->data_cadastro = date('d-m-Y h:i:s a', time());
-        $debito->cadastrado_usuario_id = $usuario;
+        $debito->cadastrado_usuario_id = $usuario_id;
         $debito->save();
-
+   
         // Cadastrar Parcelas
-        $qtd_parcelas = $request->input('quantidade_parcela');
+        $qtd_parcelas = count($debito_scraping['parcelas']);
         $debito_id = $debito->id;
         $data_vencimento = $debito->data_vencimento; 
-        $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
+        $dataCarbon = Carbon::createFromFormat('d/m/Y', $data_vencimento);
         $valor_entrada = $debito->valor_entrada;
         $empresa = TitularConta::find(1);
         $lote = Lote::find($debito->lote_id);
@@ -836,7 +851,7 @@ class DebitoController extends Controller
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             $parcela->valor_parcela = $debito->valor_parcela;
-            $parcela->cadastrado_usuario_id = $usuario;
+            $parcela->cadastrado_usuario_id = $usuario_id;
             if($i > 1){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
