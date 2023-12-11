@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-md-8 align-self-center">
                     <h3>Contas a Pagar Hoje</h3>
-                    <p>R$ 2.352,12</p>
+                    <p>R$ 2.352,18</p>
                 </div>
             </div>
         </div>
