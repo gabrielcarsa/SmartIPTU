@@ -27,6 +27,21 @@
     </span>
     Baixar parcelas
 </a>
+
+<a class="btn btn-primary btn-add" id="estornar_recebimento" href="{{route('estornar_recebimento')}}"
+    style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        restart_alt
+    </span>
+    Estornar recebimento
+</a>
+
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('baixar_parcela')}}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        delete
+    </span>
+    Estornar parcela
+</a>
 @endif
 
 <div class="card">
@@ -150,12 +165,12 @@
                 <label for="" class="form-label">A Receber referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
-                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}>
+                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteLotes')">
                     <label class="form-check-label" for="referenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteOutros') is-invalid @enderror" type="checkbox"
-                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }}>
+                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteOutros')">
                     <label class="form-check-label" for="referenteOutros">Outros</label>
                 </div>
             </div>
@@ -244,7 +259,8 @@
                                         <p>Recebimento em:
                                             {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                                        <p>Valor recebido: R$
+                                            {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>
@@ -306,7 +322,8 @@
                                         <p>Recebimento em:
                                             {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                                         </p>
-                                        <p>Valor recebido: R$ {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
+                                        <p>Valor recebido: R$
+                                            {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
                                         <p>Cadastrado por {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por {{$resultado->alterado_por}}</p>
                                         <p>Baixado por {{$resultado->baixado_por}}</p>
@@ -339,6 +356,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+function handleCheckboxClick(clickedCheckboxId) {
+    // Desmarcar o outro checkbox
+    if (clickedCheckboxId === 'referenteLotes') {
+        document.getElementById('referenteOutros').checked = false;
+    } else if (clickedCheckboxId === 'referenteOutros') {
+        document.getElementById('referenteLotes').checked = false;
+    }
+}
 $(document).ready(function() {
     if (referenteLotes.checked) {
         // Captura o clique no Parcelas Reajustar
@@ -396,6 +421,25 @@ $(document).ready(function() {
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
         });
+
+        $("#estornar_recebimento").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('estornar_recebimento') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
     } else if (referenteOutros.checked) {
         // Captura o clique no Parcelas Reajustar
         $("#reajustar_parcelas").click(function(event) {
@@ -428,8 +472,9 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('receber_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
-                ',') + "&origem=contas_receber";
+            var url = "{{ route('receber_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados
+                .join(
+                    ',') + "&origem=contas_receber";
 
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
@@ -446,7 +491,27 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('receber_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            var url = "{{ route('receber_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+
+        $("#estornar_recebimento").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('estornar_recebimento') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
                 "&origem=contas_receber";
 
             // Redirecione para a URL com os parâmetros

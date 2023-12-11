@@ -19,9 +19,7 @@ use App\Http\Controllers\TitularContaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovimentacaoFinanceiraController;
 use App\Http\Controllers\ContaCorrenteController;
-
-
-
+use App\Http\Controllers\ScrapingIptuController;
 
 
 /*
@@ -89,6 +87,8 @@ Route::middleware([
         Route::post('/parcela/definir_data_vencimento/{usuario}',[DebitoController::class, 'definir_alteracao_data']);
         Route::get('/parcela/baixar_parcela',[DebitoController::class, 'baixar_parcela_view'])->name('baixar_parcela');
         Route::post('/parcela/definir_baixar_parcela/{usuario}',[DebitoController::class, 'definir_baixar_parcela']);
+        Route::get('/debito/cadastrar_scraping',[DebitoController::class, 'cadastrar_scraping'])->name('cadastrar_scraping');
+
 
 
         //ROTAS PRESCRIÇÃO
@@ -110,6 +110,9 @@ Route::middleware([
         Route::post('/contas_receber/definir_data_vencimento/{usuario}',[ContaReceberController::class, 'definir_alteracao_data']);
         Route::get('/contas_receber/baixar_parcela',[ContaReceberController::class, 'baixar_parcela_view'])->name('receber_baixar_parcela');
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
+        Route::get('/contas_receber/estornar_recebimento',[ContaReceberController::class, 'estornar_recebimento_view'])->name('estornar_recebimento');
+        Route::post('/contas_receber/estornar_recebimento/{usuario}',[ContaReceberController::class, 'estornar_recebimento']);
+
         
         //ROTAS CONTAS PAGAR
         Route::get('/contas_pagar',[ContaPagarController::class, 'contas_pagar'])->name('contas_pagar');//FINANCEIRO
@@ -169,4 +172,7 @@ Route::middleware([
         Route::post('/movimentacao_financeira/cadastrar/{usuario}',[MovimentacaoFinanceiraController::class, 'cadastrar']);
         Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
 
+        //SCRAPING  
+        Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
+        
 });

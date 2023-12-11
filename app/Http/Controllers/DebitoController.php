@@ -611,6 +611,13 @@ class DebitoController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valor = $request->get('valor', []);
         $data = $request->get('data', []);
+
+        //Verificar para não ser possível dar baixa com datas futuras
+        foreach ($data as $d) {
+            if (strtotime($d) > strtotime(date('Y-m-d'))) {
+                return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+            }
+        }
     
         $i = 0;
         foreach ($idParcelas as $id) {
@@ -781,6 +788,85 @@ class DebitoController extends Controller
             return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
         }
    
+    }
+
+    //CADASTRO DE DÉBITO
+    function cadastrar_scraping(Request $request){
+        $debito_scraping = json_decode($request->input('debito'), true);
+        $lote_id = $request->input('lote_id');
+        $usuario_id = $request->input('usuario');
+
+        //dd($debito_scraping['parcelas']);
+        //dd($debito_scraping['titulo']);
+
+        //Definindo data para cadastrar
+        date_default_timezone_set('America/Cuiaba');    
+
+        $debito = new Debito();
+
+        $tipo_debito = TipoDebito::where('descricao', 'ilike', '%' . $debito_scraping['titulo'] . '%')->first();
+        $debito->tipo_debito_id = $tipo_debito->id;
+        $debito->lote_id = $lote_id;
+        $debito->quantidade_parcela = count($debito_scraping['parcelas']);
+        $debito->titular_conta_id = 1;
+        $debito->data_vencimento = $debito_scraping['parcelas'][0]['vencimento'];
+        $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
+        $debito->descricao_debito_id = $descricao_debito->id;
+        
+        if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == ""){
+            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_debitos']);
+        }else if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_debitos'] == "0,00"){
+            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_parcelamento']);
+        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
+            $valor_entrada = 0;
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
+        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+            $valor_entrada = 0;
+            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
+        }
+
+        $debito->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
+        $debito->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
+
+        $debito->observacao = null;
+        $debito->data_cadastro = date('d-m-Y h:i:s a', time());
+        $debito->cadastrado_usuario_id = $usuario_id;
+        $debito->save();
+   
+        // Cadastrar Parcelas
+        $qtd_parcelas = count($debito_scraping['parcelas']);
+        $debito_id = $debito->id;
+        $data_vencimento = $debito->data_vencimento; 
+        $dataCarbon = Carbon::createFromFormat('d/m/Y', $data_vencimento);
+        $valor_entrada = $debito->valor_entrada;
+        $empresa = TitularConta::find(1);
+        $lote = Lote::find($debito->lote_id);
+
+        for($i = 1; $i <= $qtd_parcelas; $i++){
+            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
+            if($empresa->cliente_id == $lote->cliente_id){
+                $parcela = new ParcelaContaPagar();
+            }else{// Caso contrário é um débito a receber
+                $parcela = new ParcelaContaReceber();
+            }
+            $parcela->debito_id = $debito_id;
+            $parcela->numero_parcela = $i;
+            $parcela->valor_parcela = $debito->valor_parcela;
+            $parcela->cadastrado_usuario_id = $usuario_id;
+            if($i > 1){
+                $parcela->data_vencimento = $dataCarbon->addMonth();
+            }else{
+                if($valor_entrada != 0){
+                    $parcela->valor_parcela = $valor_entrada;
+                }
+                $parcela->data_vencimento = $data_vencimento;
+            }
+            $parcela->save();
+        }
+
+        return redirect('lote/gestao/'.$lote_id)->with('success', 'Débito cadastrado com sucesso');
     }
 
 }
