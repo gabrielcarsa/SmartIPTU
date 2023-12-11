@@ -8,6 +8,7 @@ use App\Models\SaldoDiario;
 use App\Models\MovimentacaoFinanceira;
 use App\Models\CategoriaPagar;
 use App\Models\ContaPagar;
+use App\Http\Requests\ContaPagarRequest;
 use App\Models\ParcelaContaPagar;
 use App\Models\Cliente;
 use Carbon\Carbon;
@@ -120,7 +121,7 @@ class ContaPagarController extends Controller
 
       
     //LISTAGEM E FILTRO CONTAS A PAGAR
-    function contas_pagar_listagem(Request $request){
+    function contas_pagar_listagem(ContaPagarRequest $request){
 
         //Campos
         $titular_conta_id = $request->input('titular_conta_id');
