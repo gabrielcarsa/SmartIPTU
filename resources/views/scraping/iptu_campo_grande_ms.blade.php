@@ -72,12 +72,21 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmar atualização?</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                <p>Atenção:</p>
+                <ul>
+                    <li>Ao atualizar, os débitos já existentes continuarão lá.</li>
+                    <li>Cuidado ao atualizar débitos já cadastrados, isso pode gerar duplicidade deles.</li>
+                    <li>Ao atualizar o sistema não irá substituar os mesmos débitos já existentes.</li>
+                    <li>Antes de realizar essa ação, recomenda-se saber tudo sobre essa funcionalidade!</li>
+                </ul>
+                <p>Deseja mesmo confirmar essa atualização de Débito?</p>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a class="btn btn-primary btn-add" id="central_informacoes"
-                    href="{{ route('cadastrar_scraping', ['debito' => json_encode($parcela), 'lote_id' => $lote_id, 'usuario' => Auth::user()->id]) }}"
-                    style="margin-bottom: 20px;">
-                    Atualizar
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                <a class="btn btn-primary" id="central_informacoes"
+                    href="{{ route('cadastrar_scraping', ['debito' => json_encode($parcela), 'lote_id' => $lote_id, 'usuario' => Auth::user()->id]) }}">
+                    Sim, Atualizar
                 </a>
             </div>
         </div>
