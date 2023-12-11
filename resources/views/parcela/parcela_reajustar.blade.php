@@ -44,7 +44,7 @@
                 <label for="inputIdParcelas" id="" class="form-label">ID</label>
                 <input type="text" name="" value="{{ $parcela[0]->id }}" readonly disabled
                     class="form-control @error('id_parcela') is-invalid @enderror" id="inputIdParcelas">
-                    <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
+                <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
             </div>
             <div class="col-md-1">
                 <label for="inputIdParcelas" id="numero_parcela" class="form-label">Nº parcela</label>
@@ -67,7 +67,8 @@
             </div>
             <div class="col-md-3">
                 <label for="inputValorParcelas" id="valor_parcela" class="form-label">Valor</label>
-                <input type="text" name="valor_parcela" value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly disabled
+                <input type="text" name="valor_parcela"
+                    value="{{ number_format($parcela[0]->valor_parcela, 2, ',', '.') }}" readonly disabled
                     class="form-control @error('valor_parcela') is-invalid @enderror" id="inputValorParcelas">
             </div>
 
@@ -84,9 +85,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
-  $(document).ready(function() {
-    $('#inputValorUnico').mask('000.000.000.000.000,00', { reverse: true });
-  });
+$(document).ready(function() {
+    $(document).on('input', 'input[name^="valor"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
 
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
 </script>
 @endsection

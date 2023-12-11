@@ -8,6 +8,7 @@ use App\Models\SaldoDiario;
 use App\Models\MovimentacaoFinanceira;
 use App\Models\CategoriaPagar;
 use App\Models\ContaPagar;
+use App\Http\Requests\ContaPagarRequest;
 use App\Models\ParcelaContaPagar;
 use App\Models\Cliente;
 use Carbon\Carbon;
@@ -120,7 +121,7 @@ class ContaPagarController extends Controller
 
       
     //LISTAGEM E FILTRO CONTAS A PAGAR
-    function contas_pagar_listagem(Request $request){
+    function contas_pagar_listagem(ContaPagarRequest $request){
 
         //Campos
         $titular_conta_id = $request->input('titular_conta_id');
@@ -585,6 +586,10 @@ class ContaPagarController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorPago = $request->get('valor', []);
         $dataPagamento = $request->get('data', []);
+
+        if($dataPagamento > date('d-m-Y h:i:s a', time())){
+            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+        }
     
         $i = 0;
         foreach ($idParcelas as $id) {
@@ -694,7 +699,7 @@ class ContaPagarController extends Controller
     }
 
     function estornar_pagamento_view(Request $request){
-          
+        
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
             // Recupere os valores dos checkboxes da consulta da URL
@@ -707,7 +712,7 @@ class ContaPagarController extends Controller
             foreach($checkboxesSelecionados as $parcelaId) {
                 $parcela = ParcelaContaPagar::find($parcelaId);
 
-                //Se houver parcelas pagas redireciona de volta
+                //Se houver parcelas em aberto redireciona de volta
                 if($parcela->situacao == 0){
                     return redirect()->back()->with('error', 'Selecione apenas parcelas pagas para estornar o pagamento');
                 }
@@ -728,7 +733,7 @@ class ContaPagarController extends Controller
                     'ccp.descricao as descricao',       
                 )
                 ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
-                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->leftJoin('categoria_pagar AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
@@ -760,8 +765,8 @@ class ContaPagarController extends Controller
     function estornar_pagamento($user_id, Request $request){
     
         $idParcelas = $request->get('id_parcela', []);
-        $dataPagamento = $request->get('data_pagamento', []);
-        $valorPago = $request->get('valor_pago', []);
+        $dataPagamento = $request->get('data_pagamento_recebimento', []);
+        $valorPago = $request->get('valor', []);
 
         $i = 0;
         foreach ($idParcelas as $id) {
@@ -803,7 +808,7 @@ class ContaPagarController extends Controller
 
                 //Atualizando o saldo
                 $saldo_model->saldo = $valor_desatualizado_saldo + $valor; 
-
+  
                 //Salvando alterações
                 $saldo_model->save();
                 $parcela->save();

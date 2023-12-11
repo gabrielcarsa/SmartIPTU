@@ -3,7 +3,7 @@
 @section('conteudo')
 
 <h2>
-    Estornar Pagamento/Recebimento
+    Estornar {{isset($data['parcelaReceberOutros']) ? 'Recebimento' : 'Pagamento'}}
 </h2>
 
 <div class="card">
@@ -32,9 +32,9 @@
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Valor Pago</th>
+                        <th scope="col">{{isset($data['parcelaReceberOutros']) ? 'Valor Recebido' : 'Valor Pago'}}</th>
                         <th scope="col">Data Vencimento</th>
-                        <th scope="col">Data Pagamento</th>
+                        <th scope="col">{{isset($data['parcelaReceberOutros']) ? 'Data Recebimento' : 'Data Pagamento'}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,9 +48,9 @@
                             <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
                         </th>
                         <th scope="row">
-                            <input type="text" name="valor_pago[]"
-                                value="{{ number_format($parcela[0]->valor_pago, 2, ',', '.') }}" readonly
-                                class="form-control @error('valor_pago') is-invalid @enderror"
+                            <input type="text" name="valor[]"
+                                value="{{ isset($data['parcelaReceberOutros']) ? number_format($parcela[0]->valor_recebido, 2, ',', '.') : number_format($parcela[0]->valor_pago, 2, ',', '.') }}" readonly
+                                class="form-control @error('valor') is-invalid @enderror"
                                 id="inputValorParcelas">
                         </th>
                         <th scope="row">
@@ -61,10 +61,10 @@
                                 id="inputDataVencimentoParcelas">
                         </th>
                         <th scope="row">
-                            <input type="text" name="data_pagamento[]"
-                                value="{{ \Carbon\Carbon::parse( $parcela[0]->data_pagamento )->format('d/m/Y') }}"
+                            <input type="text" name="data_pagamento_recebimento[]"
+                                value="{{ isset($data['parcelaReceberOutros']) ? \Carbon\Carbon::parse( $parcela[0]->data_recebimento )->format('d/m/Y') : \Carbon\Carbon::parse( $parcela[0]->data_pagamento )->format('d/m/Y') }}"
                                 readonly
-                                class="form-control @error('data_pagamento') is-invalid @enderror"
+                                class="form-control @error('data_pagamento_recebimento') is-invalid @enderror"
                                 id="inputDataVencimentoParcelas">
                         </th>
                     </tr>

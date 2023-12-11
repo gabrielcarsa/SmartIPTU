@@ -161,15 +161,15 @@
             </div>
 
             <div class="col-md-3">
-                <label for="" class="form-label">A Pagar refente</label><br>
+                <label for="" class="form-label">A Pagar referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
-                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}>
+                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteLotes')">
                     <label class="form-check-label" for="referenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteOutros') is-invalid @enderror" type="checkbox"
-                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }}>
+                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteOutros')">
                     <label class="form-check-label" for="referenteOutros">Outros</label>
                 </div>
             </div>
@@ -355,7 +355,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-
+function handleCheckboxClick(clickedCheckboxId) {
+    // Desmarcar o outro checkbox
+    if (clickedCheckboxId === 'referenteLotes') {
+        document.getElementById('referenteOutros').checked = false;
+    } else if (clickedCheckboxId === 'referenteOutros') {
+        document.getElementById('referenteLotes').checked = false;
+    }
+}
 
 $(document).ready(function() {
 

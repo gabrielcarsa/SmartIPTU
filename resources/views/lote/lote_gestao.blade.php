@@ -100,6 +100,13 @@
     </span>
     Prescrições
 </a>
+<a class="btn btn-add" id="central_informacoes" href="{{ route('iptuCampoGrande', ['inscricao_municipal' => $resultados[0]->inscricao_municipal, 'lote_id' => $resultados[0]->lote_id]) }}"
+    style="margin-bottom: 20px; background-color:RGB(255, 67, 164) ">
+    <span class="material-symbols-outlined">
+        smart_toy
+    </span>
+    Central de Informações
+</a>
 
 @if($resultados[0]->tipo_debito_descricao)
 
@@ -229,7 +236,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('parcela_reajustar') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -247,7 +255,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
@@ -264,7 +273,8 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') + "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
+        var url = "{{ route('baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            "&origem=lote_gestao&lote_id={{$resultados[0]->lote_id}}";
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
