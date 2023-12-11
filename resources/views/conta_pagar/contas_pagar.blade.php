@@ -161,7 +161,7 @@
             </div>
 
             <div class="col-md-3">
-                <label for="" class="form-label">A Pagar refente</label><br>
+                <label for="" class="form-label">A Pagar referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
                         id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteLotes')">
