@@ -89,15 +89,21 @@ class ScrapingIptuController extends Controller
             $rows->each(function ($row) use (&$resultadoParcela, &$parcelas, &$i, &$titulo) {
                 $auxTitulo = $row->filter('tr')->eq(0)->text();
 
+                //Preencher tipo de Débito conforme o nome
                 if (
                     $auxTitulo == "Pagamento Parcelado (2023)" ||
                     $auxTitulo == "Débitos Protestados" ||
                     $auxTitulo == "Débitos Negativados" ||
                     $auxTitulo == "Débitos Inscritos em Dívida Ativa" ||
-                    $auxTitulo == "Débitos Ajuizados"
+                    $auxTitulo == "Débitos Ajuizados" ||
+                    $auxTitulo == "Pagamento Parcelado (2024)" ||
+                    $auxTitulo == "Débitos Anteriores" ||
+                    $auxTitulo == "Pagamento à Vista (2024)" 
                 ) {
                     $titulo[$i] = $auxTitulo;
                 }
+                
+                //Deixar uma string vazia por padrão
                 $vencimento = "";
                 $descricao_debito = "";
                 $valor_total_parcelamento = "";
@@ -114,18 +120,22 @@ class ScrapingIptuController extends Controller
                 }
                 if($row->filter('tr')->eq(0)->filter('td')->eq(1)->count() > 0){
                     $content = trim($row->filter('tr')->eq(0)->filter('td')->eq(1)->text());
+                  
                     if (preg_match('/[a-zA-Z]/', $content)) {
                         $descricao_debito = $content;
                     }else{
                         $resultadoParcela[$i] = [
-                            'titulo' => $titulo[$i],
+                            'titulo' => isset($titulo[$i]) ? $titulo[$i] : 'Valor Padrão',
                             'parcelas' => $parcelas,
                         ];
                         $i++;
                         $parcelas = [];
                     }
+                    
+                   
                 }
-
+               
+                //Preencher parcelas se houver
                 if(!empty($vencimento)){
                     $parcelas[] = [
                         'vencimento' => $vencimento,
@@ -133,6 +143,19 @@ class ScrapingIptuController extends Controller
                         'valor_total_parcelamento' => $valor_total_parcelamento,
                         'valor_total_debitos' => $valor_total_debitos,
                     ];
+                }
+
+                //Pegar Pagamento à Vista se houver
+                if(!empty($vencimento) && $i == 0){
+                    if($titulo[$i] == "Pagamento à Vista (2024)"){
+                        $resultadoParcela[$i] = [
+                            'titulo' => isset($titulo[$i]) ? $titulo[$i] : 'Valor Padrão',
+                            'parcelas' => $parcelas,
+                        ];
+                        $i++;
+                        $parcelas = [];
+                    }
+                  
                 }
                
             });
