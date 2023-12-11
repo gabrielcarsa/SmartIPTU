@@ -1,98 +1,133 @@
 ![Mobile Detect](http://demo.mobiledetect.net/logo-github.png)
 
-> Motto: "Every business should have a detection script to detect mobile readers."
+# MobileDetect, PHP mobile detection class
 
-![Build status](https://github.com/serbanghita/Mobile-Detect/workflows/Mobile-Detect/badge.svg)
-[![Latest Stable Version](https://poser.pugx.org/mobiledetect/mobiledetectlib/v/stable.svg)](https://packagist.org/packages/mobiledetect/mobiledetectlib) 
-[![Total Downloads](https://poser.pugx.org/mobiledetect/mobiledetectlib/downloads.svg)](https://packagist.org/packages/mobiledetect/mobiledetectlib) 
-[![Daily Downloads](https://poser.pugx.org/mobiledetect/mobiledetectlib/d/daily.png)](https://packagist.org/packages/mobiledetect/mobiledetectlib) 
-[![License](https://poser.pugx.org/mobiledetect/mobiledetectlib/license.svg)](https://packagist.org/packages/mobiledetect/mobiledetectlib)
-[![Chat on Slack](https://img.shields.io/badge/Slack%20%23general-join-orange.svg)](https://join.slack.com/t/mobiledetect/shared_invite/enQtMjg1NDY0OTg5NzgzLTcwMzEzMWJjZjRlOWFkY2ZiNzE1ZmRmNzEwM2VhOGY5OGVkYWMxNjdkZDU5YjQ5MmM5MGUxYjhlZDQwOGVjZjE)
-
-#### About
+![Workflow status](https://img.shields.io/github/actions/workflow/status/serbanghita/Mobile-Detect/4.8.x-test.yml?style=flat-square)
+![Latest tag](https://img.shields.io/github/v/tag/serbanghita/Mobile-Detect?filter=4.*&style=flat-square)
+![Monthly Downloads](https://img.shields.io/packagist/dm/mobiledetect/mobiledetectlib?style=flat-square&label=installs)
+![Total Downloads](https://img.shields.io/packagist/dt/mobiledetect/mobiledetectlib?style=flat-square&label=installs)
+![MIT License](https://img.shields.io/packagist/l/mobiledetect/mobiledetectlib?style=flat-square)
 
 Mobile Detect is a lightweight PHP class for detecting mobile devices (including tablets).
 It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.
 
-*Why*
-
-Your website's _content strategy_ is important! You need a complete toolkit to deliver an experience that is _optimized_, 
-_fast_ and _relevant_ to your users. Mobile Detect class is a 
-[server-side detection](http://www.w3.org/TR/mwabp/#bp-devcap-detection) tool that can help you with your RWD strategy, 
+- MobileDetect class is a 
+[server-side detection](http://www.w3.org/TR/mwabp/#bp-devcap-detection) PHP class that can help you with your RWD strategy, 
 it is not a replacement for CSS3 media queries or other forms of client-side feature detection.
+- Can detect the difference between a mobile phone and a table by using regexes.
+- The **accuracy** and **relevance** of the detection is kept by running [tests](https://github.com/serbanghita/Mobile-Detect/tree/4.8.x/tests) to check for detection conflicts.
 
-*How*
+## Before you install
 
-We're committed to make Mobile_Detect the best open-source mobile detection resource and this is why before 
-each release we're running [unit tests](./tests) and research and update the detection rules on **monthly** basis.
+There are three versions of MobileDetect. 
+`4.8.x` is the main version that is ALWAYS going to be updated first.
 
-*Who*
-
-See [the history](./docs/HISTORY.md) of the project.
-
-#### Announcements
-
-* **JetBrains** is sponsoring the project by providing licenses for [PHPStorm](https://www.jetbrains.com/phpstorm/) and 
-[DataGrip](https://www.jetbrains.com/datagrip/).
-* **Mobile_Detect `2.x.x`** is only integrating new regexes, User-Agents and tests. We are focusing on **new tablets only**. 
-The rest of the PRs about TVs, bots or optimizations will be closed and analyzed after `3.0.0-beta` is released.
-* **Mobile_Detect `3.x.x`** is experimental and WIP.
+| Version | Tests                                                                                                                                                                                                 | Namespace | Code                                                             | PHP Version | Status               |
+|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------------------------------------------------------------|-------------|----------------------|
+| 2.8.x   | [![5x](https://img.shields.io/github/actions/workflow/status/serbanghita/Mobile-Detect/2.8.x-test.yml?style=flat-square)](https://github.com/serbanghita/Mobile-Detect/actions/workflows/test.yml)  | `\Mobile_Detect`       | [2.8](https://github.com/serbanghita/Mobile-Detect/tree/2.8.x)   | \>=5.0,<7.0 | Deprecated           |
+| 3.74.x  | [![7x](https://img.shields.io/github/actions/workflow/status/serbanghita/Mobile-Detect/3.74.x-test.yml?style=flat-square)](https://github.com/serbanghita/Mobile-Detect/actions/workflows/test.yml) | `Detection\MobileDetect`        | [3.74](https://github.com/serbanghita/Mobile-Detect/tree/3.74.x) | \>=7.4,<8.0 | LTS                  |
+| 4.8.x   | [![7x](https://img.shields.io/github/actions/workflow/status/serbanghita/Mobile-Detect/4.8.x-test.yml?style=flat-square)](https://github.com/serbanghita/Mobile-Detect/actions/workflows/test.yml)  | `Detection\MobileDetect`        | [4.8](https://github.com/serbanghita/Mobile-Detect/tree/4.8.x)   | \>=8.0      | Current, **Recommended** |
 
 
-#### Install
+## Installing
 
-**Download and include manually**
-> Use this to quickly test the demo.
-
-* [Download latest release](../../tags)
-* [Mobile_Detect.php](./Mobile_Detect.php)
-
-```php
-require_once "libs/Mobile_Detect.php";
-```
-
-**Install as a [composer package](https://packagist.org/packages/mobiledetect/mobiledetectlib)**
-> Use this method to get continuous updates.
-
-```
-composer require mobiledetect/mobiledetectlib
-```
-or include the dependency in the `composer.json` file:
+- Install via [composer](https://packagist.org/packages/mobiledetect/mobiledetectlib): `composer require mobiledetect/mobiledetectlib`
+- Include the dependency in the `composer.json` file:
+- 
 ```json
 {
-    "require": {
-        "mobiledetect/mobiledetectlib": "^2.8"
-    }
+  "require": {
+      "mobiledetect/mobiledetectlib": "^4.8"
+  }
 }
 ```
 
-#### Demo 
+```php
+// 1. Include composer's autoloader
+require __DIR__ . '/vendor/autoload.php';
 
-* [:iphone: Live demo!](https://demo.mobiledetect.net)
-* [Code examples](../../wiki/Code-examples)
+use Detection\MobileDetect;
+// Instantiate the class.
+// Here you can inject your own caching system.
+$detect = new MobileDetect();
+// Set the user agent string from HTTP headers or manually.
+$detect->setUserAgent('Mozilla/5.0 (iPad; CPU OS 14_7 like Mac OS X) ...');
+// Finally, check for "mobile".
+$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+```
 
-#### Contribute
+## Project structure
 
-*Submit a PR*
-> Submit a pull request but before make sure you read [how to contribute](docs/CONTRIBUTING.md) guide.
+```shell
+├── .github                                 # Definitions of GitHub workflows.
+├── scripts                                 # Various utility PHP scripts for dev purposes.
+├── src                                     
+│    ├── Cache                              
+│    │    ├── Cache.php                     # PSR-16 cache array implementation.
+│    │    ├── CacheException.php
+│    │    └── CacheItem.php                 # Cache item that holds key, value and ttl.
+│    ├── Exception                          
+│    │    └── MobileDetectException.php     # Generic exception.
+│    └── MobileDetect.php                   # Main library PHP code.
+├── tests                                   
+│    ├── Benchmark                          # Performance tests.
+│    │    └── MobileDetectBench.php         
+│    ├── providers                          
+│    │    └── vendors                       # Mobile vendors (Acer, Apple, Samsung, etc.) 
+│    │         └── ... 
+│    ├── bootstrap.php  
+│    ├── CacheTest.php  
+│    ├── MobileDetectGeneralTest.php        # Unit tests
+│    ├── MobileDetectVersionTest.php        # Unit tests for $detect->version("...")
+│    ├── MobileDetectWithCacheTest.php      # Unit tests for caching system.
+│    ├── UserAgentList.inc.php  
+│    ├── UserAgentTest.php                  # Integration tests using User-Agents. These prevent collisions.
+│    ├── phpunit.xml  
+│    └── ualist.json  
+└── MobileDetect.json                       # Use this file to create a 3rd-party project.
+```
 
-*Donate*
+## Performance
 
-|Paypal|
-|------|
-|[Donate :+1:](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mobiledetectlib%40gmail%2ecom&lc=US&item_name=Mobile%20Detect&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)|
+Results are taken from a PC with 32GB RAM, i7-10700KF CPU, Win11 Pro, PHP 8.x (xdebug: yes, opcache: no)
 
+```shell
++-------------------+--------------------------------+-----+------+-----+----------+------------------+--------+
+| benchmark         | subject                        | set | revs | its | mem_peak | mode             | rstdev |
++-------------------+--------------------------------+-----+------+-----+----------+------------------+--------+
+| MobileDetectBench | benchIsMobileAgainstBestMatch  |     | 1000 | 10  | 1.866mb  | 16,211.566ops/s  | ±0.43% |
+| MobileDetectBench | benchIsMobileAgainstWorstMatch |     | 1000 | 10  | 1.866mb  | 2,327.531ops/s   | ±0.25% |
+| MobileDetectBench | benchIsTabletAgainstBestMatch  |     | 1000 | 10  | 1.866mb  | 104,689.667ops/s | ±0.42% |
+| MobileDetectBench | benchIsTabletAgainstWorstMatch |     | 1000 | 10  | 1.866mb  | 5,151.454ops/s   | ±0.39% |
+| MobileDetectBench | benchIsIOS                     |     | 1000 | 10  | 1.866mb  | 52,449.311ops/s  | ±0.38% |
+| MobileDetectBench | benchIsIpad                    |     | 1000 | 10  | 1.866mb  | 52,261.416ops/s  | ±0.40% |
+| MobileDetectBench | benchIsSamsung                 |     | 1000 | 10  | 1.866mb  | 37,232.133ops/s  | ±0.41% |
+| MobileDetectBench | benchIsSamsungTablet           |     | 1000 | 10  | 1.866mb  | 46,380.775ops/s  | ±0.49% |
++-------------------+--------------------------------+-----+------+-----+----------+------------------+--------+
+```
 
-I'm currently paying for hosting and spend a lot of my family time to maintain the project and planning the future releases.
-I would highly appreciate any money donations that will keep the research going.
+## Contribute
 
-Special thanks to the community :+1: for donations, JetBrains team for the continuous support and [Dragos Gavrila](https://twitter.com/grafician) who contributed with the logo.
+1. **Submit your User-agent** by visiting [:iphone: https://demo.mobiledetect.net](https://demo.mobiledetect.net) on your device.
+2. Submit a code patch, see [CONTRIBUTING.md](https://github.com/serbanghita/Mobile-Detect/blob/4.8.x/CONTRIBUTING.md) guide.
+3. Creating a 3rd party library. The file [MobileDetect.json](https://github.com/serbanghita/Mobile-Detect/blob/4.8.x/MobileDetect.json) is a model representation of this PHP script. \
+It contains all the information necessary to create a "mobile" detection script in any programming language. \
+You can auto-import this periodically in your repository by checking the `version` property, which is updated on each release.
+4. [Donate :+1:](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mobiledetectlib%40gmail%2ecom&lc=US&item_name=Mobile%20Detect&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted).
+I'm currently paying for hosting and spend a lot of my family time to maintain the project and planning the future releases. I would highly appreciate any money donations.
 
-#### Modules, plugins, ports
-> [Submit new module, plugin, port](../../issues/new?title=New%203rd%20party%20module&body=Name,%20Link%20and%20Description%20of%20the%20module.)
+Special thanks to the community :+1: for donations and the JetBrains team for the open-source licenses.
 
-:point_right: Keep `Mobile_Detect.php` class in a separate `module` and do NOT include it in your script core because of the high frequency of updates.
-:point_right: When including the class into your `web application` or `module` always use `include_once '../path/to/Mobile_Detect.php` to prevent conflicts.
+## Credits
+
+* [Serban Ghita](https://github.com/serbanghita) - maintainer, lead dev
+* [Nick Ilyin](https://github.com/nicktacular) - developer 2.x, 3.x-dev
+* [Victor Stanciu](https://github.com/victorstanciu) - developer first version
+* [Dragos Gavrila](https://twitter.com/grafician) - logo design
+
+## Modules, plugins, ports
+
+[Submit new module, plugin, port](https://github.com/serbanghita/Mobile-Detect/issues/new?title=New%203rd%20party%20module&body=Name,%20Link%20and%20Description%20of%20the%20module.)
 
 **JavaScript**
 
@@ -322,7 +357,7 @@ Made by [Karthik T](https://github.com/ktaragorn).
 **Go**
 
 * [GoMobileDetect](https://github.com/Shaked/gomobiledetect) is a Go port of Mobile Detect class. 
-Made by [https://github.com/Shaked](Shaked).
+Made by [Shaked](https://github.com/Shaked).
 
 
 **LUA**
@@ -344,3 +379,7 @@ Mobile_Detect PHP Library. Made by [Giancarlo Gomez](https://github.com/Giancarl
 **Experiments** :bulb:
 
 * [Mobile Detect Fast](https://bitbucket.org/lanaguani/mobile-detect-fast/) (See: [#474](https://github.com/serbanghita/Mobile-Detect/issues/474)) is a class to increase the performance of Mobile Detect lib. Made by [LanaGuani](https://github.com/lanaguanifw).
+
+## About
+
+See [the history](CHANGELOG.md) of the project.
