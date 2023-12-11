@@ -612,8 +612,11 @@ class DebitoController extends Controller
         $valor = $request->get('valor', []);
         $data = $request->get('data', []);
 
-        if($data > date('d-m-Y h:i:s a', time())){
-            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+        //Verificar para não ser possível dar baixa com datas futuras
+        foreach ($data as $d) {
+            if (strtotime($d) > strtotime(date('Y-m-d'))) {
+                return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+            }
         }
     
         $i = 0;
@@ -793,7 +796,7 @@ class DebitoController extends Controller
         $lote_id = $request->input('lote_id');
         $usuario_id = $request->input('usuario');
 
-        //dd($debito_scraping['parcelas'][0]['vencimento']);
+        //dd($debito_scraping['parcelas']);
         //dd($debito_scraping['titulo']);
 
         //Definindo data para cadastrar
@@ -810,16 +813,16 @@ class DebitoController extends Controller
         $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
         $debito->descricao_debito_id = $descricao_debito->id;
         
-        if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == "0,00"){
+        if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == ""){
             $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_debitos']);
         }else if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_debitos'] == "0,00"){
             $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_parcelamento']);
-        }else if(count($debito_scraping['parcelas']) == 0 && $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
+        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
             $valor_entrada = 0;
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
-        }else if(count($debito_scraping['parcelas']) == 0 && $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
             $valor_entrada = 0;
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
         }
