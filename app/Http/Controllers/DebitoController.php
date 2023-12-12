@@ -799,7 +799,7 @@ class DebitoController extends Controller
         //dd($debito_scraping['parcelas']);
         //dd($debito_scraping['titulo']);
 
-        
+
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
@@ -828,10 +828,9 @@ class DebitoController extends Controller
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
         }
 
-        $valor_corrigido_parcela = str_replace(',', '.', $valor_parcela);
-        $valor_corrigido_entrada = str_replace(',', '.', $valor_entrada);
-        $debito->valor_parcela = (double) $valor_corrigido_parcela; 
-        $debito->valor_entrada = (double) $valor_corrigido_entrada; 
+        dd($valor_parcela);
+        $debito->valor_parcela = (double) $valor_parcela; 
+        $debito->valor_entrada = (double) $valor_entrada; 
 
         $debito->observacao = null;
         $debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
