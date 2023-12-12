@@ -99,6 +99,7 @@ class LoteController extends Controller
 
         $lote->lote = $request->input('lote');
         $lote->matricula = $request->input('matricula');
+        $lote->cliente_id = $request->input('cliente_id');
         $lote->inscricao_municipal = $request->input('inscricao_municipal');
         $lote->valor = $request->input('valor');
         $lote->endereco = $request->input('endereco');
