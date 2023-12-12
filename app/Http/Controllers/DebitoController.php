@@ -813,24 +813,14 @@ class DebitoController extends Controller
         $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
         $debito->descricao_debito_id = $descricao_debito->id;
         
-        if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == ""){
-            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
-            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_debitos']);
-        }else if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_debitos'] == "0,00"){
-            $valor_entrada = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
-            $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][1]['valor_total_parcelamento']);
-        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
-            $valor_entrada = 0;
+        if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_debitos']);
-        }else if(count($debito_scraping['parcelas']) <= 1 && $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
-            $valor_entrada = 0;
+        }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
         }
 
         $valor_corrigido_parcela = str_replace(',', '.', $valor_parcela);
-        $valor_corrigido_entrada = str_replace(',', '.', $valor_entrada);
         $debito->valor_parcela = (double) $valor_corrigido_parcela; 
-        $debito->valor_entrada = (double) $valor_corrigido_entrada; 
 
         $debito->observacao = null;
         $debito->data_cadastro = date('d-m-Y h:i:s a', time());
@@ -855,16 +845,14 @@ class DebitoController extends Controller
             }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
-            $parcela->valor_parcela = $debito->valor_parcela;
-            $parcela->cadastrado_usuario_id = $usuario_id;
-            if($i > 1){
-                $parcela->data_vencimento = $dataCarbon->addMonth();
-            }else{
-                if($valor_entrada != 0){
-                    $parcela->valor_parcela = $valor_entrada;
-                }
-                $parcela->data_vencimento = $data_vencimento;
+            if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
+                $parcela->valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
+            }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+                $parcela->valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
             }
+            $parcela->cadastrado_usuario_id = $usuario_id;
+            $parcela->data_vencimento = $debito_scraping['parcelas'][$i-1]['vencimento'];
+
             $parcela->save();
         }
 
