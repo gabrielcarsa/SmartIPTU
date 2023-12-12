@@ -831,7 +831,7 @@ class DebitoController extends Controller
         $valor_corrigido_entrada = str_replace(',', '.', $valor_entrada);
         $debito->valor_parcela = (double) $valor_corrigido_parcela; 
         $debito->valor_entrada = (double) $valor_corrigido_entrada; 
-        
+
         $debito->observacao = null;
         $debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $debito->cadastrado_usuario_id = $usuario_id;
@@ -841,7 +841,7 @@ class DebitoController extends Controller
         $qtd_parcelas = count($debito_scraping['parcelas']);
         $debito_id = $debito->id;
         $data_vencimento = $debito->data_vencimento; 
-        $dataCarbon = $data_vencimento;
+        $dataCarbon = Carbon::createFromFormat('Y-m-d', $data_vencimento);
         $valor_entrada = $debito->valor_entrada;
         $empresa = TitularConta::find(1);
         $lote = Lote::find($debito->lote_id);
