@@ -839,7 +839,7 @@ class DebitoController extends Controller
         $qtd_parcelas = count($debito_scraping['parcelas']);
         $debito_id = $debito->id;
         $data_vencimento = $debito->data_vencimento; 
-        $dataCarbon = Carbon::createFromFormat('d/m/Y', $data_vencimento);
+        $dataCarbon = $data_vencimento;
         $valor_entrada = $debito->valor_entrada;
         $empresa = TitularConta::find(1);
         $lote = Lote::find($debito->lote_id);
