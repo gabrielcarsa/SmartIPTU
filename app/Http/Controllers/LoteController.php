@@ -22,7 +22,7 @@ class LoteController extends Controller
         ->select('id as quadra_id', 'nome as quadra_nome')
         ->get();
         //$quadras = Quadra::select('quadra.id as quadra_id, quadra_nome')->where('quadra.empreendimento_id', '=', $empreendimento_id);
-        $clientes = Cliente::all()->orderBy('nome');
+        $clientes = Cliente::orderBy('nome')->get();
         return view('lote/lote_novo', compact('empreendimento_id', 'quadras'), compact('clientes'));
     }
 
@@ -74,7 +74,7 @@ class LoteController extends Controller
         $cadastrado_por_user = User::find($cadastrado_por_user_id);
         $alterado_por_user = User::find($alterado_por_user_id);
 
-        $clientes = Cliente::all()->orderBy('nome');
+        $clientes = Cliente::orderBy('nome')->get();
 
         $data = [
             'cliente_nome' => $cliente_nome,
