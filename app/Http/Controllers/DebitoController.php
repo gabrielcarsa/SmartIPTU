@@ -854,7 +854,7 @@ class DebitoController extends Controller
                 $parcela->valor_parcela = str_replace(',', '.', $valorAux);
             }
             $parcela->cadastrado_usuario_id = $usuario_id;
-            $parcela->data_vencimento = $debito_scraping['parcelas'][$i-1]['vencimento'];
+            $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][$i-1]['vencimento'])->format('Y-m-d');
 
             $parcela->save();
         }
