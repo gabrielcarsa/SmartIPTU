@@ -809,9 +809,8 @@ class DebitoController extends Controller
         $debito->lote_id = $lote_id;
         $debito->quantidade_parcela = count($debito_scraping['parcelas']);
         $debito->titular_conta_id = 1;
-        $debito->data_vencimento = $debito_scraping['parcelas'][0]['vencimento'];
+        $debito->data_vencimento = \Carbon\Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][0]['vencimento'])->format('Y-m-d');
         $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
-        //$descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%', 'ilike')->first();
         $debito->descricao_debito_id = $descricao_debito->id;
         
         if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == ""){
