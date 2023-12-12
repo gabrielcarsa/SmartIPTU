@@ -804,13 +804,13 @@ class DebitoController extends Controller
 
         $debito = new Debito();
 
-        $tipo_debito = TipoDebito::where('descricao', 'ilike', '%' . $debito_scraping['titulo'] . '%')->first();
+        $tipo_debito = TipoDebito::where('descricao', 'like', '%' . $debito_scraping['titulo'] . '%', 'ilike')->first();
         $debito->tipo_debito_id = $tipo_debito->id;
         $debito->lote_id = $lote_id;
         $debito->quantidade_parcela = count($debito_scraping['parcelas']);
         $debito->titular_conta_id = 1;
         $debito->data_vencimento = $debito_scraping['parcelas'][0]['vencimento'];
-        $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
+        $descricao_debito = DescricaoDebito::where('descricao', 'ilike', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%', 'ilike')->first();
         $debito->descricao_debito_id = $descricao_debito->id;
         
         if(count($debito_scraping['parcelas']) > 1 && $debito_scraping['parcelas'][1]['valor_total_parcelamento'] == ""){
