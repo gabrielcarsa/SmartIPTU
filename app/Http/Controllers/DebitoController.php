@@ -809,7 +809,7 @@ class DebitoController extends Controller
         $debito->lote_id = $lote_id;
         $debito->quantidade_parcela = count($debito_scraping['parcelas']);
         $debito->titular_conta_id = 1;
-        $debito->data_vencimento = Carbon::createFromFormat('Y-m-d', $debito_scraping['parcelas'][0]['vencimento']);
+        $debito->data_vencimento = $debito_scraping['parcelas'][0]['vencimento'];
         $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
         $debito->descricao_debito_id = $descricao_debito->id;
         
