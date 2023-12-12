@@ -74,6 +74,8 @@ class LoteController extends Controller
         $cadastrado_por_user = User::find($cadastrado_por_user_id);
         $alterado_por_user = User::find($alterado_por_user_id);
 
+        $clientes = Cliente::all();
+
         $data = [
             'cliente_nome' => $cliente_nome,
             'quadra_nome' => $quadra_nome,
@@ -81,7 +83,7 @@ class LoteController extends Controller
             'alterado_por_user' => $alterado_por_user,
         ];
 
-        return view('lote/lote_novo', compact('data', 'lote'));
+        return view('lote/lote_novo', compact('data', 'lote'), compact('clientes'));
     }
 
     //ALTERAR LOTE
