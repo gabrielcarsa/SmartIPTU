@@ -832,7 +832,7 @@ class DebitoController extends Controller
         $debito->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
         $debito->observacao = null;
-        $debito->data_cadastro = date('d-m-Y h:i:s a', time());
+        $debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $debito->cadastrado_usuario_id = $usuario_id;
         $debito->save();
    
