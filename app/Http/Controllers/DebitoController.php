@@ -846,10 +846,12 @@ class DebitoController extends Controller
             }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
-            if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == ""){
-                $parcela->valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
-            }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
-                $parcela->valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
+            if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
+                $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
+                $parcela->valor_parcela = str_replace(',', '.', $valorAux);
+            }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "" || $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+                $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
+                $parcela->valor_parcela = str_replace(',', '.', $valorAux);
             }
             $parcela->cadastrado_usuario_id = $usuario_id;
             $parcela->data_vencimento = $debito_scraping['parcelas'][$i-1]['vencimento'];
