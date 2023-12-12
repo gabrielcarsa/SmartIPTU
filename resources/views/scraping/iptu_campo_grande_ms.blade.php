@@ -58,14 +58,16 @@
         <h3>{{$parcela['titulo']}}</h3>
     </div>
     <div class="col-md-6 text-right">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#exampleModal-{{$loop->index}}">
             Atualizar débito
         </button>
     </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal-{{$loop->index}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -80,7 +82,7 @@
                     <li>Ao atualizar o sistema não irá substituar os mesmos débitos já existentes.</li>
                     <li>Antes de realizar essa ação, recomenda-se saber tudo sobre essa funcionalidade!</li>
                 </ul>
-                <p>Deseja mesmo confirmar essa atualização de Débito?</p>
+                <p>Deseja mesmo confirmar essa atualização de {{$parcela['titulo']}}?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>

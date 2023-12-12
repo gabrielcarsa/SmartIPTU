@@ -827,8 +827,10 @@ class DebitoController extends Controller
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][0]['valor_total_parcelamento']);
         }
 
-        $debito->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
-        $debito->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
+        $valor_corrigido_parcela = str_replace(',', '.', $valor_parcela);
+        $valor_corrigido_entrada = str_replace(',', '.', $valor_entrada);
+        $debito->valor_parcela = (double) $valor_corrigido_parcela; 
+        $debito->valor_entrada = (double) $valor_corrigido_entrada; 
 
         $debito->observacao = null;
         $debito->data_cadastro = date('d-m-Y h:i:s a', time());
