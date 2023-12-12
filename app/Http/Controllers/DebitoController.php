@@ -799,6 +799,7 @@ class DebitoController extends Controller
         //dd($debito_scraping['parcelas']);
         //dd($debito_scraping['titulo']);
 
+        
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');    
 
