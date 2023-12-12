@@ -828,7 +828,6 @@ class DebitoController extends Controller
             $valor_parcela = $debito_scraping['parcelas'][0]['valor_total_parcelamento'];
         }
 
-        dd($valor_parcela);
         $debito->valor_parcela = (double) $valor_parcela; 
         $debito->valor_entrada = (double) $valor_entrada; 
 
