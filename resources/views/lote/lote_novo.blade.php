@@ -98,7 +98,12 @@
 
             <div class="col-md-3">
                 <label for="inputReponsabilidade" class="form-label">Responsabilidade*</label>
-                
+                @if(isset($lote))
+                <input type="text" readonly disabled class="form-control @error('cliente_id') is-invalid @enderror"
+                    id="inputLote" name=""
+                    value="{{ empty($data['cliente_nome']->nome_cliente) ? $data['cliente_nome']->razao_social_cliente : $data['cliente_nome']->nome_cliente }}">
+                <input type="hidden" name="cliente_id" value="{{ $lote->cliente_id }}">
+                @else
                 <select id="inputReponsabilidade" name="cliente_id"
                     class="form-select form-control @error('cliente_id') is-invalid @enderror">
                     <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
@@ -112,7 +117,7 @@
                     </option>
                     @endforeach
                 </select>
-    
+                @endif
             </div>
 
             <div class="col-md-3">
