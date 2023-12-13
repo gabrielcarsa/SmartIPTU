@@ -251,4 +251,39 @@ class LoteController extends Controller
         return view('lote/lote_gestao', compact('resultados', 'totalValorParcelas'));
 
     }
+
+    //RETORNA VIEW NOVA LOTE      
+    function nova_venda($id){
+        $lote = Lote::find($id);
+        $clientes = Cliente::all();
+        $quadra = Quadra::where('id', $lote->quadra_id)->first();
+
+        $data = [
+            'lote' => $lote,
+            'quadra' => $quadra,
+        ];
+
+        return view('lote/lote_contrato', compact('data', 'clientes'));
+    }
+
+    //ALTERAR LOTE
+    function cadastrar_venda($id, $usuario, Request $request){
+        //Definindo data para cadastrar
+        date_default_timezone_set('America/Cuiaba');
+
+        $lote = Lote::find($id);
+
+        if (!$lote) {
+            return redirect()->back()->with('error', 'Lote não encontrado');
+        }
+
+        $lote->data_venda = $request->input('data_contrato');
+        $lote->cliente_id = $request->input('cliente_id');
+        $lote->data_alteracao = date('d-m-Y h:i:s a', time());
+        $lote->alterado_usuario_id = $usuario;
+        $lote->save();
+
+        return redirect()->back()->with('success', 'Venda cadastrada com sucesso');
+
+    }
 }
