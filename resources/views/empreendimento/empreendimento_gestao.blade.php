@@ -55,6 +55,7 @@
                     <th scope="col">Lote</th>
                     <th scope="col">Responsabilidade</th>
                     <th scope="col">Inscrição Municipal</th>
+                    <th scope="col">Data da Venda</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -62,15 +63,16 @@
                 @if(isset($resultado))
                 @foreach ($resultado as $lote)
                 <tr>
-                    <th scope="row">{{$lote->lote_id}}</th>
+                    <td>{{$lote->lote_id}}</td>
                     <td>{{$lote->quadra_nome}}</td>
-                    <td>{{$lote->lote}}</td>
+                    <th scope="row">{{$lote->lote}}</th>
                     @if(empty($lote->nome_cliente))
                     <td>{{$lote->razao_social__cliente}}</td>
                     @else
                     <td>{{$lote->nome_cliente}}</td>
                     @endif
                     <td>{{$lote->inscricao_municipal}}</td>
+                    <td>{{\Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}</td>
                     <td>
                         <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
                         <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"

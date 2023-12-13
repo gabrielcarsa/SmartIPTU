@@ -101,6 +101,7 @@ class EmpreendimentoController extends Controller
             'lote.id as lote_id',
             'lote.lote as lote',
             'lote.inscricao_municipal as inscricao_municipal',
+            'lote.data_venda as data_venda',
             'lote.quadra_id as lote_quadra_id',
             'lote.cliente_id as lote_cliente_id',
             'cliente.nome as nome_cliente',

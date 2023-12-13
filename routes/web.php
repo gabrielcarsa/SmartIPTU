@@ -78,7 +78,7 @@ Route::middleware([
         Route::get('/lote/excluir/{id}',[LoteController::class, 'excluir']);
         Route::get('/lote/gestao/{id}',[LoteController::class, 'gestao']);
         Route::get('/lote/nova_venda/{id}',[LoteController::class, 'nova_venda'])->name('nova_venda');
-        Route::post('/lote/cadastrar_venda/{id}/usuario}',[LoteController::class, 'cadastrar_venda']);
+        Route::post('/lote/cadastrar_venda/{id}/{usuario}',[LoteController::class, 'cadastrar_venda']);
 
 
         //ROTAS DEBITO
