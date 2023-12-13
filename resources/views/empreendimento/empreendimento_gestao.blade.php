@@ -72,7 +72,7 @@
                     <td>{{$lote->nome_cliente}}</td>
                     @endif
                     <td>{{$lote->inscricao_municipal}}</td>
-                    <td>{{\Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}</td>
+                    <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}</td>
                     <td>
                         <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
                         <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
