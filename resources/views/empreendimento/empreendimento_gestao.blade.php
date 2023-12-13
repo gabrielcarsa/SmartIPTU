@@ -17,10 +17,7 @@
     <span class="material-symbols-outlined">
         add
     </span>Novo Lote</a>
-<a class="btn btn-primary btn-add" href="empreendimento/novo" style="margin-bottom: 20px">
-    <span class="material-symbols-outlined">
-        add
-    </span>Nova Venda</a>
+
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
     <div class="card-body">
@@ -76,9 +73,10 @@
                     <td>{{$lote->inscricao_municipal}}</td>
                     <td>
                         <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
+                        <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
+                            class="btn-acao-listagem">Novo Contrato</a>
                         <a href="../../lote/editar/{{$lote->lote_id}}"
                             class="btn-acao-listagem-secundary">Ver/Editar</a>
-
                     </td>
                 </tr>
                 @endforeach
