@@ -110,7 +110,7 @@
 </a>
 
 
-@if($resultadosReceber != null && $resultadosReceber[0]->data_vencimento_parcela != "")
+@if($resultadosReceber[0]->data_vencimento_parcela != null)
 
 <h5>Débitos de Terceiros</h5>
 
@@ -215,13 +215,9 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 
 @endforeach
 
-@else
-
-<p></p>
-
 @endif
 
-@if($resultadosPagar != null)
+@if($resultadosPagar[0]->data_vencimento_parcela != null)
 
 <h5>Débitos da Empresa</h5>
 
@@ -325,10 +321,6 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 @endif
 
 @endforeach
-
-@else
-
-<p></p>
 
 @endif
 

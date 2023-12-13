@@ -186,10 +186,6 @@ class LoteController extends Controller
         ->where('l.id', $id)
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
-
-        if($resultadosPagar[0]->data_vencimento_parcela == null){
-            $resultadosPagar = null;
-        }
      
         $resultadosReceber = DB::table('lote AS l')
         ->select(
@@ -234,9 +230,7 @@ class LoteController extends Controller
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
 
-        if($resultadosReceber[0]->data_vencimento_parcela == null){
-            $resultadosReceber = null;
-        }
+   
     
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
@@ -263,6 +257,7 @@ class LoteController extends Controller
             }
 
         }
+        
         return view('lote/lote_gestao', compact('resultadosReceber', 'resultadosPagar'), compact('totalValorParcelas'));
 
     }
