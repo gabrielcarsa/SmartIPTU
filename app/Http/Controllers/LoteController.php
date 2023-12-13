@@ -279,7 +279,7 @@ class LoteController extends Controller
 
         $lote->data_venda = $request->input('data_contrato');
         $lote->cliente_id = $request->input('cliente_id');
-        $lote->data_alteracao = date('d-m-Y h:i:s a', time());
+        $lote->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
         $lote->alterado_usuario_id = $usuario;
         $lote->save();
 
