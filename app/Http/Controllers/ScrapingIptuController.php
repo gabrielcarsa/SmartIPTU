@@ -32,7 +32,18 @@ class ScrapingIptuController extends Controller
         //echo 'Valor do campo InscricaoMunicipal: ' . $form['InscricaoMunicipal']->getValue() . '<br>';
 
         // Submete o formulário
-        $client->submit($form);
+        try {
+            // Your existing code here
+            $client->submit($form);
+        } catch (TransportExceptionInterface $e) {
+            if ($e->getCode() === 28) {
+                // Handle timeout error
+                // Log, retry, or take appropriate action
+                dd("tempo");
+            } else {
+                dd("outro");
+            }
+        }
 
         // Log: Verifica a URL após a submissão
         //echo 'URL após submissão: ' . $client->getHistory()->current()->getUri() . '<br>';
