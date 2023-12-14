@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Prescricao;
 use App\Models\User;
-use Carbon\Carbon;
+
 
 class PrescricaoController extends Controller
 {
@@ -26,7 +26,7 @@ class PrescricaoController extends Controller
         $prescricao->entrada_pedido = $request->input('entrada_pedido');
         $prescricao->anos_referencia = $request->input('anos_referencia');
         $prescricao->observacao = $request->input('observacao');
-        $prescricao->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $prescricao->data_cadastro = date('d-m-Y h:i:s a', time());
         $prescricao->cadastrado_usuario_id = $usuario;
         $prescricao->save();
         return redirect('prescricao/'.$lote_id)->with('success', 'Prescrição cadastrado com sucesso');
@@ -62,7 +62,7 @@ class PrescricaoController extends Controller
         $prescricao->entrada_pedido = $request->input('entrada_pedido');
         $prescricao->anos_referencia = $request->input('anos_referencia');
         $prescricao->observacao = $request->input('observacao');
-        $prescricao->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
+        $prescricao->data_alteracao = date('d-m-Y h:i:s a', time());
         $prescricao->alterado_usuario_id = $usuario;
         $prescricao->save();
         return redirect('prescricao/'.$prescricao->lote_id)->with('success', 'Prescrição alterado com sucesso');

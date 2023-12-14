@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Cliente;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
@@ -131,7 +130,7 @@ class ClienteController extends Controller
         $cliente->numero_end = $request->input('numero_end');
         $cliente->cidade_end = $request->input('cidade_end');
         $cliente->estado_end = $request->input('estado_end');
-        $cliente->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
+        $cliente->data_alteracao = date('d-m-Y h:i:s a', time());
         $cliente->alterado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
         $cliente->telefone1 = $request->input('telefone1');
@@ -206,7 +205,7 @@ class ClienteController extends Controller
         $cliente->numero_end = $request->input('numero_end');
         $cliente->cidade_end = $request->input('cidade_end');
         $cliente->estado_end = $request->input('estado_end');
-        $cliente->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $cliente->data_cadastro = date('d-m-Y h:i:s a', time());
         $cliente->cadastrado_usuario_id = $usuario;
         $cliente->email = $request->input('email');
         $cliente->telefone1 = $request->input('telefone1');

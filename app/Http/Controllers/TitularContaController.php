@@ -9,7 +9,7 @@ use App\Models\ContaReceber;
 use App\Models\ContaPagar;
 use App\Models\Debito;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+
 
 class TitularContaController extends Controller
 {
@@ -41,7 +41,7 @@ class TitularContaController extends Controller
 
         $titular_conta = new TitularConta();
         $titular_conta->cliente_id = $request->input('cliente_id');
-        $titular_conta->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $titular_conta->data_cadastro = date('d-m-Y h:i:s a', time());
         $titular_conta->cadastrado_usuario_id = $usuario;
         $titular_conta->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');

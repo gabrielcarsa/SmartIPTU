@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CategoriaPagar;
 use App\Models\ContaPagar;
-use Carbon\Carbon;
+
 
 class CategoriaPagarController extends Controller
 {
@@ -29,7 +29,7 @@ class CategoriaPagarController extends Controller
 
         $categoria_pagar = new CategoriaPagar();
         $categoria_pagar->descricao = $request->input('descricao');
-        $categoria_pagar->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $categoria_pagar->data_cadastro = date('d-m-Y h:i:s a', time());
         $categoria_pagar->cadastrado_usuario_id = $usuario;
         $categoria_pagar->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');

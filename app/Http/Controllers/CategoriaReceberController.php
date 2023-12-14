@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CategoriaReceber;
 use App\Models\ContaReceber;
-use Carbon\Carbon;
+
+
 
 class CategoriaReceberController extends Controller
 {
@@ -29,7 +30,7 @@ class CategoriaReceberController extends Controller
 
         $categoria_receber = new CategoriaReceber();
         $categoria_receber->descricao = $request->input('descricao');
-        $categoria_receber->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $categoria_receber->data_cadastro = date('d-m-Y h:i:s a', time());
         $categoria_receber->cadastrado_usuario_id = $usuario;
         $categoria_receber->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');

@@ -7,7 +7,6 @@ use App\Http\Requests\QuadraRequest;
 use App\Models\Quadra;
 use App\Models\Lote;
 use App\Models\User;
-use Carbon\Carbon;
 
 class QuadraController extends Controller
 {
@@ -30,7 +29,7 @@ class QuadraController extends Controller
         $quadra = new Quadra();
         $quadra->nome = $request->input('nome');
         $quadra->empreendimento_id = $empreendimento_id;
-        $quadra->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+        $quadra->data_cadastro = date('d-m-Y h:i:s a', time());
         $quadra->cadastrado_usuario_id = $usuario;
         $quadra->save();
         return redirect('quadra/novo/'.$empreendimento_id)->with('success', 'Quadra cadastrado com sucesso');
