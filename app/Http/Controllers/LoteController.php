@@ -11,6 +11,7 @@ use App\Models\TitularConta;
 use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class LoteController extends Controller
@@ -51,7 +52,7 @@ class LoteController extends Controller
         $lote->confrontacao_fundo = $request->input('confrontacao_fundo');
         $lote->confrontacao_direita = $request->input('confrontacao_direita');
         $lote->confrontacao_esquerda = $request->input('confrontacao_esquerda');
-        $lote->data_cadastro = date('d-m-Y h:i:s a', time());
+        $lote->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $lote->cadastrado_usuario_id = $usuario;
         $lote->save();
         return redirect('empreendimento/gestao/'.$empreendimento_id)->with('success', 'Lote cadastrado com sucesso');
@@ -109,7 +110,7 @@ class LoteController extends Controller
         $lote->confrontacao_fundo = $request->input('confrontacao_fundo');
         $lote->confrontacao_direita = $request->input('confrontacao_direita');
         $lote->confrontacao_esquerda = $request->input('confrontacao_esquerda');
-        $lote->data_alteracao = date('d-m-Y h:i:s a', time());
+        $lote->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
         $lote->alterado_usuario_id = $usuario;
         $lote->save();
 
@@ -289,7 +290,7 @@ class LoteController extends Controller
 
         $lote->data_venda = $request->input('data_contrato');
         $lote->cliente_id = $request->input('cliente_id');
-        $lote->data_alteracao = date('d-m-Y h:i:s a', time());
+        $lote->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
         $lote->alterado_usuario_id = $usuario;
         $lote->save();
 
