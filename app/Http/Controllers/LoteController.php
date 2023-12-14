@@ -261,7 +261,7 @@ class LoteController extends Controller
             }
 
         }
-        
+        dd($resultadosPagar);
         return view('lote/lote_gestao', compact('resultadosReceber', 'resultadosPagar'), compact('totalValorParcelas'));
 
     }

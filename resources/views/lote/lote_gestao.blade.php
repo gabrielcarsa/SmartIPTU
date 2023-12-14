@@ -216,7 +216,7 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 @endforeach
 
 @endif
-<p>{{$resultadosPagar[0]->data_vencimento_parcela}}   111</p>
+<p>{{$resultadosPagar[0]->data_vencimento_parcela}}   222</p>
 
 @if($resultadosPagar[0]->data_vencimento_parcela != null)
 
