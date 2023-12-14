@@ -795,7 +795,7 @@ class ContaReceberController extends Controller
                 $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::all()->get(); // Saldo do dia
+                $saldo = SaldoDiario::all(); // Saldo do dia
                 dd($saldo);
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
