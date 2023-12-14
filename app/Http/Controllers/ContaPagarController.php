@@ -786,22 +786,25 @@ class ContaPagarController extends Controller
                 //Pegando variáveis necessárias para selecionar e estornar saldo
                 $titular_conta_id = $movimentacao_financeira->titular_conta_id;
                 $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
+                
+                $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataPagamento[$i]))->format('Y-m-d');;
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', $dataPagamento[$i])
+                $saldo = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
-
+                
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                 //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataPagamento[$i])
+                $saldo_model = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->first();
 
-                $valor = (double) str_replace(',', '.', $valorPago[$i]);
+                //Corrigindo valor para salvar
+                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorPago[$i]));
 
                 //Atualizando o saldo
                 $saldo_model->saldo = $valor_desatualizado_saldo + $valor; 
