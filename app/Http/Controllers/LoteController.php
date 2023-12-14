@@ -186,7 +186,7 @@ class LoteController extends Controller
         ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
         ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
         ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
-        ->leftJoin('parcela_conta_pagar AS p', 'd.id', '=', 'p.debito_id')
+        ->Join('parcela_conta_pagar AS p', 'd.id', '=', 'p.debito_id')
         ->where('l.id', $id)
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
