@@ -109,7 +109,6 @@
     Central de Informações
 </a>
 
-<p>{{$resultadosReceber[0]->data_vencimento_parcela}}   111</p>
 @if($resultadosReceber[0]->data_vencimento_parcela != null)
 
 <h5>Débitos de Terceiros</h5>
@@ -216,7 +215,6 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 @endforeach
 
 @endif
-<p>{{$resultadosPagar[0]->data_vencimento_parcela}}   222</p>
 
 @if($resultadosPagar[0]->data_vencimento_parcela != null)
 
