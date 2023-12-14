@@ -109,8 +109,7 @@
     Central de Informações
 </a>
 
-
-@if($resultadosReceber[0]->data_vencimento_parcela != null)
+@if($resultadosReceber)
 
 <h5>Débitos de Terceiros</h5>
 
@@ -119,7 +118,7 @@ $displayedDebitoDescricao = [];
 @endphp
 
 @foreach($resultadosReceber as $i)
-@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao)  && $i->data_vencimento_parcela != "")
+@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao)  && $i->data_vencimento_parcela != null)
 <div class="card">
     <h5 class="card-header">{{ $i->tipo_debito_descricao }}</h5>
     <div class="card-footer">
@@ -217,7 +216,7 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 
 @endif
 
-@if($resultadosPagar[0]->data_vencimento_parcela != null)
+@if($resultadosPagar)
 
 <h5>Débitos da Empresa</h5>
 
@@ -226,7 +225,7 @@ $displayedDebitoDescricao = [];
 @endphp
 
 @foreach($resultadosPagar as $i)
-@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao) && $i->data_vencimento_parcela != "")
+@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao) && $i->data_vencimento_parcela != null)
 <div class="card">
     <h5 class="card-header">{{ $i->tipo_debito_descricao}}</h5>
     <div class="card-footer">
