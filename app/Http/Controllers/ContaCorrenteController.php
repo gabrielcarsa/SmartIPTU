@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ContaCorrente;
+use Carbon\Carbon;
 
 class ContaCorrenteController extends Controller
 {
@@ -34,7 +35,7 @@ class ContaCorrenteController extends Controller
         $conta_corrente->numero_conta = $request->input('numeroConta');
         $conta_corrente->digito_conta = $request->input('digitoConta');
         $conta_corrente->titular_conta_id = $titular_id;
-        $conta_corrente->data_cadastro = date('d-m-Y h:i:s a', time());
+        $conta_corrente->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $conta_corrente->cadastrado_usuario_id = $usuario;
         $conta_corrente->save();
         return redirect('conta_corrente/'.$titular_id)->with('success', 'Conta Corrente cadastrada com sucesso');

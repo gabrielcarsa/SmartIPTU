@@ -7,6 +7,7 @@ use App\Models\Quadra;
 use App\Models\Lote;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmpreendimentoRequest;
+use Carbon\Carbon;
 
 class EmpreendimentoController extends Controller
 {
@@ -37,7 +38,7 @@ class EmpreendimentoController extends Controller
         $empreendimento->matricula = $request->input('matricula');
         $empreendimento->cidade = $request->input('cidade');
         $empreendimento->estado = $request->input('estado');
-        $empreendimento->data_cadastro = date('d-m-Y h:i:s a', time());
+        $empreendimento->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $empreendimento->cadastrado_usuario_id = $usuario;
         $empreendimento->save();
         return redirect('empreendimento')->with('success', 'Empreendimento cadastrado com sucesso');
@@ -75,7 +76,7 @@ class EmpreendimentoController extends Controller
         $empreendimento->matricula = $request->input('matricula');
         $empreendimento->cidade = $request->input('cidade');
         $empreendimento->estado = $request->input('estado');      
-        $empreendimento->data_alteracao = date('d-m-Y h:i:s a', time());
+        $empreendimento->data_alteracao = Carbon::now()->format('Y-m-d H:i:s');
         $empreendimento->alterado_usuario_id = $usuario;
         $empreendimento->save();
     

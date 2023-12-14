@@ -75,7 +75,7 @@ class ContaReceberController extends Controller
         $contaReceber->valor_entrada = (double) $valor_entrada; // Converter a string diretamente para um número em ponto flutuante
 
         $contaReceber->descricao = $request->input('descricao');
-        $contaReceber->data_cadastro = date('d-m-Y h:i:s a', time());
+        $contaReceber->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $contaReceber->cadastrado_usuario_id = $usuario;
         $contaReceber->save();
 
@@ -590,7 +590,7 @@ class ContaReceberController extends Controller
         $valorRecebido = $request->get('valor', []);
         $dataRecebimento = $request->get('data', []);
 
-        if($dataRecebimento > date('d-m-Y h:i:s a', time())){
+        if($dataRecebimento > Carbon::now()->format('Y-m-d H:i:s')){
             return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
         }
      
@@ -601,7 +601,7 @@ class ContaReceberController extends Controller
             $valor = str_replace(',', '.', $valorRecebido[$i]);
             $parcela->valor_recebido = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             $parcela->data_recebimento = $dataRecebimento[$i];
-            $parcela->data_baixa = date('d-m-Y h:i:s a', time());
+            $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
             $parcela->situacao = 1;
 
@@ -631,7 +631,7 @@ class ContaReceberController extends Controller
                 $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
                 $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
             
-                $movimentacao_financeira->data_cadastro = date('d-m-Y h:i:s a', time());
+                $movimentacao_financeira->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                 $movimentacao_financeira->cadastrado_usuario_id = $user_id;
         
                 //Variavel de saldo para manipulacao e verificacao do saldo
@@ -661,7 +661,7 @@ class ContaReceberController extends Controller
                     $addSaldo->titular_conta_id = $request->input('titular_conta_id');
                     $addSaldo->conta_corrente_id = $request->input('conta_corrente_id');
                     $addSaldo->data = $dataRecebimento[$i];
-                    $addSaldo->data_cadastro = date('d-m-Y h:i:s a', time());
+                    $addSaldo->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                     $addSaldo->save();
         
                     $saldo = $addSaldo;

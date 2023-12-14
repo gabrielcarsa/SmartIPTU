@@ -7,8 +7,7 @@ use App\Models\TipoDebito;
 use App\Models\Debito;
 use App\Models\ContaReceber;
 use App\Models\ContaPagar;
-
-
+use Carbon\Carbon;
 
 class TipoDebitoController extends Controller
 {
@@ -31,7 +30,7 @@ class TipoDebitoController extends Controller
 
         $tipo_debito = new TipoDebito();
         $tipo_debito->descricao = $request->input('descricao');
-        $tipo_debito->data_cadastro = date('d-m-Y h:i:s a', time());
+        $tipo_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $tipo_debito->cadastrado_usuario_id = $usuario;
         $tipo_debito->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');

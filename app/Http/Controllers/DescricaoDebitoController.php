@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DescricaoDebito;
 use App\Models\Debito;
-
+use Carbon\Carbon;
 
 class DescricaoDebitoController extends Controller
 {
@@ -29,7 +29,7 @@ class DescricaoDebitoController extends Controller
 
         $descricao_debito = new DescricaoDebito();
         $descricao_debito->descricao = $request->input('descricao');
-        $descricao_debito->data_cadastro = date('d-m-Y h:i:s a', time());
+        $descricao_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
         $descricao_debito->cadastrado_usuario_id = $usuario;
         $descricao_debito->save();
         return redirect()->back()->with('success', 'Cadastro feito com sucesso');
