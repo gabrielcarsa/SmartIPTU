@@ -795,11 +795,11 @@ class ContaReceberController extends Controller
                 $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', '=', $dataRecebimento[$i])
+                $saldo = SaldoDiario::where('data', '=', Carbon::createFromFormat('Y-m-d', $dataRecebimento[$i]))
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
-                dd($dataRecebimento[$i]);
+                dd($saldo);
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                 //variavel que será responsavel por alterar-lo
