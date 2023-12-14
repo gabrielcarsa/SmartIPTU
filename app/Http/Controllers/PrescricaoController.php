@@ -7,7 +7,6 @@ use App\Models\Prescricao;
 use App\Models\User;
 use Carbon\Carbon;
 
-
 class PrescricaoController extends Controller
 {
     function prescricao($lote_id){

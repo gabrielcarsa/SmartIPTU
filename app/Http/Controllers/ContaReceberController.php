@@ -180,7 +180,6 @@ class ContaReceberController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-        ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
         ->orderBy('data_vencimento', 'ASC');
 
 
@@ -794,8 +793,10 @@ class ContaReceberController extends Controller
                 $titular_conta_id = $movimentacao_financeira->titular_conta_id;
                 $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
 
+                $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataRecebimento[$i]))->format('Y-m-d');;
+
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', '=', $dataRecebimento[$i])
+                $saldo = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
@@ -803,12 +804,13 @@ class ContaReceberController extends Controller
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                 //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataRecebimento[$i])
+                $saldo_model = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->first();
 
-                $valor = (double) str_replace(',', '.', $valorRecebido[$i]);
+                //Corrigindo valor para salvar
+                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorRecebido[$i]));
 
                 //Atualizando o saldo
                 $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 

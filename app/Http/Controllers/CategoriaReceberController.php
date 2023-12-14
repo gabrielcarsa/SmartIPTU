@@ -7,8 +7,6 @@ use App\Models\CategoriaReceber;
 use App\Models\ContaReceber;
 use Carbon\Carbon;
 
-
-
 class CategoriaReceberController extends Controller
 {
     function categoria_receber(){

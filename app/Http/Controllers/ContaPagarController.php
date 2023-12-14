@@ -177,7 +177,6 @@ class ContaPagarController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-        ->whereColumn('l.cliente_id', '=', 'td.cliente_id')
         ->orderBy('data_vencimento', 'ASC');
 
 
@@ -221,7 +220,6 @@ class ContaPagarController extends Controller
         FILTRO
         ----------*/
         if ($isReferenteLotes) { //Referente a Lotes
-
             if($titular_conta_id == 0){ //Se o titular da conta for 'Todos'
 
                 if(!empty($periodoDe) && !empty($periodoAte) && $isPeriodoVencimento){ //Verifica período e Vencimento
@@ -355,7 +353,6 @@ class ContaPagarController extends Controller
             'totalValorParcelas' => $totalValorParcelas,
         ];
         
-    
         return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'));
     }
 
@@ -789,22 +786,25 @@ class ContaPagarController extends Controller
                 //Pegando variáveis necessárias para selecionar e estornar saldo
                 $titular_conta_id = $movimentacao_financeira->titular_conta_id;
                 $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
+                
+                $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataPagamento[$i]))->format('Y-m-d');;
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', $dataPagamento[$i])
+                $saldo = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
-
+                
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                 //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataPagamento[$i])
+                $saldo_model = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->first();
 
-                $valor = (double) str_replace(',', '.', $valorPago[$i]);
+                //Corrigindo valor para salvar
+                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorPago[$i]));
 
                 //Atualizando o saldo
                 $saldo_model->saldo = $valor_desatualizado_saldo + $valor; 

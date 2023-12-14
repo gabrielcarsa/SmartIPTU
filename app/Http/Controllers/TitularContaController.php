@@ -11,7 +11,6 @@ use App\Models\Debito;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-
 class TitularContaController extends Controller
 {
     function titular_conta(){
