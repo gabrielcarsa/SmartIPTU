@@ -109,7 +109,7 @@
     Central de Informações
 </a>
 
-@if($resultadosReceber[0]->data_vencimento_parcela != null)
+@if($resultadosReceber)
 
 <h5>Débitos de Terceiros</h5>
 
@@ -216,7 +216,7 @@ $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
 
 @endif
 
-@if($resultadosPagar[0]->data_vencimento_parcela != null)
+@if($resultadosPagar)
 
 <h5>Débitos da Empresa</h5>
 
