@@ -180,7 +180,6 @@ class ContaReceberController extends Controller
         ->join('users as uc', 'uc.id', '=', 'p.cadastrado_usuario_id') // Usuario que cadastrou a parcela
         ->leftJoin('users as ua', 'ua.id', '=', 'p.alterado_usuario_id') // Usuário que alterou, usando LEFT JOIN para permitir nulos
         ->leftJoin('users as ub', 'ub.id', '=', 'p.usuario_baixa_id') // Usuário que baixou, usando LEFT JOIN para permitir nulos
-        ->whereColumn('l.cliente_id', '<>', 'td.cliente_id')
         ->orderBy('data_vencimento', 'ASC');
 
 
