@@ -799,7 +799,7 @@ class ContaReceberController extends Controller
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
-
+                dd($saldo);
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                 //variavel que será responsavel por alterar-lo
