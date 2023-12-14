@@ -72,7 +72,11 @@ class DebitoController extends Controller
             if($empresa->cliente_id == $lote->cliente_id){
                 $parcela = new ParcelaContaPagar();
             }else{// Caso contrário é um débito a receber
-                $parcela = new ParcelaContaReceber();
+                if($lote->data_venda > $dataCarbon){
+                    $parcela = new ParcelaContaPagar();
+                }else{
+                    $parcela = new ParcelaContaReceber();
+                }
             }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
@@ -842,7 +846,11 @@ class DebitoController extends Controller
             if($empresa->cliente_id == $lote->cliente_id){
                 $parcela = new ParcelaContaPagar();
             }else{// Caso contrário é um débito a receber
-                $parcela = new ParcelaContaReceber();
+                if($lote->data_venda > $dataCarbon){
+                    $parcela = new ParcelaContaPagar();
+                }else{
+                    $parcela = new ParcelaContaReceber();
+                }
             }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
