@@ -796,8 +796,6 @@ class ContaReceberController extends Controller
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
                 $saldo = SaldoDiario::where('data', '=', $dataRecebimento[$i])
-                ->where('titular_conta_id', $titular_conta_id)
-                ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
                 dd($saldo);
                 $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
