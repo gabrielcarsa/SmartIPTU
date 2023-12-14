@@ -80,6 +80,7 @@ class DebitoController extends Controller
             }
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
+            $parcela->situacao = 0;
             $parcela->valor_parcela = $debito->valor_parcela;
             $parcela->cadastrado_usuario_id = $usuario;
             if($i > 1){
@@ -467,7 +468,6 @@ class DebitoController extends Controller
 
      //RETORNA VIEW PARA BAIXAR PARCELA
      function baixar_parcela_view(Request $request){
-       
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
              // Recupere os valores dos checkboxes da consulta da URL
@@ -486,14 +486,16 @@ class DebitoController extends Controller
                     //Verificar se é parcela a pagar ou receber
                     $empresa = TitularConta::find(1);
                     $lote = Lote::find($request->input('lote_id'));
+                    dd($empresa);
+
                     //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
                     if($empresa->cliente_id == $lote->cliente_id){
                         $parcela = ParcelaContaPagar::find($parcelaId);
+
                     }else{// Caso contrário é um débito a receber
                         $parcela = ParcelaContaReceber::find($parcelaId);
                     }
                 }
-
                 //Se houver parcelas já recebidas redireciona de volta
                 if($parcela->situacao == 1){
                     return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto! Dica: para alterar parcelas já recebidas/pagas estornar o recebimento/pagamento!');
@@ -862,6 +864,7 @@ class DebitoController extends Controller
                 $parcela->valor_parcela = str_replace(',', '.', $valorAux);
             }
             $parcela->cadastrado_usuario_id = $usuario_id;
+            $parcela->situacao = 0;
             $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][$i-1]['vencimento'])->format('Y-m-d');
 
             $parcela->save();
