@@ -1,9 +1,5 @@
 <nav class="navbar navbar-expand-lg fixed-top">
-    <button class="btn-sidebar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-        aria-controls="offcanvasScrolling"><span class="material-symbols-outlined">
-            menu
-        </span>
-    </button>
+    
     <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarText">
         <span class="navbar-text">
             <!-- Settings Dropdown -->
