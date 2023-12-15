@@ -589,7 +589,7 @@ class ContaReceberController extends Controller
         $valorRecebido = $request->get('valor', []);
         $dataRecebimento = $request->get('data', []);
 
-        if($dataRecebimento > date('d-m-Y h:i:s a', time())){
+        if(strtotime($dataRecebimento) >= strtotime(date('Y-m-d'))){
             return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
         }
      
