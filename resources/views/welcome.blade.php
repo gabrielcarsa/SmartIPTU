@@ -26,28 +26,36 @@
             <a class="navbar-brand" href="#">
                 <img src="{{asset("storage/SmartIPTU.png")}}" width="60px" />
             </a>
-            <div class="collapse navbar-collapse d-lg-flex justify-content-end" id="navbarText">
-                <span class="navbar-text">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                <ul class="navbar-nav ml-auto">
                     @if (Route::has('login'))
-                    <div class="">
-                        @auth
-                        <a href="{{ url('/dashboard') }}" class="">Dashboard</a>
-                        @else
-                        <a href="{{ route('login') }}" class="">Entrar</a>
-
-                        @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="">Registrar</a>
-                        @endif
-                        @endauth
-                    </div>
+                    @auth
+                    <li class="nav-item">
+                        <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="nav-link">Entrar</a>
+                    </li>
+                    <!--@if (Route::has('register'))
+                        <li class="nav-item">
+                            <a href="{{ route('register') }}" class="nav-link">Registrar</a>
+                        </li>
+                        @endif-->
+                    @endauth
                     @endif
-                </span>
+                </ul>
             </div>
         </div>
     </nav>
 
+
     <main>
-        <section class="principal"> 
+        <section class="principal">
             <div class="container text-center ">
                 <div class="row align-items-center">
                     <div class="col">
@@ -55,7 +63,8 @@
                     </div>
                     <div class="col">
                         <h1>Sistema de gestão IPTU e Financeiro</h1>
-                        <p>Simplifique a Gestão Financeira e de IPTU com o nosso sistema SmartIPTU, descomplicado e eficaz para Imobiliárias e Loteadoras</p>
+                        <p>Simplifique a Gestão Financeira e de IPTU com o nosso sistema SmartIPTU, descomplicado e
+                            eficaz para Imobiliárias e Loteadoras</p>
                     </div>
                 </div>
             </div>
