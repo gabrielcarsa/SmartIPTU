@@ -90,6 +90,7 @@ class ContaReceberController extends Controller
             $parcela = new ParcelaContaReceber();
             $parcela->conta_receber_id = $contaReceber_id;
             $parcela->numero_parcela = $i;
+            $parcela->situacao = 0;
             $parcela->valor_parcela = $contaReceber->valor_parcela;
             $parcela->cadastrado_usuario_id = $usuario;
             if($i > 1){
