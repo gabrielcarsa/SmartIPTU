@@ -61,14 +61,79 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-ranking text-center">
+                <h4>Débitos em atraso - EMPRESA X CLIENTES</h5>
+                <div class="card-body">
+                    <canvas id="graficoDividaClienteEmpresa"></canvas>
+                </div>
+            </div>
+        </div>
+            
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-ranking">
+                <h4>Ranking Maiores Saídas por Categoria - 30 dias</h4>
+                <div>
+                    @if(isset($data['rankingSaidas']))
+                    @foreach($data['rankingSaidas'] as $categorias)
+                    <div class="linha-ranking">
+                        <p>{{$categorias->categoria}}</p>
+                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{($categorias->total*100)/$data['totalSaidas']}}"
+                            aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{($categorias->total*100)/$data['totalSaidas']}}%">R$ {{$categorias->total}}</div>
+                        </div>
+                    </div>
+                    @endforeach
+                    @else
+                    <p>Não foi possível carregar esse recurso!</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
+// Obtém os dados do PHP e armazena em variáveis JavaScript
+const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
+const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+
+
+new Chart(graficoDividaClienteEmpresa, {
+    type: 'pie',
+    data: {
+        labels: [
+            'Empresa',
+            'Clientes'
+        ],
+        datasets: [{
+            label: 'R$ Débitos',
+            data: [debitosPagarAtrasados,debitosReceberAtrasados],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+            ],
+            hoverOffset: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+    }
+});
 
 </script>
 

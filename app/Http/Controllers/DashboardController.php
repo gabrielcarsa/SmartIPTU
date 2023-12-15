@@ -8,12 +8,15 @@ use App\Models\Cliente;
 use App\Models\TitularConta;
 use App\Models\Empreendimento;
 use App\Models\TipoDebito;
+use Carbon\Carbon;
 
 
 class DashboardController extends Controller
 {
     function dashboard(){
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+        $hojeAux = Carbon::now(); // Obtém a data e hora atual com Carbon
+        $data30diasAtras = $hojeAux->subDays(30); //Data 30 dias atrás
 
         //Soma das parcelas a Pagar no dia de Hoje
         $pagarHoje =  DB::table('parcela_conta_pagar')
@@ -50,6 +53,26 @@ class DashboardController extends Controller
         //Valor total de debitos atrasados a receber e pagar
         $totalDividaDebitos = $debitosPagarAtrasados + $debitosReceberAtrasados;
 
+        //Ranking maiores saídas dos últimos 30 dias
+        $rankingSaidas = DB::table('movimentacao_financeira as mf')
+        ->selectRaw('CASE WHEN cp.descricao IS NOT NULL THEN cp.descricao ELSE td.descricao END AS categoria')
+        ->selectRaw('SUM(mf.valor) as total')
+        ->leftJoin('tipo_debito as td', 'td.id', '=', 'mf.tipo_debito_id')
+        ->leftJoin('categoria_pagar as cp', 'cp.id', '=', 'mf.categoria_pagar_id')
+        ->where('mf.tipo_movimentacao', '=', 1)
+        ->whereDate('mf.data_movimentacao', '>', $data30diasAtras)
+        ->groupBy('categoria')
+        ->orderBy('mf.valor', 'desc')
+        ->get();
+
+        // Inicializa a variável para armazenar a soma
+        $totalSaidas = 0;
+
+        // Itera sobre os resultados do ranking e acumula a soma
+        foreach ($rankingSaidas as $saida) {
+            $totalSaidas += $saida->total;
+        }
+
         //Alimentar gráfico de Receber Débitos por ano
         $receberPorAnos = DB::table('parcela_conta_receber as p')
             ->selectRaw("EXTRACT(YEAR FROM p.data_vencimento) as ano_vencimento")
@@ -71,15 +94,17 @@ class DashboardController extends Controller
             ->groupBy('ano_vencimento')
             ->orderBy('ano_vencimento', 'ASC')
             ->get();
-
         $data = [
             'pagarHoje' => $pagarHoje,
             'receberHoje' => $receberHoje,
             'pagamentosAtrasados' => $pagamentosAtrasados,
             'totalDividaDebitos' => $totalDividaDebitos,
+            'debitosPagarAtrasados' => $debitosPagarAtrasados,
+            'debitosReceberAtrasados' => $debitosReceberAtrasados,
+            'rankingSaidas' => $rankingSaidas,
+            'totalSaidas' => $totalSaidas,
             'receberPorAnos' => $receberPorAnos->toArray(),
         ];
-
 
         return view('dashboard', compact('data'));
 
