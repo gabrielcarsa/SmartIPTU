@@ -589,9 +589,12 @@ class ContaReceberController extends Controller
         $valorRecebido = $request->get('valor', []);
         $dataRecebimento = $request->get('data', []);
 
-        if($dataRecebimento > date('d-m-Y h:i:s a', time())){
-            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
-        }
+         //Verificar para não ser possível dar baixa com datas futuras
+         foreach ($dataRecebimento as $d) {
+            if (strtotime($d) > strtotime(date('Y-m-d'))) {
+                return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+            }
+        }   
      
         $i = 0;
         foreach ($idParcelas as $id) {
