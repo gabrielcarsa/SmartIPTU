@@ -584,9 +584,12 @@ class ContaPagarController extends Controller
         $valorPago = $request->get('valor', []);
         $dataPagamento = $request->get('data', []);
 
-        if(strtotime($dataPagamento) >= strtotime(date('Y-m-d'))){
-            return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
-        }
+        //Verificar para não ser possível dar baixa com datas futuras
+        foreach ($dataPagamento as $d) {
+            if (strtotime($d) > strtotime(date('Y-m-d'))) {
+                return redirect()->back()->with('error', 'Não é possível baixar com datas futuras!');
+            }
+        }   
     
         $i = 0;
         foreach ($idParcelas as $id) {
