@@ -597,7 +597,6 @@ class ContaPagarController extends Controller
 
             $valor = str_replace(',', '.', $valorPago[$i]);
             $parcela->valor_pago = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
-            dd($parcela->valor_pago);
             $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
