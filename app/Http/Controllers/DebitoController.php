@@ -68,16 +68,16 @@ class DebitoController extends Controller
         $lote = Lote::find($debito->lote_id);
 
         for($i = 1; $i <= $qtd_parcelas; $i++){
-            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-            if($empresa->cliente_id == $lote->cliente_id){
+          
+            /* ----------- MELHORIA A FAZER -------------------
+            ## A cada laço verificar data da venda com valor da parcela
+            -----------------------------------------*/
+            if($lote->data_venda > $dataCarbon){ 
                 $parcela = new ParcelaContaPagar();
-            }else{// Caso contrário é um débito a receber
-                if($lote->data_venda > $dataCarbon){
-                    $parcela = new ParcelaContaPagar();
-                }else{
-                    $parcela = new ParcelaContaReceber();
-                }
+            }else{
+                $parcela = new ParcelaContaReceber();
             }
+            
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             $parcela->situacao = 0;
@@ -780,16 +780,16 @@ class DebitoController extends Controller
         $lote = Lote::find($debito->lote_id);
 
         for($i = 1; $i <= $qtd_parcelas; $i++){
-            //Se a responsabilidade do lote for da EMPRESA então é um débito a pagar
-            if($empresa->cliente_id == $lote->cliente_id){
+            
+            /* ----------- MELHORIA A FAZER -------------------
+            ## A cada laço verificar data da venda com valor da parcela
+            -----------------------------------------*/
+            if($lote->data_venda > $dataCarbon){
                 $parcela = new ParcelaContaPagar();
-            }else{// Caso contrário é um débito a receber
-                if($lote->data_venda > $dataCarbon){
-                    $parcela = new ParcelaContaPagar();
-                }else{
-                    $parcela = new ParcelaContaReceber();
-                }
+            }else{
+                $parcela = new ParcelaContaReceber();
             }
+            
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
