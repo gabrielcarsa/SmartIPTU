@@ -40,7 +40,7 @@ class LoteController extends Controller
         $lote->cliente_id = $request->input('cliente_id');
         $lote->matricula = $request->input('matricula');
         $lote->inscricao_municipal = $request->input('inscricao_municipal');
-        $lote->valor = $request->input('valor');
+        $lote->valor = str_replace(['.', ','], ['', '.'], $request->input('valor'));
         $lote->endereco = $request->input('endereco');
         $lote->metros_quadrados = $request->input('metros_quadrados');
         $lote->metragem_frente = $request->input('metragem_frente');
