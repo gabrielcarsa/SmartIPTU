@@ -748,7 +748,18 @@ class DebitoController extends Controller
         $debito = new Debito();
 
         $tipo_debito = TipoDebito::whereRaw("LOWER(`descricao`) LIKE ?", ['%' . strtolower($debito_scraping['titulo']) . '%'])->first();
-        $debito->tipo_debito_id = $tipo_debito->id;
+        //Verificando se existe o tipo de débito
+        if($tipo_debito == null){
+            $novo_tipo_debito = new TipoDebito();
+            $novo_tipo_debito->descricao = strtolower($debito_scraping['titulo']);
+            $novo_tipo_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+            $novo_tipo_debito->cadastrado_usuario_id = $usuario;
+            $novo_tipo_debito->save();
+            $debito->tipo_debito_id = $novo_tipo_debito->id;
+
+        }else{
+            $debito->tipo_debito_id = $tipo_debito->id;
+        }
         $debito->lote_id = $lote_id;
         $debito->quantidade_parcela = count($debito_scraping['parcelas']);
         $debito->titular_conta_id = 1;
