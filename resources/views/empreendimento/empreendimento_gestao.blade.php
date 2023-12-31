@@ -56,6 +56,7 @@
                     <th scope="col">Responsabilidade</th>
                     <th scope="col">Inscrição Municipal</th>
                     <th scope="col">Data da Venda</th>
+                    <th scope="col">Telefones</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -73,6 +74,7 @@
                     @endif
                     <td>{{$lote->inscricao_municipal}}</td>
                     <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}</td>
+                    <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
                         <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
                         <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
