@@ -221,4 +221,30 @@
         </form>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $(document).on('input', 'input[name^="valor"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
+</script>
 @endsection

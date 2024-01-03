@@ -25,6 +25,9 @@
             @elseif (!empty($resultadosReceber[0]->razao_social_cliente))
             <h4>{{ $resultadosReceber[0]->razao_social_cliente }}</h4>
             @endif
+            <p id="data_venda_lote_gestao">
+                {{$resultadosReceber[0]->data_venda == null ? '' : \Carbon\Carbon::parse($resultadosReceber[0]->data_venda)->format('d/m/Y')}}
+            </p>
         </div>
         <div class="col card-info">
             <p> <span class="material-symbols-outlined">
@@ -36,7 +39,7 @@
             <p> <span class="material-symbols-outlined">
                     receipt_long
                 </span> Total Débitos</p>
-            <h4>R$ {{number_format($totalValorParcelas, 2, ',', '.')}}</h4>
+            <h4>R$ {{number_format($valoresTotais['totalValorParcelas'], 2, ',', '.')}}</h4>
         </div>
     </div>
 </div>
@@ -109,219 +112,237 @@
     Central de Informações
 </a>
 
+
+
+
 @if($resultadosReceber)
 
-<h5>Débitos de Terceiros</h5>
+<div class="separacaoDebitos">
+    <h5 id="tituloSeparacaoDebitos">Débitos de Terceiros</h5>
+    <p style="text-align: center;">R$ {{number_format($valoresTotais['totalValorReceber'], 2, ',', '.')}}</p>
 
-@php
-$displayedDebitoDescricao = [];
-@endphp
 
-@foreach($resultadosReceber as $i)
-@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao)  && $i->data_vencimento_parcela != null)
-<div class="card">
-    <h5 class="card-header">{{ $i->tipo_debito_descricao }}</h5>
-    <div class="card-footer">
-        @if (isset($resultadosReceber))
-        <p>
-            Cadastrado por <strong>{{ $resultadosReceber[0]->cadastrado_usuario_nome }}</strong> em
-            {{ \Carbon\Carbon::parse( $resultadosReceber[0]->debito_data_cadastro)->format('d/m/Y') }}
-        </p>
-        @if (isset($alterado_por_user))
-        <p>
-            Última alteração feita por <strong>{{ $resultadosReceber[0]->alterado_usuario_nome }}</strong> em
-            {{ \Carbon\Carbon::parse( $resultadosReceber[0]->debito_data_alteracao)->format('d/m/Y') }}
-        </p>
-        @endif
-        @endif
-    </div>
-    <div class="card-body">
-        <table class="table">
-            <form action="" method="post">
-                @csrf
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nº Parcela</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col">Data Vencimento</th>
-                        <th scope="col">Valor Parcela</th>
-                        <th scope="col">Valor Pago</th>
-                        <th scope="col">Data Recebimento</th>
-                        <th scope="col">Situação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(isset($resultadosReceber))
-                    @foreach ($resultadosReceber as $resultado)
-                    @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
-                    <tr
-                        class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
-                        @if($resultado->situacao_parcela == 0)
-                        <th><input type="checkbox" id="" name="checkboxes[]" value="{{ $resultado->parcela_id }}" />
-                        </th>
-                        @else
-                        <th></th>
-                        @endif
-                        <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
-                        <th scope="row">{{$resultado->numero_parcela}} / {{ $resultado->quantidade_parcela_debito }}
-                        </th>
-                        <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
-                        @if(empty($resultado->data_vencimento_parcela))
-                        <th scope="row"></th>
-                        @else
-                        <th scope="row">
-                            {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
-                        </th>
-                        @endif
-                        <th scope="row">R$ {{ number_format($resultado->valor_parcela, 2, ',', '.') }}</th>
-                        <th scope="row">R$ {{ number_format($resultado->valor_pago_parcela, 2, ',', '.') }}</th>
-                        @if(empty($resultado->data_recebimento_parcela))
-                        <th scope="row"></th>
-                        @else
-                        <th scope="row">
-                            {{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
-                        </th>
-                        @endif
-                        @if($resultado->situacao_parcela == 0)
-                        <th scope="row">Em Aberto</th>
-                        @else
-                        <th scope="row">Pago</th>
-                        @endif
-                    </tr>
-                    @endif
-                    @endforeach
-                    @endif
-                </tbody>
-            </form>
-        </table>
-        @if(isset($empreendimentos))
+    @php
+    $displayedDebitoDescricao = [];
+    @endphp
+
+    @foreach($resultadosReceber as $i)
+    @if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao) && $i->data_vencimento_parcela != null)
+    <div class="card">
+        <h5 class="card-header">{{ $i->tipo_debito_descricao }}</h5>
         <div class="card-footer">
-            <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+            @if (isset($resultadosReceber))
+            <p>
+                Cadastrado por <strong>{{ $resultadosReceber[0]->cadastrado_usuario_nome }}</strong> em
+                {{ \Carbon\Carbon::parse( $resultadosReceber[0]->debito_data_cadastro)->format('d/m/Y') }}
+            </p>
+            @if (isset($alterado_por_user))
+            <p>
+                Última alteração feita por <strong>{{ $resultadosReceber[0]->alterado_usuario_nome }}</strong>
+                em
+                {{ \Carbon\Carbon::parse( $resultadosReceber[0]->debito_data_alteracao)->format('d/m/Y') }}
+            </p>
+            @endif
+            @endif
         </div>
-        @endif
+        <div class="card-body">
+            <table class="table">
+                <form action="" method="post">
+                    @csrf
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nº Parcela</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Data Vencimento</th>
+                            <th scope="col">Valor Parcela</th>
+                            <th scope="col">Valor Pago</th>
+                            <th scope="col">Data Recebimento</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($resultadosReceber))
+                        @foreach ($resultadosReceber as $resultado)
+                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao && $resultado->data_vencimento_parcela != null)
+                        <tr
+                            class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
+                            @if($resultado->situacao_parcela == 0)
+                            <th><input type="checkbox" id="" name="checkboxes[]" value="{{ $resultado->parcela_id }}" />
+                            </th>
+                            @else
+                            <th></th>
+                            @endif
+                            <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
+                            <th scope="row">{{$resultado->numero_parcela}} /
+                                {{ $resultado->quantidade_parcela_debito }}
+                            </th>
+                            <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
+                            @if(empty($resultado->data_vencimento_parcela))
+                            <th scope="row"></th>
+                            @else
+                            <th scope="row">
+                                {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
+                            </th>
+                            @endif
+                            <th scope="row">R$ {{ number_format($resultado->valor_parcela, 2, ',', '.') }}</th>
+                            <th scope="row">R$ {{ number_format($resultado->valor_pago_parcela, 2, ',', '.') }}
+                            </th>
+                            @if(empty($resultado->data_recebimento_parcela))
+                            <th scope="row"></th>
+                            @else
+                            <th scope="row">
+                                {{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
+                            </th>
+                            @endif
+                            @if($resultado->situacao_parcela == 0)
+                            <th scope="row">Em Aberto</th>
+                            @else
+                            <th scope="row">Pago</th>
+                            @endif
+                        </tr>
+                        @endif
+                        @endforeach
+                        @endif
+                    </tbody>
+                </form>
+            </table>
+            @if(isset($empreendimentos))
+            <div class="card-footer">
+                <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+            </div>
+            @endif
 
+        </div>
     </div>
+
+
+    @php
+    $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
+    @endphp
+
+    @endif
+
+    @endforeach
+
+    @endif
+
 </div>
 
-
-@php
-$displayedDebitoDescricao[] = $i->tipo_debito_descricao;
-@endphp
-
-@endif
-
-@endforeach
-
-@endif
 
 @if($resultadosPagar)
 
-<h5>Débitos da Empresa</h5>
+<div class="separacaoDebitos">
+    <h5 id="tituloSeparacaoDebitos">Débitos da Empresa</h5>
+    <p style="text-align: center;">R$ {{number_format($valoresTotais['totalValorPagar'], 2, ',', '.')}}</p>
 
-@php
-$displayedDebitoDescricao = [];
-@endphp
+    @php
+    $displayedDebitoDescricao = [];
+    @endphp
 
-@foreach($resultadosPagar as $i)
-@if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao) && $i->data_vencimento_parcela != null)
-<div class="card">
-    <h5 class="card-header">{{ $i->tipo_debito_descricao}}</h5>
-    <div class="card-footer">
-        @if (isset($resultadosPagar))
-        <p>
-            Cadastrado por <strong>{{ $resultadosPagar[0]->cadastrado_usuario_nome }}</strong> em
-            {{ \Carbon\Carbon::parse( $resultadosPagar[0]->debito_data_cadastro)->format('d/m/Y') }}
-        </p>
-        @if (isset($alterado_por_user))
-        <p>
-            Última alteração feita por <strong>{{ $resultadosPagar[0]->alterado_usuario_nome }}</strong> em
-            {{ \Carbon\Carbon::parse( $resultadosPagar[0]->debito_data_alteracao)->format('d/m/Y') }}
-        </p>
-        @endif
-        @endif
-    </div>
-    <div class="card-body">
-        <table class="table">
-            <form action="" method="post">
-                @csrf
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nº Parcela</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col">Data Vencimento</th>
-                        <th scope="col">Valor Parcela</th>
-                        <th scope="col">Valor Pago</th>
-                        <th scope="col">Data Recebimento</th>
-                        <th scope="col">Situação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(isset($resultadosPagar))
-                    @foreach ($resultadosPagar as $resultado)
-                    @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
-                    <tr
-                        class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
-                        @if($resultado->situacao_parcela == 0)
-                        <th><input type="checkbox" id="" name="checkboxes[]" value="{{ $resultado->parcela_id }}" />
-                        </th>
-                        @else
-                        <th></th>
-                        @endif
-                        <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
-                        <th scope="row">{{$resultado->numero_parcela}} / {{ $resultado->quantidade_parcela_debito }}
-                        </th>
-                        <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
-                        @if(empty($resultado->data_vencimento_parcela))
-                        <th scope="row"></th>
-                        @else
-                        <th scope="row">
-                            {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
-                        </th>
-                        @endif
-                        <th scope="row">R$ {{ number_format($resultado->valor_parcela, 2, ',', '.') }}</th>
-                        <th scope="row">R$ {{ number_format($resultado->valor_pago_parcela, 2, ',', '.') }}</th>
-                        @if(empty($resultado->data_recebimento_parcela))
-                        <th scope="row"></th>
-                        @else
-                        <th scope="row">
-                            {{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
-                        </th>
-                        @endif
-                        @if($resultado->situacao_parcela == 0)
-                        <th scope="row">Em Aberto</th>
-                        @else
-                        <th scope="row">Pago</th>
-                        @endif
-                    </tr>
-                    @endif
-                    @endforeach
-                    @endif
-                </tbody>
-            </form>
-        </table>
-        @if(isset($empreendimentos))
+    @foreach($resultadosPagar as $i)
+    @if (!in_array($i->tipo_debito_descricao, $displayedDebitoDescricao) && $i->data_vencimento_parcela != null)
+    <div class="card">
+        <h5 class="card-header">{{ $i->tipo_debito_descricao}}</h5>
         <div class="card-footer">
-            <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+            @if (isset($resultadosPagar))
+            <p>
+                Cadastrado por <strong>{{ $resultadosPagar[0]->cadastrado_usuario_nome }}</strong> em
+                {{ \Carbon\Carbon::parse( $resultadosPagar[0]->debito_data_cadastro)->format('d/m/Y') }}
+            </p>
+            @if (isset($alterado_por_user))
+            <p>
+                Última alteração feita por <strong>{{ $resultadosPagar[0]->alterado_usuario_nome }}</strong> em
+                {{ \Carbon\Carbon::parse( $resultadosPagar[0]->debito_data_alteracao)->format('d/m/Y') }}
+            </p>
+            @endif
+            @endif
         </div>
-        @endif
+        <div class="card-body">
+            <table class="table">
+                <form action="" method="post">
+                    @csrf
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nº Parcela</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Data Vencimento</th>
+                            <th scope="col">Valor Parcela</th>
+                            <th scope="col">Valor Pago</th>
+                            <th scope="col">Data Recebimento</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($resultadosPagar))
+                        @foreach ($resultadosPagar as $resultado)
+                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao && $resultado->data_vencimento_parcela != null)
+                        <tr
+                            class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
+                            @if($resultado->situacao_parcela == 0)
+                            <th><input type="checkbox" id="" name="checkboxes[]" value="{{ $resultado->parcela_id }}" />
+                            </th>
+                            @else
+                            <th></th>
+                            @endif
+                            <th scope="row" class="id_table">{{$resultado->parcela_id}}</th>
+                            <th scope="row">{{$resultado->numero_parcela}} /
+                                {{ $resultado->quantidade_parcela_debito }}
+                            </th>
+                            <th scope="row">{{$resultado->descricao_debito_descricao}}</th>
+                            @if(empty($resultado->data_vencimento_parcela))
+                            <th scope="row"></th>
+                            @else
+                            <th scope="row">
+                                {{ \Carbon\Carbon::parse($resultado->data_vencimento_parcela)->format('d/m/Y') }}
+                            </th>
+                            @endif
+                            <th scope="row">R$ {{ number_format($resultado->valor_parcela, 2, ',', '.') }}</th>
+                            <th scope="row">R$ {{ number_format($resultado->valor_pago_parcela, 2, ',', '.') }}
+                            </th>
+                            @if(empty($resultado->data_recebimento_parcela))
+                            <th scope="row"></th>
+                            @else
+                            <th scope="row">
+                                {{ \Carbon\Carbon::parse($resultado->data_recebimento_parcela)->format('d/m/Y') }}
+                            </th>
+                            @endif
+                            @if($resultado->situacao_parcela == 0)
+                            <th scope="row">Em Aberto</th>
+                            @else
+                            <th scope="row">Pago</th>
+                            @endif
+                        </tr>
+                        @endif
+                        @endforeach
+                        @endif
+                    </tbody>
+                </form>
+            </table>
+            @if(isset($empreendimentos))
+            <div class="card-footer">
+                <p>Exibindo {{$empreendimentos->count()}} de {{ $total_empreendimentos }} registros</p>
+            </div>
+            @endif
 
+        </div>
     </div>
+
+
+    @php
+    $displayedDebitoDescricao[] = $i->tipo_debito_descricao;
+    @endphp
+
+    @endif
+
+    @endforeach
+
+    @endif
 </div>
 
-
-@php
-$displayedDebitoDescricao[] = $i->tipo_debito_descricao;
-@endphp
-
-@endif
-
-@endforeach
-
-@endif
 
 @endsection
 

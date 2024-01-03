@@ -301,6 +301,28 @@ TABLE RESULTADOS
 .btn-icone-listagem span{
     font-size: 20px;
 }
+
+
+
+.separacaoDebitos{
+    border: 1px solid #b4b4b4;
+    width: 100%;
+    border-radius: 0.3em;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+#tituloSeparacaoDebitos{
+    text-align: center;
+    font-size: 23px;
+    font-weight: 700;
+}
+#data_venda_lote_gestao{
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    color: #5f5f5f;
+}
+
 /*-----
 CALENDARIO
 -----*/

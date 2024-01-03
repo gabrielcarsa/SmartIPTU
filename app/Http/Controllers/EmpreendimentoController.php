@@ -107,6 +107,8 @@ class EmpreendimentoController extends Controller
             'lote.cliente_id as lote_cliente_id',
             'cliente.nome as nome_cliente',
             'cliente.razao_social as razao_social__cliente',
+            'cliente.telefone1 as tel1',
+            'cliente.telefone2 as tel2',
         )
         ->leftJoin('lote', 'quadra.id', '=', 'lote.quadra_id')
         ->join('cliente', 'cliente.id', '=', 'lote.cliente_id')
