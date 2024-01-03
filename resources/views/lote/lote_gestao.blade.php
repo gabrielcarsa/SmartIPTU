@@ -165,7 +165,7 @@
                     <tbody>
                         @if(isset($resultadosReceber))
                         @foreach ($resultadosReceber as $resultado)
-                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
+                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao && $resultado->data_vencimento_parcela != null)
                         <tr
                             class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
                             @if($resultado->situacao_parcela == 0)
@@ -279,7 +279,7 @@
                     <tbody>
                         @if(isset($resultadosPagar))
                         @foreach ($resultadosPagar as $resultado)
-                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao)
+                        @if($resultado->tipo_debito_descricao == $i->tipo_debito_descricao && $resultado->data_vencimento_parcela != null)
                         <tr
                             class="resultados-table text-center @if (\Carbon\Carbon::parse($resultado->data_vencimento_parcela)->isPast() && $resultado->situacao_parcela == 0) parcela_atrasada @elseif ($resultado->situacao_parcela == 1) parcela_paga @endif">
                             @if($resultado->situacao_parcela == 0)
