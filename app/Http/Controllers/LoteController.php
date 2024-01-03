@@ -150,6 +150,7 @@ class LoteController extends Controller
             'l.id AS lote_id',
             'l.lote',
             'l.inscricao_municipal',
+            'l.data_venda',
             'q.id AS quadra_id',
             'q.nome AS quadra_nome',
             'd.id AS debito_id',
@@ -172,6 +173,8 @@ class LoteController extends Controller
             'p.situacao AS situacao_parcela',
             'cliente.nome AS nome_cliente',
             'cliente.razao_social AS razao_social_cliente',
+            'cliente.telefone1 AS tel1',
+            'cliente.telefone1 AS tel2',
             'users_cadastrado.name AS cadastrado_usuario_nome',
             'users_alterado.name AS alterado_usuario_nome'
         )
@@ -193,6 +196,7 @@ class LoteController extends Controller
             'l.id AS lote_id',
             'l.lote',
             'l.inscricao_municipal',
+            'l.data_venda',
             'q.id AS quadra_id',
             'q.nome AS quadra_nome',
             'd.id AS debito_id',
@@ -215,6 +219,8 @@ class LoteController extends Controller
             'p.situacao AS situacao_parcela',
             'cliente.nome AS nome_cliente',
             'cliente.razao_social AS razao_social_cliente',
+            'cliente.telefone1 AS tel1',
+            'cliente.telefone1 AS tel2',
             'users_cadastrado.name AS cadastrado_usuario_nome',
             'users_alterado.name AS alterado_usuario_nome'
         )
@@ -235,6 +241,9 @@ class LoteController extends Controller
     
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
+        $totalValorReceber = 0;
+        $totalValorPagar = 0;
+
 
         // Percorra a coleção de resultados
         if($resultadosPagar != null){
@@ -243,6 +252,8 @@ class LoteController extends Controller
                 if ($resultado->situacao_parcela == 0) {
                     // Adicione o valor da parcela ao valor total
                     $totalValorParcelas += $resultado->valor_parcela;
+                    $totalValorPagar += $resultado->valor_parcela;
+                    
                 }
             }
         }
@@ -254,12 +265,18 @@ class LoteController extends Controller
                 if ($resultado->situacao_parcela == 0) {
                     // Adicione o valor da parcela ao valor total
                     $totalValorParcelas += $resultado->valor_parcela;
+                    $totalValorReceber += $resultado->valor_parcela;
                 }
             }
-
         }
 
-        return view('lote/lote_gestao', compact('resultadosReceber', 'resultadosPagar'), compact('totalValorParcelas'));
+        $valoresTotais = [
+            'totalValorParcelas' => $totalValorParcelas,
+            'totalValorReceber' => $totalValorReceber,
+            'totalValorPagar' => $totalValorPagar,
+        ];
+
+        return view('lote/lote_gestao', compact('resultadosReceber', 'resultadosPagar'), compact('valoresTotais'));
 
     }
 
