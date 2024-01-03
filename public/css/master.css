@@ -305,14 +305,14 @@ TABLE RESULTADOS
 
 
 .separacaoDebitos{
-    text-align: center;
-    border: 1px solid black;
-    background-image: linear-gradient(#a7a7a7, #fff); 
+    border: 1px solid #EDEDED;
     width: 100%;
     border-radius: 0.3em;
     padding: 15px;
+    margin-bottom: 10px;
 }
-.separacaoDebitos h5{
+#tituloSeparacaoDebitos{
+    text-align: center;
     font-size: 23px;
     font-weight: 700;
 }
@@ -323,22 +323,6 @@ TABLE RESULTADOS
     color: #5f5f5f;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #000; /* Cor de fundo das setas */
-    margin: 0; 
-}
-.carousel-control-prev,
-.carousel-control-next {
-    position: absolute;
-    height: 15px !important;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1; /* Garante que os botões fiquem acima do conteúdo */
-}
-.carousel-item{
-    margin-top: 20px;
-}
 /*-----
 CALENDARIO
 -----*/
