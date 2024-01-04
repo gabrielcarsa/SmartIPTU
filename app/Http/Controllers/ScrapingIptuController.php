@@ -178,9 +178,9 @@ class ScrapingIptuController extends Controller
             return $resultado;
      
          } catch (\Exception $e) {
-             //dd('Erro durante a requisição GET: ' . $e->getMessage());
-             return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
- 
+            //dd('Erro durante a requisição GET: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
+
          }
     }
 
@@ -193,9 +193,14 @@ class ScrapingIptuController extends Controller
         //atribuindo a variavel resultado da funcao scraping Campo Grande
         $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
 
-        //separando variaveis conforme resultado
-        $resultadoParcela = $resultadoScraping['resultadoParcela'];
-        $resultadoLote = $resultadoScraping['resultadoLote'];
+        try{
+            //separando variaveis conforme resultado
+            $resultadoParcela = $resultadoScraping['resultadoParcela'];
+            $resultadoLote = $resultadoScraping['resultadoLote'];
+        }catch(\Exception $e){
+            //dd('Erro durante a requisição GET: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
+        }
 
         //retornando view
         return view('scraping/iptu_campo_grande_ms', compact('resultadoParcela', 'resultadoLote', 'lote_id'));
@@ -211,9 +216,15 @@ class ScrapingIptuController extends Controller
         //atribuindo a variavel resultado da funcao scraping Campo Grande
         $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
 
-        //separando variaveis conforme resultado
-        $resultadoParcela = $resultadoScraping['resultadoParcela'];
-        $resultadoLote = $resultadoScraping['resultadoLote'];
+        try{
+            //separando variaveis conforme resultado
+            $resultadoParcela = $resultadoScraping['resultadoParcela'];
+            $resultadoLote = $resultadoScraping['resultadoLote'];
+        }catch(\Exception $e){
+            //dd('Erro durante a requisição GET: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
+        }
+       
        
         //definindo variaveis
         $qtd_debitos = count($resultadoParcela);
@@ -224,11 +235,15 @@ class ScrapingIptuController extends Controller
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');  
         
+        //percorrer debitos
         for($i = 1; $i <= $qtd_debitos; $i++){
+            //zerando variaveis
             $aux_debito_receber = 0;
             $aux_debito_pagar = 0;    
+
             $qtd_parcelas = count($resultadoParcela[$i-1]['parcelas']);
 
+            //percorrer parcelas
             for($j = 1; $j <= $qtd_parcelas; $j++){
                 $data_vencimento_aux = Carbon::createFromFormat('d/m/Y', $resultadoParcela[$i-1]['parcelas'][$j-1]['vencimento'])->format('Y-m-d');
    
@@ -239,7 +254,7 @@ class ScrapingIptuController extends Controller
                         $aux_debito_pagar++;
 
                        //Cadastrar Debitos
-                       $debito = $ScrapingController->cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id, $aux_debito_pagar, $aux_debito_receber);
+                       $debito = $ScrapingController->cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id);
                     }
 
                     // Cadastrar Parcelas
@@ -251,13 +266,12 @@ class ScrapingIptuController extends Controller
                         $aux_debito_receber++;
     
                        //Cadastrar Debitos
-                       $debito = $ScrapingController->cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id, $aux_debito_pagar, $aux_debito_receber);
+                       $debito = $ScrapingController->cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id);
                     
                     }
 
                     //Cadastro de Parcelas
                     $cadastroParcelas = $ScrapingController->cadastrarParcelas($debito, $resultadoParcela, $i, $j, $data_vencimento_aux, $lote, $usuario_id);
-
 
                 }
             }
@@ -267,12 +281,15 @@ class ScrapingIptuController extends Controller
     }
 
     //FUNCÃO PARA CADASTRAR DEBITOS
-    public function cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id, $aux_debito_pagar, $aux_debito_receber){
+    public function cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id){
         $debito = new Debito();
+
+        //Consultando Tipo de Debito
         $tipo_debito = TipoDebito::whereRaw("LOWER(`descricao`) LIKE ?", ['%' . strtolower($resultadoParcela[$i-1]['titulo']) . '%'])->first();
        
         //Verificando se existe o tipo de débito
         if($tipo_debito == null){
+            //Caso não exista criar novo
             $novo_tipo_debito = new TipoDebito();
             $novo_tipo_debito->descricao = strtoupper($resultadoParcela[$i-1]['titulo']);
             $novo_tipo_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
@@ -281,20 +298,20 @@ class ScrapingIptuController extends Controller
             $debito->tipo_debito_id = $novo_tipo_debito->id;
 
         }else{
+            //Caso exista
             $debito->tipo_debito_id = $tipo_debito->id;
         }
         $debito->lote_id = $lote_id;
         $debito->titular_conta_id = 1;
         $debito->data_vencimento  = Carbon::createFromFormat('d/m/Y', $resultadoParcela[0]['parcelas'][0]['vencimento'])->format('Y-m-d');
-        $debito->quantidade_parcela = count($resultadoParcela[$i-1]['parcelas']);
         
-        
+        //Consultando Descricao de Debitos
         $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $resultadoParcela[$i-1]['parcelas'][$j-1]['descricao_debito'] . '%')->first();
         
         //Verificando se existe o descricao de débito
         if($descricao_debito == null){
             $novo_descricao_debito = new DescricaoDebito();
-            $novo_descricao_debito->descricao = strtolower($resultadoParcela[$i-1]['parcelas'][$j-1]['descricao_debito']);
+            $novo_descricao_debito->descricao = strtoupper($resultadoParcela[$i-1]['parcelas'][$j-1]['descricao_debito']);
             $novo_descricao_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
             $novo_descricao_debito->cadastrado_usuario_id = $usuario_id;
             $novo_descricao_debito->save();
@@ -304,11 +321,13 @@ class ScrapingIptuController extends Controller
             $debito->descricao_debito_id = $descricao_debito->id;
         }
         
-        
+        //Verificando se é parcelamento
         if($resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_parcelamento'] == ""){
             $valor_parcela = str_replace(',', '.', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos']);
+            $debito->quantidade_parcela = 1;
         }else if($resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos'] == "0,00"){
             $valor_parcela = str_replace(',', '.', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_parcelamento']);
+            $debito->quantidade_parcela = count($resultadoParcela[$i-1]['parcelas']);
         }
 
         $valor_corrigido_parcela = str_replace(',', '.', $valor_parcela);
