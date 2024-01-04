@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 
@@ -49,62 +49,67 @@
                             group
                         </span>Cadastro e controle de usuários</a></li>
                 <li>
-                    <a href="">
+                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="material-symbols-outlined">
                             universal_currency_alt
                         </span>Financeiro
-                        <span class="material-symbols-outlined">
-                            arrow_drop_down
-                        </span>
                     </a>
-                </li>
-                <div id="collapseFinanceiro">
-                    <ul class="sublist-offcanvas">
-                        <li><a href="{{ route('calendario') }}"><span class="material-symbols-outlined">
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('calendario') }}"><span class="material-symbols-outlined">
                                     calendar_month
                                 </span>Calendário Financeiro</a></li>
-                        <li><a href="{{ route('contas_receber') }}"><span class="material-symbols-outlined">
+                        <li><a class="dropdown-item" href="{{ route('contas_receber') }}"><span class="material-symbols-outlined">
                                     attach_money
                                 </span>Contas a receber</a></li>
-                        <li><a href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
+                        <li><a class="dropdown-item" href="{{ route('contas_pagar') }}"><span class="material-symbols-outlined">
                                     money_off
                                 </span>Contas a pagar</a></li>
-                        <li><a href="{{ route('movimentacao_financeira') }}"><span class="material-symbols-outlined">
+                        <li><a class="dropdown-item" href="{{ route('movimentacao_financeira') }}"><span class="material-symbols-outlined">
                                     currency_exchange
                                 </span>Movimentação Financeira</a></li>
                     </ul>
-                </div>
+                </li>
 
                 <li>
-                    <a href="#">
+                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="material-symbols-outlined">
                             settings
                         </span>Configurações
-                        <span class="material-symbols-outlined">
-                            arrow_drop_down
-                        </span>
                     </a>
-                </li>
-                <div id="collapseConfiguracoes">
-                    <ul class="sublist-offcanvas">
-                        <li><a href="{{ route('titular_conta') }}"><span class="material-symbols-outlined">
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('titular_conta') }}">
+                                <span class="material-symbols-outlined">
                                     person_pin
-                                </span>Central de Contas</a></li>
-                        <li><a href="{{ route('tipo_debito') }}"><span class="material-symbols-outlined">
+                                </span>Central de Contas</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('tipo_debito') }}">
+                                <span class="material-symbols-outlined">
                                     request_quote
-                                </span>Tipo de Débitos</a></li>
-                        <li><a href="{{ route('descricao_debito') }}"><span class="material-symbols-outlined">
+                                </span>Tipo de Débitos</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('descricao_debito') }}">
+                                <span class="material-symbols-outlined">
                                     description
-                                </span>Descrição de Débitos</a></li>
-                        <li><a href="{{ route('categoria_pagar') }}"><span class="material-symbols-outlined">
+                                </span>Descrição de Débitos</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('categoria_pagar') }}">
+                                <span class="material-symbols-outlined">
                                     attach_money
-                                </span>Categoria a Pagar</a></li>
-                        <li><a href="{{ route('categoria_receber') }}"><span class="material-symbols-outlined">
+                                </span>Categoria a Pagar</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('categoria_receber') }}">
+                                <span class="material-symbols-outlined">
                                     money_off
-                                </span>Categoria a Receber</a></li>
-                    </ul>
-                </div>
+                                </span>Categoria a Receber</a>
+                        </li>
 
+                    </ul>
+                </li>
 
             </ul>
         </div>

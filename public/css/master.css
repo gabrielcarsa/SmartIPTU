@@ -301,7 +301,9 @@ TABLE RESULTADOS
 .btn-icone-listagem span{
     font-size: 20px;
 }
-
+.dropdown-item{
+    font-size: 15px;
+}
 
 
 .separacaoDebitos{

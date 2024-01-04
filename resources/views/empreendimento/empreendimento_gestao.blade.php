@@ -91,13 +91,22 @@
                     </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
-                        <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
-                        <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}" class="btn-acao-listagem">Novo
-                            Contrato</a>
-                        <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
-                            class="btn-acao-listagem">Adicionar Débitos</a>
-                        <a href="../../lote/editar/{{$lote->lote_id}}"
-                            class="btn-acao-listagem-secundary">Ver/Editar</a>
+                        <div class="dropdown">
+                            <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
+                            <a class="btn-acao-listagem dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Ações
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
+                                        class="dropdown-item">Novo
+                                        Contrato</a></li>
+                                <li><a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
+                                        class="dropdown-item">Adicionar Débitos</a></li>
+                                <li><a href="../../lote/editar/{{$lote->lote_id}}" class="dropdown-item">Ver/Editar</a>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
