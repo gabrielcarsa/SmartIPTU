@@ -31,6 +31,10 @@
     <span class="material-symbols-outlined">
         add
     </span>Novo Lote</a>
+    <a class="btn btn-primary btn-add" href="{{ route('importarLotesCSV', ['user_id' => Auth::user()->id, 'empreendimento_id' => $empreendimento->id]) }}" style="margin-bottom: 20px">
+    <span class="material-symbols-outlined">
+        expand_less
+    </span>Subir planilha de Lotes</a>
 
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>

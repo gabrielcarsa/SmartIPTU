@@ -20,6 +20,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovimentacaoFinanceiraController;
 use App\Http\Controllers\ContaCorrenteController;
 use App\Http\Controllers\ScrapingIptuController;
+use App\Http\Controllers\ImportarController;
 
 
 /*
@@ -179,4 +180,6 @@ Route::middleware([
         Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
         Route::get('/scraping/{inscricao_municipal}/{lote_id}/{user_id}',[ScrapingIptuController::class, 'iptuCampoGrandeAdicionarDireto'])->name('iptuCampoGrandeAdicionarDireto');
         
+        //SUBIR PLANILHAS DE DADOS
+        Route::get('/importar_lotes/{user_id}/{empreendimento_id}', [ImportarController::class, 'importarLotesCSV'])->name('importarLotesCSV');
 });
