@@ -7,6 +7,20 @@
     {{ session('success') }}
 </div>
 @endif
+@if (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
 <h2>{{$empreendimento->nome}}</h2>
 <a class="btn btn-primary btn-add" href="../../quadra/novo/{{$empreendimento->id}}" style="margin-bottom: 20px">
@@ -73,12 +87,15 @@
                     <td>{{$lote->nome_cliente}}</td>
                     @endif
                     <td>{{$lote->inscricao_municipal}}</td>
-                    <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}</td>
+                    <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
+                    </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
                         <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
-                        <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
-                            class="btn-acao-listagem">Novo Contrato</a>
+                        <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}" class="btn-acao-listagem">Novo
+                            Contrato</a>
+                        <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
+                            class="btn-acao-listagem">Adicionar Débitos</a>
                         <a href="../../lote/editar/{{$lote->lote_id}}"
                             class="btn-acao-listagem-secundary">Ver/Editar</a>
                     </td>
