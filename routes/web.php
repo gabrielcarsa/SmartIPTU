@@ -177,5 +177,6 @@ Route::middleware([
 
         //SCRAPING  
         Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
+        Route::get('/scraping/{inscricao_municipal}/{lote_id}/{user_id}',[ScrapingIptuController::class, 'iptuCampoGrandeAdicionarDireto'])->name('iptuCampoGrandeAdicionarDireto');
         
 });
