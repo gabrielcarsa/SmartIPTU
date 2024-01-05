@@ -41,7 +41,11 @@ class ImportarController extends Controller
                 $confrontacao_direita = $row[14];
                 $confrontacao_esquerda = $row[15];
                 $nomeCliente = $row[16];
-                $data_venda = Carbon::createFromFormat('d-m-Y', $row[17])->format('Y-m-d');
+                if($row[17] != ""){
+                    $data_venda = Carbon::createFromFormat('d-m-Y', $row[17])->format('Y-m-d');
+                }else{
+                    $data_venda = null;
+                }
 
                 // Buscar o ID do cliente usando Eloquent
                 $idCliente = Cliente::where('nome', $nomeCliente)->value('id');
@@ -50,7 +54,9 @@ class ImportarController extends Controller
                 }
               
                 // Buscar id quadra
-                $idQuadra = Quadra::where('nome', $nomeQuadra)->value('id');
+                $idQuadra = Quadra::where('nome', $nomeQuadra)
+                ->where('empreendimento_id', $empreendimento_id)
+                ->value('id');
 
                 if($idQuadra == null){
                     return redirect()->back()->with('error', 'Quadra não encontrada.');
