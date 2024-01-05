@@ -31,10 +31,34 @@
     <span class="material-symbols-outlined">
         add
     </span>Novo Lote</a>
-    <a class="btn btn-primary btn-add" href="{{ route('importarLotesCSV', ['user_id' => Auth::user()->id, 'empreendimento_id' => $empreendimento->id]) }}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         expand_less
     </span>Subir planilha de Lotes</a>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Selecione a planilha</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Selecione o arquivo no formato .csv</p>
+                <form action="/importar_lotes/{{ Auth::user()->id}}/{{$empreendimento->id}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="csv_file" accept=".csv">
+                    <button type="submit" class="btn btn-primary">Importar</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>

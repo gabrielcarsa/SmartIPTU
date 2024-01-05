@@ -181,5 +181,5 @@ Route::middleware([
         Route::get('/scraping/{inscricao_municipal}/{lote_id}/{user_id}',[ScrapingIptuController::class, 'iptuCampoGrandeAdicionarDireto'])->name('iptuCampoGrandeAdicionarDireto');
         
         //SUBIR PLANILHAS DE DADOS
-        Route::get('/importar_lotes/{user_id}/{empreendimento_id}', [ImportarController::class, 'importarLotesCSV'])->name('importarLotesCSV');
+        Route::post('/importar_lotes/{user_id}/{empreendimento_id}', [ImportarController::class, 'importarLotesCSV'])->name('importarLotesCSV');
 });
