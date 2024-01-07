@@ -248,7 +248,7 @@ class ScrapingIptuController extends Controller
                 $data_vencimento_aux = Carbon::createFromFormat('d/m/Y', $resultadoParcela[$i-1]['parcelas'][$j-1]['vencimento'])->format('Y-m-d');
    
                 //Débito da EMPRESA (PAGAR)
-                if($lote->data_venda > $data_vencimento_aux){
+                if($lote->data_venda > $data_vencimento_aux || $lote->data_venda == ""){
     
                     if($aux_debito_pagar == 0){
                         $aux_debito_pagar++;
