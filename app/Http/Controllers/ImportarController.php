@@ -50,7 +50,7 @@ class ImportarController extends Controller
                 // Buscar o ID do cliente usando Eloquent
                 $idCliente = Cliente::where('nome', $nomeCliente)->value('id');
                 if($idCliente == null){
-                    return redirect()->back()->with('error', 'Cliente não encontrado.');
+                    return redirect()->back()->with('error', 'Cliente'.$nomeCliente.' não encontrado.');
                 }
               
                 // Buscar id quadra

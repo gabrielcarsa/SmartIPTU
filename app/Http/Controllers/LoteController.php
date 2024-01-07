@@ -147,7 +147,6 @@ class LoteController extends Controller
         $empresa = TitularConta::find(1);
         $lote = Lote::find($id);
 
-
         $resultadosPagar = DB::table('lote AS l')
         ->select(
             'l.id AS lote_id',
@@ -186,10 +185,10 @@ class LoteController extends Controller
         ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
         ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
         ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
-        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+        ->leftJoin('parcela_conta_pagar AS p', 'd.id', '=', 'p.debito_id')
+        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
         ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
         ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
-        ->leftJoin('parcela_conta_pagar AS p', 'd.id', '=', 'p.debito_id')
         ->where('l.id', $id)
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
@@ -232,16 +231,14 @@ class LoteController extends Controller
         ->join('cliente', 'cliente.id', '=', 'l.cliente_id') // Corrigido para incluir a tabela cliente
         ->leftJoin('debito AS d', 'l.id', '=', 'd.lote_id')
         ->leftJoin('tipo_debito AS td', 'd.tipo_debito_id', '=', 'td.id')
-        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+        ->leftJoin('parcela_conta_receber AS p', 'd.id', '=', 'p.debito_id')
+        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
         ->leftJoin('users AS users_cadastrado', 'users_cadastrado.id', '=', 'd.cadastrado_usuario_id')
         ->leftJoin('users AS users_alterado', 'users_alterado.id', '=', 'd.alterado_usuario_id')
-        ->leftJoin('parcela_conta_receber AS p', 'd.id', '=', 'p.debito_id')
         ->where('l.id', $id)
         ->orderBy('data_vencimento_parcela', 'ASC') 
         ->get();
 
-   
-    
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
         $totalValorReceber = 0;
