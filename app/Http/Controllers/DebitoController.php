@@ -809,22 +809,6 @@ class DebitoController extends Controller
         $debito->titular_conta_id = 1;
         $debito->data_vencimento  = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][0]['vencimento'])->format('Y-m-d');
         
-        //Consultando Descricao de Debitos
-        $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
-        
-        //Verificando se existe o descricao de débito
-        if($descricao_debito == null){
-            $novo_descricao_debito = new DescricaoDebito();
-            $novo_descricao_debito->descricao = strtolower($debito_scraping['parcelas'][0]['descricao_debito']);
-            $novo_descricao_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
-            $novo_descricao_debito->cadastrado_usuario_id = $usuario_id;
-            $novo_descricao_debito->save();
-            $debito->descricao_debito_id = $novo_descricao_debito->id;
-
-        }else{
-            $debito->descricao_debito_id = $descricao_debito->id;
-        }
-        
         //Verificando se é parcelamento
         if($debito_scraping['parcelas'][$i-1]['valor_total_parcelamento'] == ""){
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
@@ -857,7 +841,24 @@ class DebitoController extends Controller
             }else{
                 $parcela = new ParcelaContaReceber();
             }
-            
+
+            //Consultando Descricao de Debitos
+            $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $debito_scraping['parcelas'][$i-1]['descricao_debito'] . '%')->first();
+        
+
+            //Verificando se existe o descricao de débito
+            if($descricao_debito == null){
+                $novo_descricao_debito = new DescricaoDebito();
+                $novo_descricao_debito->descricao = strtolower($debito_scraping['parcelas'][0]['descricao_debito']);
+                $novo_descricao_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+                $novo_descricao_debito->cadastrado_usuario_id = $usuario_id;
+                $novo_descricao_debito->save();
+                $parcela->descricao_debito_id = $novo_descricao_debito->id;
+
+            }else{
+                $parcela->descricao_debito_id = $descricao_debito->id;
+            }
+
             $parcela->debito_id = $debito_id;
             $parcela->numero_parcela = $i;
             if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
