@@ -748,7 +748,6 @@ class DebitoController extends Controller
         //dd($debito_scraping['parcelas']);
         //dd($debito_scraping['titulo']);
 
-
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');  
         
@@ -764,34 +763,9 @@ class DebitoController extends Controller
                     $debito = $DebitoController->cadastrarDebitosScraping($debito_scraping, $i, $lote_id, $usuario_id);
                    
                 }
+
                 // Cadastrar Parcelas
-                $debito_id = $debito->id;
-                $data_vencimento = $debito->data_vencimento; 
-                $valor_entrada = $debito->valor_entrada;
-                $empresa = TitularConta::find(1);
-
-                    if($lote->data_venda > $data_vencimento_aux || $lote->data_venda == ""){
-                        $parcela = new ParcelaContaPagar();
-                    }else{
-                        $parcela = new ParcelaContaReceber();
-                    }
-                    
-                    $parcela->debito_id = $debito_id;
-                    $parcela->numero_parcela = $i;
-                    if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
-                        $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
-                        $parcela->valor_parcela = str_replace(',', '.', $valorAux);
-                        $parcela->numero_parcela = 1;
-                    }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "" || $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
-                        $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
-                        $parcela->valor_parcela = str_replace(',', '.', $valorAux);
-                        $parcela->numero_parcela = $i;
-                    }
-                    $parcela->cadastrado_usuario_id = $usuario_id;
-                    $parcela->situacao = 0;
-                    $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][$i-1]['vencimento'])->format('Y-m-d');
-
-                    $parcela->save();
+                $cadastroParcelas = $DebitoController->cadastrarParcelasScraping($debito, $debito_scraping, $i, $data_vencimento_aux, $lote, $usuario_id);
                 
             }else{
                 if($aux_debito_receber == 0){
@@ -800,46 +774,26 @@ class DebitoController extends Controller
                     //atribuindo a variavel resultado da funcao de cadastrar debitos
                     $debito = $DebitoController->cadastrarDebitosScraping($debito_scraping, $i, $lote_id, $usuario_id);
                 }
+
                 // Cadastrar Parcelas
-                $debito_id = $debito->id;
-                $data_vencimento = $debito->data_vencimento; 
-                $valor_entrada = $debito->valor_entrada;
-                $empresa = TitularConta::find(1);
-
-                    if($lote->data_venda > $data_vencimento_aux || $lote->data_venda == ""){
-                        $parcela = new ParcelaContaPagar();
-                    }else{
-                        $parcela = new ParcelaContaReceber();
-                    }
-                    
-                    $parcela->debito_id = $debito_id;
-                    if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
-                        $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
-                        $parcela->valor_parcela = str_replace(',', '.', $valorAux);
-                        $parcela->numero_parcela = 1;
-                    }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "" || $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
-                        $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
-                        $parcela->valor_parcela = str_replace(',', '.', $valorAux);
-                        $parcela->numero_parcela = $i;
-                    }
-                    $parcela->cadastrado_usuario_id = $usuario_id;
-                    $parcela->situacao = 0;
-                    $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][$i-1]['vencimento'])->format('Y-m-d');
-
-                    $parcela->save();
+                $cadastroParcelas = $DebitoController->cadastrarParcelasScraping($debito, $debito_scraping, $i, $data_vencimento_aux, $lote, $usuario_id);
+                
             }
         }
         return redirect('lote/gestao/'.$lote_id)->with('success', 'Débito cadastrado com sucesso');
     }
 
+    //FUNCÃO PARA CADASTRAR DEBITOS SCRAPING
     public function cadastrarDebitosScraping($debito_scraping, $i, $lote_id, $usuario_id){
-
+        //Novo Débito
         $debito = new Debito();
 
+        //Consultando Tipo de Debito
         $tipo_debito = TipoDebito::whereRaw("LOWER(`descricao`) LIKE ?", ['%' . strtolower($debito_scraping['titulo']) . '%'])->first();
         
         //Verificando se existe o tipo de débito
         if($tipo_debito == null){
+            //Caso não exista criar novo
             $novo_tipo_debito = new TipoDebito();
             $novo_tipo_debito->descricao = strtolower($debito_scraping['titulo']);
             $novo_tipo_debito->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
@@ -848,13 +802,14 @@ class DebitoController extends Controller
             $debito->tipo_debito_id = $novo_tipo_debito->id;
 
         }else{
+            //Caso exista
             $debito->tipo_debito_id = $tipo_debito->id;
         }
-
         $debito->lote_id = $lote_id;
         $debito->titular_conta_id = 1;
         $debito->data_vencimento  = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][0]['vencimento'])->format('Y-m-d');
         
+        //Consultando Descricao de Debitos
         $descricao_debito = DescricaoDebito::where('descricao', 'like', '%' . $debito_scraping['parcelas'][0]['descricao_debito'] . '%')->first();
         
         //Verificando se existe o descricao de débito
@@ -870,7 +825,7 @@ class DebitoController extends Controller
             $debito->descricao_debito_id = $descricao_debito->id;
         }
         
-        
+        //Verificando se é parcelamento
         if($debito_scraping['parcelas'][$i-1]['valor_total_parcelamento'] == ""){
             $valor_parcela = str_replace(',', '.', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
             $debito->quantidade_parcela = 1;
@@ -890,4 +845,34 @@ class DebitoController extends Controller
         return $debito;
     }
 
+    //FUNÇÃO PARA CADASTRAR PARCELAS SCRAPING
+    public function cadastrarParcelasScraping($debito, $debito_scraping, $i, $data_vencimento_aux, $lote, $usuario_id){
+        $debito_id = $debito->id;
+        $data_vencimento = $debito->data_vencimento; 
+        $valor_entrada = $debito->valor_entrada;
+        $empresa = TitularConta::find(1);
+
+            if($lote->data_venda > $data_vencimento_aux || $lote->data_venda == ""){
+                $parcela = new ParcelaContaPagar();
+            }else{
+                $parcela = new ParcelaContaReceber();
+            }
+            
+            $parcela->debito_id = $debito_id;
+            $parcela->numero_parcela = $i;
+            if($debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "" || $debito_scraping['parcelas'][0]['valor_total_parcelamento'] == "0,00"){
+                $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_debitos']);
+                $parcela->valor_parcela = str_replace(',', '.', $valorAux);
+                $parcela->numero_parcela = 1;
+            }else if($debito_scraping['parcelas'][0]['valor_total_debitos'] == "" || $debito_scraping['parcelas'][0]['valor_total_debitos'] == "0,00"){
+                $valorAux = str_replace('.', '', $debito_scraping['parcelas'][$i-1]['valor_total_parcelamento']);
+                $parcela->valor_parcela = str_replace(',', '.', $valorAux);
+                $parcela->numero_parcela = $i;
+            }
+            $parcela->cadastrado_usuario_id = $usuario_id;
+            $parcela->situacao = 0;
+            $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $debito_scraping['parcelas'][$i-1]['vencimento'])->format('Y-m-d');
+
+            $parcela->save();
+    }
 }
