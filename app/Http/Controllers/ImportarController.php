@@ -82,6 +82,8 @@ class ImportarController extends Controller
                     'confrontacao_esquerda' => $confrontacao_esquerda,
                     'cliente_id' => $idCliente,
                     'data_venda' => trim($data_venda),
+                    'data_cadastro' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'cadastrado_usuario_id' => 1, //ALTERAR
                 ]);
             }
     
