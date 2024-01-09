@@ -26,16 +26,16 @@ class ClienteController extends Controller
         // Verifique se o campo "nome" está preenchido no formulário
         if ($request->filled('nome')) {
             $query->where(function ($subquery) use ($request) {
-                $subquery->where('nome', 'ilike', '%' . $request->input('nome') . '%')
-                    ->orWhere('razao_social', 'ilike', '%' . $request->input('nome') . '%');
+                $subquery->where('nome', 'like', '%' . $request->input('nome') . '%')
+                    ->orWhere('razao_social', 'like', '%' . $request->input('nome') . '%');
             });
         }
     
         // Verifique se o campo "cpf_cnpj" está preenchido no formulário
         if ($request->filled('cpf_cnpj')) {
             $query->where(function ($subquery) use ($request) {
-                $subquery->where('cpf', 'ilike', '%' . $request->input('cpf_cnpj') . '%')
-                    ->orWhere('cnpj', 'ilike', '%' . $request->input('cpf_cnpj') . '%');
+                $subquery->where('cpf', 'like', '%' . $request->input('cpf_cnpj') . '%')
+                    ->orWhere('cnpj', 'like', '%' . $request->input('cpf_cnpj') . '%');
             });
         }
     

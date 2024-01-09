@@ -48,10 +48,13 @@ class ImportarController extends Controller
                 }
 
                 // Buscar o ID do cliente usando Eloquent
-                $idCliente = Cliente::where('nome', $nomeCliente)->value('id');
-                if($idCliente == null){
-                    return redirect()->back()->with('error', 'Cliente'.$nomeCliente.' não encontrado.');
+                if($nomeCliente != ""){
+                    $idCliente = Cliente::where('nome', $nomeCliente)->value('id');
+                    if($idCliente == null){
+                        return redirect()->back()->with('error', 'Cliente'.$nomeCliente.' não encontrado.');
+                    }
                 }
+
               
                 // Buscar id quadra
                 $idQuadra = Quadra::where('nome', $nomeQuadra)
@@ -80,8 +83,8 @@ class ImportarController extends Controller
                     'confrontacao_fundo' => $confrontacao_fundo ,
                     'confrontacao_direita' => $confrontacao_direita ,
                     'confrontacao_esquerda' => $confrontacao_esquerda,
-                    'cliente_id' => $idCliente,
-                    'data_venda' => trim($data_venda),
+                    'cliente_id' => $nomeCliente != "" ? $idCliente : null,
+                    'data_venda' => $nomeCliente != "" ? trim($data_venda) : null,
                     'data_cadastro' => Carbon::now()->format('Y-m-d H:i:s'),
                     'cadastrado_usuario_id' => 1, //ALTERAR
                 ]);
