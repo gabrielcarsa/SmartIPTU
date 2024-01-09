@@ -148,15 +148,18 @@
                 <label for="" class="form-label">Situação</label><br>
 
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+                    <input class="form-check-input" type="checkbox" id="situacaoVencer" name="situacaoVencer"
+                        onclick="handleCheckboxClickSituacao('situacaoVencer')">
                     <label class="form-check-label" for="inlineCheckbox1">A vencer</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2">
+                    <input class="form-check-input" type="checkbox" id="situacaoPago" name="situacaoPago"
+                        onclick="handleCheckboxClickSituacao('situacaoPago')">
                     <label class="form-check-label" for="inlineCheckbox2">Pago</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+                    <input class="form-check-input" type="checkbox" checked id="situacaoTodos" name="situacaoTodos"
+                        onclick="handleCheckboxClickSituacao('situacaoTodos')">
                     <label class="form-check-label" for="inlineCheckbox1">Todos</label>
                 </div>
             </div>
@@ -165,12 +168,14 @@
                 <label for="" class="form-label">A Receber referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
-                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteLotes')">
+                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}
+                        onclick="handleCheckboxClick('referenteLotes')">
                     <label class="form-check-label" for="referenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteOutros') is-invalid @enderror" type="checkbox"
-                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteOutros')">
+                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }}
+                        onclick="handleCheckboxClick('referenteOutros')">
                     <label class="form-check-label" for="referenteOutros">Outros</label>
                 </div>
             </div>
@@ -261,6 +266,7 @@
                                         </p>
                                         <p>Valor recebido: R$
                                             {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                                        <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
                                         <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                                         <p>Alterado por: {{$resultado->alterado_por}}</p>
                                         <p>Baixado por: {{$resultado->baixado_por}}</p>
@@ -362,6 +368,20 @@ function handleCheckboxClick(clickedCheckboxId) {
         document.getElementById('referenteOutros').checked = false;
     } else if (clickedCheckboxId === 'referenteOutros') {
         document.getElementById('referenteLotes').checked = false;
+    }
+}
+
+function handleCheckboxClickSituacao(clickedCheckboxId) {
+    // Desmarcar o outro checkbox
+    if (clickedCheckboxId === 'situacaoTodos') {
+        document.getElementById('situacaoPago').checked = false;
+        document.getElementById('situacaoVencer').checked = false;
+    } else if (clickedCheckboxId === 'situacaoPago') {
+        document.getElementById('situacaoVencer').checked = false;
+        document.getElementById('situacaoTodos').checked = false;
+    } else if (clickedCheckboxId === 'situacaoVencer') {
+        document.getElementById('situacaoPago').checked = false;
+        document.getElementById('situacaoTodos').checked = false;
     }
 }
 $(document).ready(function() {

@@ -21,6 +21,7 @@ use App\Http\Controllers\MovimentacaoFinanceiraController;
 use App\Http\Controllers\ContaCorrenteController;
 use App\Http\Controllers\ScrapingIptuController;
 use App\Http\Controllers\ImportarController;
+use App\Http\Controllers\CobrancaController;
 
 
 /*
@@ -182,4 +183,8 @@ Route::middleware([
         
         //SUBIR PLANILHAS DE DADOS
         Route::post('/importar_lotes/{user_id}/{empreendimento_id}', [ImportarController::class, 'importarLotesCSV'])->name('importarLotesCSV');
-});
+
+        // ROTAS PARA COBRANÇA
+        Route::get('/cobranca',[CobrancaController::class, 'gestao_cobranca'])->name('cobranca');
+
+    });
