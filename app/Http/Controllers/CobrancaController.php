@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Empreendimento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CobrancaController extends Controller
 {
@@ -16,4 +17,5 @@ class CobrancaController extends Controller
 
         return view('cobranca/cobranca_gestao', compact('data'));
     }
+
 }

@@ -67,7 +67,7 @@ class ImportarController extends Controller
                     'quadra_id' => $idQuadra,
                     'lote' => $lote,
                     'metros_quadrados' => $metros_quadrados,
-                    'valor' => $valor,
+                    'valor' => ($valor != '') ? floatval(str_replace(',', '.', $valor)) : null,
                     'endereco' => $endereco,
                     'matricula' => $matricula,
                     'inscricao_municipal' => $inscricao_municipal,
@@ -81,7 +81,7 @@ class ImportarController extends Controller
                     'confrontacao_direita' => $confrontacao_direita ,
                     'confrontacao_esquerda' => $confrontacao_esquerda,
                     'cliente_id' => $idCliente,
-                    'data_venda' => $data_venda,
+                    'data_venda' => trim($data_venda),
                 ]);
             }
     

@@ -7,7 +7,7 @@
 </h2>
 
 <div class="card">
-    <h5 class="card-header">Gerar relatório para cobrança*</h5>
+    <h5 class="card-header">*</h5>
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -24,8 +24,7 @@
     @endif
 
     <div class="card-body">
-        <p>Relatório de débitos de clientes para cobrança</p>
-        <form class="row g-3" action="{{Auth::user()->id}}" method="post" autocomplete="off">
+        <form class="row g-3" action="" method="post" autocomplete="off">
             @csrf
             <div class="col-md-3">
                 <label for="inputEmpreendimento" class="form-label">Selecione o empreendimento*</label>

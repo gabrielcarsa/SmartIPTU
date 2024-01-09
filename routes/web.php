@@ -187,5 +187,4 @@ Route::middleware([
         // ROTAS PARA COBRANÇA
         Route::get('/cobranca',[CobrancaController::class, 'gestao_cobranca'])->name('cobranca');
 
-
     });
