@@ -43,6 +43,7 @@ class ImportarController extends Controller
                 $nomeCliente = $row[16];
                 if($row[17] != ""){
                     $data_venda = Carbon::createFromFormat('d-m-Y', $row[17])->format('Y-m-d');
+                    $data_venda = trim($data_venda);
                 }else{
                     $data_venda = null;
                 }
@@ -50,11 +51,16 @@ class ImportarController extends Controller
                 // Buscar o ID do cliente usando Eloquent
                 if($nomeCliente != ""){
                     $idCliente = Cliente::where('nome', $nomeCliente)->value('id');
-                    if($idCliente == null){
-                        return redirect()->back()->with('error', 'Cliente'.$nomeCliente.' não encontrado.');
-                    }
-                }
 
+                    if($idCliente == null){
+                        $idCliente = Cliente::where('razao_social', $nomeCliente)->value('id');
+                    }
+
+                    if($idCliente == null){
+                        return redirect()->back()->with('error', 'Cliente '.$nomeCliente.' não encontrado.');
+                    }
+
+                }
               
                 // Buscar id quadra
                 $idQuadra = Quadra::where('nome', $nomeQuadra)
@@ -84,9 +90,9 @@ class ImportarController extends Controller
                     'confrontacao_direita' => $confrontacao_direita ,
                     'confrontacao_esquerda' => $confrontacao_esquerda,
                     'cliente_id' => $nomeCliente != "" ? $idCliente : null,
-                    'data_venda' => $nomeCliente != "" ? trim($data_venda) : null,
+                    'data_venda' => $data_venda,
                     'data_cadastro' => Carbon::now()->format('Y-m-d H:i:s'),
-                    'cadastrado_usuario_id' => 1, //ALTERAR
+                    'cadastrado_usuario_id' => $user_id,
                 ]);
             }
     
