@@ -277,7 +277,7 @@ class ScrapingIptuController extends Controller
             }
             
         }
-        return redirect()->back()->with('success', 'Débito cadastrado com sucesso');
+        return redirect()->back()->with('success', 'Débito do lote '. $lote->nome .' cadastrado com sucesso');
     }
 
     //FUNCÃO PARA CADASTRAR DEBITOS
