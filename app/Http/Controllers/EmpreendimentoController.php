@@ -113,7 +113,7 @@ class EmpreendimentoController extends Controller
         ->leftJoin('lote', 'quadra.id', '=', 'lote.quadra_id')
         ->join('cliente', 'cliente.id', '=', 'lote.cliente_id')
         ->where('quadra.empreendimento_id', '=', $id)
-        ->orderByRaw('quadra.nome, CAST(lote.lote AS UNSIGNED)')
+        ->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED), CAST(lote.lote AS UNSIGNED)')
         ->get();
 
         $total_lotes = $resultado->count();
