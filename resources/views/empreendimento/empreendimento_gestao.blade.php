@@ -46,7 +46,8 @@
             </div>
             <div class="modal-body">
                 <p>Selecione o arquivo no formato .csv</p>
-                <form action="/importar_lotes/{{ Auth::user()->id}}/{{$empreendimento->id}}" method="post" enctype="multipart/form-data">
+                <form action="/importar_lotes/{{ Auth::user()->id}}/{{$empreendimento->id}}" method="post"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="file" name="csv_file" accept=".csv">
                     <button type="submit" class="btn btn-primary">Importar</button>
@@ -123,7 +124,6 @@
                             <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
                             <a class="btn-acao-listagem dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Ações
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
