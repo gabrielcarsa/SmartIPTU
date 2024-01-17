@@ -886,4 +886,68 @@ class ContaReceberController extends Controller
         }
         return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
     }
+
+    function estornar_pagamento($user_id, Request $request){
+    
+        $idParcelas = $request->get('id_parcela', []);
+        $dataRecebimento = $request->get('data_pagamento_recebimento', []);
+        $valorRecebido = $request->get('valor', []);
+
+        $i = 0;
+        foreach ($idParcelas as $id) {
+            $parcela = ParcelaContaReceber::find($id);
+            $parcela->valor_recebido = null; 
+            $parcela->data_recebimento = null;
+            $parcela->data_baixa = null;
+            $parcela->usuario_baixa_id = $user_id;
+            $parcela->situacao = 0;
+
+            //Selecionar o ID do movimentacao financeira
+            $movimentacao_financeira_id = $parcela->movimentacao_financeira_id;
+            $parcela->movimentacao_financeira_id = null; 
+            
+
+            //Se a conta está relacionada a uma movimentação
+            if ($movimentacao_financeira_id != null) {
+                $movimentacao_financeira = MovimentacaoFinanceira::find($movimentacao_financeira_id);
+
+                //Pegando variáveis necessárias para selecionar e estornar saldo
+                $titular_conta_id = $movimentacao_financeira->titular_conta_id;
+                $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
+
+                $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataRecebimento[$i]))->format('Y-m-d');;
+
+                //Variavel de saldo para manipulacao e verificacao do saldo
+                $saldo = SaldoDiario::where('data', $dataFormatada)
+                ->where('titular_conta_id', $titular_conta_id)
+                ->where('conta_corrente_id', $conta_corrente_id)
+                ->get(); // Saldo do dia
+
+                $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+                 
+                //variavel que será responsavel por alterar-lo
+                $saldo_model = SaldoDiario::where('data', $dataFormatada)
+                ->where('titular_conta_id', $titular_conta_id)
+                ->where('conta_corrente_id', $conta_corrente_id)
+                ->first();
+
+                //Corrigindo valor para salvar
+                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorRecebido[$i]));
+
+                //Atualizando o saldo
+                $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 
+
+                //Salvando alterações
+                $saldo_model->save();
+                $parcela->save();
+                $movimentacao_financeira->delete();
+
+            }else{ //Se não estiver relacionado
+ 
+            }
+            
+            $i++;
+        }
+        return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
+    }
 }

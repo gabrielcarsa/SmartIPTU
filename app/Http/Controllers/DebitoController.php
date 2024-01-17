@@ -45,7 +45,6 @@ class DebitoController extends Controller
         $debito->quantidade_parcela = $request->input('quantidade_parcela');
         $debito->titular_conta_id = 1;
         $debito->data_vencimento = $request->input('data_vencimento');
-        $debito->descricao_debito_id = $request->input('descricao_debito_id');
         
         $valor_parcela = str_replace(',', '.', $request->input('valor_parcela'));
         $debito->valor_parcela = (double) $valor_parcela; // Converter a string diretamente para um número em ponto flutuante
@@ -83,6 +82,8 @@ class DebitoController extends Controller
             $parcela->situacao = 0;
             $parcela->valor_parcela = $debito->valor_parcela;
             $parcela->cadastrado_usuario_id = $usuario;
+            $parcela->descricao_debito_id = $request->input('descricao_debito_id');
+
             if($i > 1){
                 $parcela->data_vencimento = $dataCarbon->addMonth();
             }else{
@@ -145,11 +146,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                 }else if($request->input('origem') == "contas_receber"){
@@ -162,11 +163,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                 }else{
@@ -181,11 +182,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                     }else{// Caso contrário é um débito a receber
@@ -198,11 +199,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                     }
@@ -328,11 +329,11 @@ class DebitoController extends Controller
                         'p.situacao as situacao_parcela',
                         'd.id as debito_id',
                         'd.quantidade_parcela as debito_quantidade_parcela',
-                        'd.descricao_debito_id as debito_descricao_debito_id',  
+                        'p.descricao_debito_id as debito_descricao_debito_id',  
                         'dd.descricao as descricao',       
                     )
                     ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                    ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                     ->where('p.id', $parcelaId)
                     ->get();
                 }else if($request->input('origem') == "contas_receber"){
@@ -345,11 +346,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                 }else{
@@ -364,11 +365,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                     }else{// Caso contrário é um débito a receber
@@ -381,11 +382,11 @@ class DebitoController extends Controller
                             'p.situacao as situacao_parcela',
                             'd.id as debito_id',
                             'd.quantidade_parcela as debito_quantidade_parcela',
-                            'd.descricao_debito_id as debito_descricao_debito_id',  
+                            'p.descricao_debito_id as debito_descricao_debito_id',  
                             'dd.descricao as descricao',       
                         )
                         ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                        ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                        ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                         ->where('p.id', $parcelaId)
                         ->get();
                     }
@@ -502,11 +503,11 @@ class DebitoController extends Controller
                         'p.situacao as situacao_parcela',
                         'd.id as debito_id',
                         'd.quantidade_parcela as debito_quantidade_parcela',
-                        'd.descricao_debito_id as debito_descricao_debito_id',  
+                        'p.descricao_debito_id as debito_descricao_debito_id',  
                         'dd.descricao as descricao',       
                     )
                     ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                    ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                     ->where('p.id', $parcelaId)
                     ->get();
                 }else{// Caso contrário é um débito a receber
@@ -519,11 +520,11 @@ class DebitoController extends Controller
                         'p.situacao as situacao_parcela',
                         'd.id as debito_id',
                         'd.quantidade_parcela as debito_quantidade_parcela',
-                        'd.descricao_debito_id as debito_descricao_debito_id',  
+                        'p.descricao_debito_id as debito_descricao_debito_id',  
                         'dd.descricao as descricao',       
                     )
                     ->leftJoin('debito AS d', 'p.debito_id', '=', 'd.id')
-                    ->leftJoin('descricao_debito AS dd', 'd.descricao_debito_id', '=', 'dd.id')
+                    ->leftJoin('descricao_debito AS dd', 'p.descricao_debito_id', '=', 'dd.id')
                     ->where('p.id', $parcelaId)
                     ->get();
                 }
@@ -599,7 +600,7 @@ class DebitoController extends Controller
             $debito = Debito::find($debito_id);
 
             //Obter descricao debito para adicionar em movimentações
-            $descricao_debito = DescricaoDebito::find($debito->descricao_debito_id);
+            $descricao_debito = DescricaoDebito::find($parcela->descricao_debito_id);
 
             //Se debito está relacionado a uma movimentação
             if ($parcela->movimentacao_financeira_id != null) {
