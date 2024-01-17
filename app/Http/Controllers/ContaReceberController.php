@@ -918,13 +918,11 @@ class ContaReceberController extends Controller
                     'p.data_vencimento as data_vencimento',
                     'p.situacao as situacao_parcela',
                     'cr.id as conta_receber_id',
-                    'dd.descricao as descricao_parcela',
                     'cr.quantidade_parcela as debito_quantidade_parcela',
                     'ccr.descricao as descricao',       
                 )
                 ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
                 ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
-                ->join('descricao_debito AS dd', 'dd.id', '=', 'p.descricao_debito_id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }

@@ -32,7 +32,6 @@
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Descrição</th>
                         <th scope="col">Valor</th>
                         <th scope="col">Data Vencimento</th>
                     </tr>
@@ -46,12 +45,6 @@
                             <input type="text" name="" value="{{ $parcela[0]->id }}" readonly disabled
                                 class="form-control @error('id_parcela') is-invalid @enderror" id="inputIdParcelas">
                             <input type="hidden" name="id_parcela[]" value="{{ $parcela[0]->id }}">
-                        </th>
-                        <th scope="row">
-                            <input type="text" name="descricao_parcela"
-                                value="{{ $parcela[0]->descricao_parcela }}"
-                                readonly
-                                class="form-control @error('descricao_parcela') is-invalid @enderror">
                         </th>
                         <th scope="row">
                             <input type="text" name="valor_parcela"
