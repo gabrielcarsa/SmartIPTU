@@ -887,67 +887,83 @@ class ContaReceberController extends Controller
         return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
     }
 
-    function estornar_pagamento($user_id, Request $request){
+    function estornar_parcela_view(Request $request){
+          
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+
+            // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas em aberto, somente pode estornar quando estiveres pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas em aberto redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
+                }
+            }
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_receber as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.valor_parcela as valor_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.situacao as situacao_parcela',
+                    'cr.id as conta_receber_id',
+                    'dd.descricao as descricao_parcela',
+                    'cr.quantidade_parcela as debito_quantidade_parcela',
+                    'ccr.descricao as descricao',       
+                )
+                ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
+                ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
+                ->join('descricao_debito AS dd', 'dd.id', '=', 'p.descricao_debito_id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            
+            $titular_conta = DB::table('titular_conta as t')
+            ->select(
+                't.id as id_titular_conta',
+                't.cliente_id as cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+            )
+            ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+            ->get();
+
+            $parcelaReceberOutros = true;
+
+            $data = [
+                'titular_conta' => $titular_conta,
+                'parcelaReceberOutros' => $parcelaReceberOutros,
+            ];
+
+            return view('parcela/parcela_estornar_parcela', compact('parcelas', 'data'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    function estornar_parcela($user_id, Request $request){
     
         $idParcelas = $request->get('id_parcela', []);
-        $dataRecebimento = $request->get('data_pagamento_recebimento', []);
-        $valorRecebido = $request->get('valor', []);
 
         $i = 0;
         foreach ($idParcelas as $id) {
             $parcela = ParcelaContaReceber::find($id);
-            $parcela->valor_recebido = null; 
-            $parcela->data_recebimento = null;
-            $parcela->data_baixa = null;
-            $parcela->usuario_baixa_id = $user_id;
-            $parcela->situacao = 0;
-
-            //Selecionar o ID do movimentacao financeira
-            $movimentacao_financeira_id = $parcela->movimentacao_financeira_id;
-            $parcela->movimentacao_financeira_id = null; 
-            
-
-            //Se a conta está relacionada a uma movimentação
-            if ($movimentacao_financeira_id != null) {
-                $movimentacao_financeira = MovimentacaoFinanceira::find($movimentacao_financeira_id);
-
-                //Pegando variáveis necessárias para selecionar e estornar saldo
-                $titular_conta_id = $movimentacao_financeira->titular_conta_id;
-                $conta_corrente_id = $movimentacao_financeira->conta_corrente_id;
-
-                $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataRecebimento[$i]))->format('Y-m-d');;
-
-                //Variavel de saldo para manipulacao e verificacao do saldo
-                $saldo = SaldoDiario::where('data', $dataFormatada)
-                ->where('titular_conta_id', $titular_conta_id)
-                ->where('conta_corrente_id', $conta_corrente_id)
-                ->get(); // Saldo do dia
-
-                $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
-                 
-                //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataFormatada)
-                ->where('titular_conta_id', $titular_conta_id)
-                ->where('conta_corrente_id', $conta_corrente_id)
-                ->first();
-
-                //Corrigindo valor para salvar
-                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorRecebido[$i]));
-
-                //Atualizando o saldo
-                $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 
-
-                //Salvando alterações
-                $saldo_model->save();
-                $parcela->save();
-                $movimentacao_financeira->delete();
-
-            }else{ //Se não estiver relacionado
- 
-            }
+            $parcela->delete(); 
             
             $i++;
         }
-        return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
+        return redirect("contas_receber")->with('success', 'Parcela excluída com sucesso'); 
     }
 }

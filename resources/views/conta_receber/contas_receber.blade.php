@@ -36,7 +36,7 @@
     Estornar recebimento
 </a>
 
-<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('baixar_parcela')}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela')}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         delete
     </span>
@@ -460,6 +460,25 @@ $(document).ready(function() {
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
         });
+
+        $("#estornar_parcela").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('estornar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
     } else if (referenteOutros.checked) {
         // Captura o clique no Parcelas Reajustar
         $("#reajustar_parcelas").click(function(event) {
@@ -531,6 +550,25 @@ $(document).ready(function() {
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
             var url = "{{ route('estornar_recebimento') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
+                "&origem=contas_receber";
+
+            // Redirecione para a URL com os parâmetros
+            window.location.href = url;
+        });
+
+        $("#estornar_parcela").click(function(event) {
+            event.preventDefault();
+
+            // Obtenha os valores dos checkboxes selecionados
+            var checkboxesSelecionados = [];
+
+            $("input[name='checkboxes[]']:checked").each(function() {
+                checkboxesSelecionados.push($(this).val());
+            });
+
+            // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+            var url = "{{ route('estornar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
                     ',') +
                 "&origem=contas_receber";
 
