@@ -68,10 +68,9 @@ class CalendarioController extends Controller
         ->join('categoria_pagar as ctp', 'cp.categoria_pagar_id', '=', 'ctp.id')
         ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
         ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
-        ->where('p.situacao', '=', null)
+        ->where('p.situacao', '=', 0)
         ->orderBy('p.data_vencimento', 'ASC')
         ->get();
-
         return view('calendario/calendario', compact('eventosDebitos', 'eventosOutros'));
     }
 }

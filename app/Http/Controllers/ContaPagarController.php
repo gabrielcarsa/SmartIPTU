@@ -904,9 +904,10 @@ class ContaPagarController extends Controller
             
             $i++;
         }
+        /*
         if($conta_pagar != null){
             $conta_pagar->delete();
-        }
+        }*/
         return redirect("contas_pagar")->with('success', 'Parcela excluída com sucesso'); 
     }
 }
