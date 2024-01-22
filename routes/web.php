@@ -135,7 +135,7 @@ Route::middleware([
         Route::get('/contas_pagar/estornar_pagamento',[ContaPagarController::class, 'estornar_pagamento_view'])->name('estornar_pagamento');
         Route::post('/contas_pagar/estornar_pagamento/{usuario}',[ContaPagarController::class, 'estornar_pagamento']);
         Route::get('/contas_pagar/estornar_parcela',[ContaPagarController::class, 'estornar_parcela_view'])->name('estornar_parcela_pagar');
-        Route::post('/contas_pagar/estornar_parcela/{usuario}',[ContaPagarController::class, 'estornar_parcela_pagar']);
+        Route::post('/contas_pagar/estornar_parcela/{usuario}',[ContaPagarController::class, 'estornar_parcela']);
 
         //ROTA CALENDÁRIO
         Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');

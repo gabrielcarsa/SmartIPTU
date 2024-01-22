@@ -389,7 +389,7 @@ class ContaPagarController extends Controller
                     'p.data_vencimento as data_vencimento',
                     'p.valor_parcela as valor_parcela',
                     'p.situacao as situacao_parcela',
-                    'cp.id as conta_receber_id',
+                    'cp.id as conta_id',
                     'cp.quantidade_parcela as debito_quantidade_parcela',
                     'ccp.descricao as descricao',       
                 )
@@ -538,7 +538,7 @@ class ContaPagarController extends Controller
                     'ccp.descricao as descricao',       
                 )
                 ->leftJoin('conta_pagar AS cp', 'p.conta_pagar_id', '=', 'cp.id')
-                ->leftJoin('categoria_receber AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
+                ->leftJoin('categoria_pagar AS ccp', 'cp.categoria_pagar_id', '=', 'ccp.id')
                 ->where('p.id', $parcelaId)
                 ->get();
             }
@@ -729,7 +729,7 @@ class ContaPagarController extends Controller
                     'p.data_pagamento as data_pagamento',
                     'p.valor_pago as valor_pago',
                     'p.situacao as situacao_parcela',
-                    'cp.id as conta_receber_id',
+                    'cp.id as conta_id',
                     'cp.quantidade_parcela as debito_quantidade_parcela',
                     'ccp.descricao as descricao',       
                 )
@@ -840,7 +840,7 @@ class ContaPagarController extends Controller
 
             //Verificar se há parcelas em aberto, somente pode estornar quando estiveres pagas
             foreach($checkboxesSelecionados as $parcelaId) {
-                $parcela = ParcelaContaReceber::find($parcelaId);
+                $parcela = ParcelaContaPagar::find($parcelaId);
 
                 //Se houver parcelas em aberto redireciona de volta
                 if($parcela->situacao == 1){
@@ -892,7 +892,6 @@ class ContaPagarController extends Controller
     }
 
     function estornar_parcela($user_id, Request $request){
-    
         $idParcelas = $request->get('id_parcela', []);
 
         $i = 0;
