@@ -117,7 +117,7 @@ Route::middleware([
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
         Route::get('/contas_receber/estornar_recebimento',[ContaReceberController::class, 'estornar_recebimento_view'])->name('estornar_recebimento');
         Route::post('/contas_receber/estornar_recebimento/{usuario}',[ContaReceberController::class, 'estornar_recebimento']);
-        Route::get('/contas_receber/estornar_parcela',[ContaReceberController::class, 'estornar_parcela_view'])->name('estornar_parcela');
+        Route::get('/contas_receber/estornar_parcela',[ContaReceberController::class, 'estornar_parcela_view'])->name('estornar_parcela_receber');
         Route::post('/contas_receber/estornar_parcela/{usuario}',[ContaReceberController::class, 'estornar_parcela']);
 
         
@@ -134,6 +134,8 @@ Route::middleware([
         Route::post('/contas_pagar/definir_baixar_parcela/{usuario}',[ContaPagarController::class, 'definir_baixar_parcela']);
         Route::get('/contas_pagar/estornar_pagamento',[ContaPagarController::class, 'estornar_pagamento_view'])->name('estornar_pagamento');
         Route::post('/contas_pagar/estornar_pagamento/{usuario}',[ContaPagarController::class, 'estornar_pagamento']);
+        Route::get('/contas_pagar/estornar_parcela',[ContaPagarController::class, 'estornar_parcela_view'])->name('estornar_parcela_pagar');
+        Route::post('/contas_pagar/estornar_parcela/{usuario}',[ContaPagarController::class, 'estornar_parcela']);
 
         //ROTA CALENDÁRIO
         Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario');
