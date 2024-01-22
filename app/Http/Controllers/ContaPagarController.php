@@ -897,9 +897,15 @@ class ContaPagarController extends Controller
         $i = 0;
         foreach ($idParcelas as $id) {
             $parcela = ParcelaContaPagar::find($id);
+
+            $conta_pagar_id = $parcela->conta_pagar_id;
+            $conta_pagar = ContaPagar::find($conta_pagar_id);
             $parcela->delete(); 
             
             $i++;
+        }
+        if($conta_pagar != null){
+            $conta_pagar->delete();
         }
         return redirect("contas_pagar")->with('success', 'Parcela excluída com sucesso'); 
     }

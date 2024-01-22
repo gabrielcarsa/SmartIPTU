@@ -958,10 +958,17 @@ class ContaReceberController extends Controller
         $i = 0;
         foreach ($idParcelas as $id) {
             $parcela = ParcelaContaReceber::find($id);
+
+            $conta_receber_id = $parcela->conta_receber_id;
+            $conta_receber = ContaReceber::find($conta_receber_id);
             $parcela->delete(); 
             
             $i++;
         }
+        if($conta_receber != null){
+            $conta_receber->delete();
+        }
+        
         return redirect("contas_receber")->with('success', 'Parcela excluída com sucesso'); 
     }
 }
