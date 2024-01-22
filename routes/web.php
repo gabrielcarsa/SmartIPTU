@@ -117,6 +117,8 @@ Route::middleware([
         Route::post('/contas_receber/definir_baixar_parcela/{usuario}',[ContaReceberController::class, 'definir_baixar_parcela']);
         Route::get('/contas_receber/estornar_recebimento',[ContaReceberController::class, 'estornar_recebimento_view'])->name('estornar_recebimento');
         Route::post('/contas_receber/estornar_recebimento/{usuario}',[ContaReceberController::class, 'estornar_recebimento']);
+        Route::get('/contas_receber/estornar_parcela',[ContaReceberController::class, 'estornar_parcela_view'])->name('estornar_parcela');
+        Route::post('/contas_receber/estornar_parcela/{usuario}',[ContaReceberController::class, 'estornar_parcela']);
 
         
         //ROTAS CONTAS PAGAR

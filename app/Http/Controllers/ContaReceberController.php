@@ -885,4 +885,82 @@ class ContaReceberController extends Controller
         }
         return redirect("contas_receber")->with('success', 'Estornado recebimento com sucesso'); 
     }
+
+    function estornar_parcela_view(Request $request){
+          
+        // Verifique se a chave 'checkboxes' está presente na requisição
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+
+            // Recupere os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
+
+            // Converta os valores dos checkboxes em um array
+            $checkboxesSelecionados = explode(',', $checkboxesSelecionados); 
+
+            //Verificar se há parcelas em aberto, somente pode estornar quando estiveres pagas
+            foreach($checkboxesSelecionados as $parcelaId) {
+                $parcela = ParcelaContaReceber::find($parcelaId);
+
+                //Se houver parcelas em aberto redireciona de volta
+                if($parcela->situacao == 1){
+                    return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
+                }
+            }
+
+            $parcelas = [];
+            foreach ($checkboxesSelecionados as $parcelaId) {
+                $parcelas[] = DB::table('parcela_conta_receber as p')
+                ->select(
+                    'p.id as id',
+                    'p.numero_parcela as numero_parcela',
+                    'p.valor_parcela as valor_parcela',
+                    'p.data_vencimento as data_vencimento',
+                    'p.situacao as situacao_parcela',
+                    'cr.id as conta_receber_id',
+                    'cr.quantidade_parcela as debito_quantidade_parcela',
+                    'ccr.descricao as descricao',       
+                )
+                ->leftJoin('conta_receber AS cr', 'p.conta_receber_id', '=', 'cr.id')
+                ->leftJoin('categoria_receber AS ccr', 'cr.categoria_receber_id', '=', 'ccr.id')
+                ->where('p.id', $parcelaId)
+                ->get();
+            }
+            
+            $titular_conta = DB::table('titular_conta as t')
+            ->select(
+                't.id as id_titular_conta',
+                't.cliente_id as cliente_id',
+                'c.nome as nome',
+                'c.razao_social as razao_social',
+            )
+            ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
+            ->get();
+
+            $parcelaReceberOutros = true;
+
+            $data = [
+                'titular_conta' => $titular_conta,
+                'parcelaReceberOutros' => $parcelaReceberOutros,
+            ];
+
+            return view('parcela/parcela_estornar_parcela', compact('parcelas', 'data'));
+
+        }else{
+            return redirect()->back()->with('error', 'Nenhuma parcela selecionada!');
+        }
+    }
+
+    function estornar_parcela($user_id, Request $request){
+    
+        $idParcelas = $request->get('id_parcela', []);
+
+        $i = 0;
+        foreach ($idParcelas as $id) {
+            $parcela = ParcelaContaReceber::find($id);
+            $parcela->delete(); 
+            
+            $i++;
+        }
+        return redirect("contas_receber")->with('success', 'Parcela excluída com sucesso'); 
+    }
 }

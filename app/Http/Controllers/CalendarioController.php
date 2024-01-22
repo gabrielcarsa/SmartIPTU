@@ -33,7 +33,7 @@ class CalendarioController extends Controller
         ->join('quadra as q', 'l.quadra_id', '=', 'q.id')
         ->join('empreendimento as e', 'q.empreendimento_id', '=', 'e.id')
         ->join('cliente as c', 'l.cliente_id', '=', 'c.id')
-        ->join('descricao_debito as dd', 'd.descricao_debito_id', '=', 'dd.id')
+        ->join('descricao_debito as dd', 'p.descricao_debito_id', '=', 'dd.id')
         ->join('titular_conta as td', 'd.titular_conta_id', '=', 'td.id')
         ->join('tipo_debito as tpd', 'd.tipo_debito_id', '=', 'tpd.id')
         ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
