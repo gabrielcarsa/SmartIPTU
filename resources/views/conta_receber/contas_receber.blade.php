@@ -36,7 +36,7 @@
     Estornar recebimento
 </a>
 
-<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela')}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela_receber')}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         delete
     </span>
@@ -472,7 +472,7 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados.join(
                     ',') +
                 "&origem=contas_receber";
 
@@ -568,7 +568,7 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados.join(
                     ',') +
                 "&origem=contas_receber";
 

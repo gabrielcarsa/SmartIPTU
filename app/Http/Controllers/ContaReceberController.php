@@ -917,7 +917,7 @@ class ContaReceberController extends Controller
                     'p.valor_parcela as valor_parcela',
                     'p.data_vencimento as data_vencimento',
                     'p.situacao as situacao_parcela',
-                    'cr.id as conta_receber_id',
+                    'cr.id as conta_id',
                     'cr.quantidade_parcela as debito_quantidade_parcela',
                     'ccr.descricao as descricao',       
                 )
