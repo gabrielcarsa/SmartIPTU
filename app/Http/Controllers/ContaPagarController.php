@@ -144,6 +144,7 @@ class ContaPagarController extends Controller
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
         $idParcela = $request->input('idParcela');
         $categoria = $request->input('categoria');
+        $tipo_debito = $request->input('tipo_debito');
     
 
         //select referente a parcelas de contas a pagar de lotes
@@ -236,20 +237,39 @@ class ContaPagarController extends Controller
 
                     $resultados = $queryReferenteLotes
                     ->where('p.data_vencimento', '>=', $periodoDe)
-                    ->where('p.data_vencimento', '<=', $periodoAte)
-                    ->get();
+                    ->where('p.data_vencimento', '<=', $periodoAte);
 
                 }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e Todos titulares
 
                     $resultados = $queryReferenteLotes
-                    ->where('p.id', '=', $idParcela)
-                    ->get();
+                    ->where('p.id', '=', $idParcela);
 
                 }else{ //Se não houver nenhum período e nenhuma parcela específica
 
                     $resultados = $queryReferenteLotes->get();
                 
                 }
+
+                if($isSituacaoVencer){ // Parcelas A VENCER
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.situacao', '=', 0);
+
+                }else if($isSituacaoPago){ // Parcelas PAGAS
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.situacao', '=', 1);
+
+                }
+
+                if($tipo_debito != 0) { // Tipo do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
+
+                }
+
+                $resultados = $queryReferenteLotes->get();
 
             }else{ //Se o titular da conta for específico
 
@@ -258,23 +278,41 @@ class ContaPagarController extends Controller
                     $resultados = $queryReferenteLotes
                     ->where('p.data_vencimento', '>=', $periodoDe)
                     ->where('p.data_vencimento', '<=', $periodoAte)
-                    ->where('d.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('d.titular_conta_id', $titular_conta_id);
 
                 }elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a Lotes e titular especifico
 
                     $resultados = $queryReferenteLotes
                     ->where('p.id', '=', $idParcela)
-                    ->where('d.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('d.titular_conta_id', $titular_conta_id);
 
                 }else{ //Se não houver nenhum período e nenhuma parcela específica mas com titular especifico
 
                     $resultados = $queryReferenteLotes
-                    ->where('d.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('d.titular_conta_id', $titular_conta_id);
 
                 }
+
+                if($isSituacaoVencer){ // Parcelas A VENCER
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.situacao', '=', 0);
+
+                }else if($isSituacaoPago){ // Parcelas PAGAS
+
+                    $resultados = $queryReferenteLotes
+                    ->where('p.situacao', '=', 1);
+
+                }
+
+                if($tipo_debito != 0) { // Tipo do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
+
+                }
+
+                $resultados = $queryReferenteLotes->get();
                
             } 
         

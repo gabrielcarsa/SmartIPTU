@@ -145,6 +145,7 @@ class ContaReceberController extends Controller
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
         $idParcela = $request->input('idParcela');
         $categoria = $request->input('categoria');
+        $tipo_debito = $request->input('tipo_debito');
 
 
     
@@ -270,10 +271,10 @@ class ContaReceberController extends Controller
 
                 }
 
-                if($categoria != 0) { // Categoria do Débito
+                if($tipo_debito != 0) { // Tipo do Débito
 
                     $resultados = $queryReferenteLotes
-                    ->where('d.categoria_receber_id', '=', $categoria);
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
 
                 }
 
@@ -313,10 +314,10 @@ class ContaReceberController extends Controller
 
                 }
 
-                if($categoria != 0) { // Categoria do Débito
+                if($tipo_debito != 0) { // Tipo do Débito
 
                     $resultados = $queryReferenteLotes
-                    ->where('d.categoria_receber_id', '=', $categoria);
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
 
                 }
 
@@ -453,7 +454,7 @@ class ContaReceberController extends Controller
             'totalValorPago' => $totalValorPago,
             'totalValorParcelas' => $totalValorParcelas,
         ];
-        
+
         return view('conta_receber/contas_receber', compact('titular_conta', 'data'), compact('categoria', 'tipo_debito'));
     }
 
