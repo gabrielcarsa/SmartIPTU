@@ -245,7 +245,7 @@
                     <th scope="col">Situação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody-contas">
 
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
@@ -303,6 +303,7 @@
                     <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
                     <th scope="col">Titular da conta</th>
+                    <th scope="col">Fornecedor</th>
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
@@ -311,7 +312,7 @@
                     <th scope="col">Situação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody-contas">
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
                     <td>
@@ -321,6 +322,11 @@
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
                     <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
+                    @if($resultado->tipo_cadastro == 0)
+                    <td scope="row">{{$resultado->nome}}</td>
+                    @else
+                    <td scope="row">{{$resultado->razao_social}}</td>
+                    @endif
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->categoria}}</td>
                     <td>{{$resultado->descricao}}</td>

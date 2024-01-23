@@ -243,7 +243,7 @@
                     <th scope="col">Situação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody-contas">
 
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
@@ -284,7 +284,7 @@
                             <p>Recebimento em:
                                 {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                             </p>
-                            <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Valor recebido: R$ {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
                             <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
                             <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                             <p>Alterado por: {{$resultado->alterado_por}}</p>
@@ -301,6 +301,7 @@
                     <th scope="col"><input type="checkbox" id="selecionar_todos" name="selecionar_todos" /></th>
                     <th scope="col">ID</th>
                     <th scope="col">Titular a receber</th>
+                    <th scope="col">Cliente</th>
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
@@ -309,7 +310,7 @@
                     <th scope="col">Situação</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody-contas">
                 @foreach ($data['resultados'] as $resultado)
                 <tr>
                     <td>
@@ -319,6 +320,11 @@
                     </td>
                     <td scope="row">{{$resultado->id}}</td>
                     <td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>
+                    @if($resultado->tipo_cadastro == 0)
+                    <td scope="row">{{$resultado->nome}}</td>
+                    @else
+                    <td scope="row">{{$resultado->razao_social}}</td>
+                    @endif
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->categoria}}</td>
                     <td>{{$resultado->descricao}}</td>
@@ -339,7 +345,7 @@
                             <p>Recebimento em:
                                 {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
                             </p>
-                            <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Valor recebido: R$ {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
                             <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
                             <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
                             <p>Alterado por: {{$resultado->alterado_por}}</p>
