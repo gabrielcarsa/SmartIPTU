@@ -8,7 +8,6 @@ use App\Models\ContaReceber;
 use App\Models\ParcelaContaReceber;
 use App\Models\SaldoDiario;
 use App\Models\Cliente;
-use App\Models\Parcela;
 use App\Models\MovimentacaoFinanceira;
 use Carbon\Carbon;
 use App\Models\CategoriaReceber;

@@ -28,14 +28,16 @@
     Baixar parcelas
 </a>
 
-<a class="btn btn-primary btn-add" id="estornar_pagamento" href="{{route('estornar_pagamento')}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="estornar_pagamento" href="{{route('estornar_pagamento')}}"
+    style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         restart_alt
     </span>
     Estornar pagamento
 </a>
 
-<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela_pagar')}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela_pagar')}}"
+    style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         delete
     </span>
@@ -191,12 +193,14 @@
                 <label for="" class="form-label">A Pagar referente</label><br>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteLotes') is-invalid @enderror" type="checkbox"
-                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteLotes')">
+                        id="referenteLotes" name="referenteLotes" {{ request('referenteLotes') ? 'checked' : '' }}
+                        onclick="handleCheckboxClick('referenteLotes')">
                     <label class="form-check-label" for="referenteLotes">Lotes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input @error('referenteOutros') is-invalid @enderror" type="checkbox"
-                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }} onclick="handleCheckboxClick('referenteOutros')">
+                        id="referenteOutros" name="referenteOutros" {{ request('referenteOutros') ? 'checked' : '' }}
+                        onclick="handleCheckboxClick('referenteOutros')">
                     <label class="form-check-label" for="referenteOutros">Outros</label>
                 </div>
             </div>
@@ -215,14 +219,14 @@
 
 @if(isset($data['resultados']))
 <div class="card">
-    <h5 class="card-header">Lista de cadastros</h5>
+    <h5 class="card-header">Parcelas</h5>
     <div class="card-footer">
         <a class="btn btn-add"
             href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped text-center">
+        <table class="table table-bordered text-center">
             @if($data['isReferenteLotes'])
             <thead>
                 <tr>
@@ -275,25 +279,18 @@
                         @endif
                     </td>
                 </tr>
-                <tr class="accordion-row">
+                <tr class="collapse" id="collapse{{$resultado->id}}">
                     <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
-                        <div class="accordion" id="accordion{{$resultado->id}}">
-                            <div class="accordion-item">
-                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{$resultado->id}}"
-                                    data-bs-parent="#accordion{{$resultado->id}}">
-                                    <div class="accordion-body">
-                                        <p>Pago em:
-                                            {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
-                                        </p>
-                                        <p>Valor Pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
-                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
-                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
-                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row-collapse-table text-left">
+                            <p>Pago em:
+                                {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
+                            </p>
+                            <p>Valor pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Telefones fornecedor: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
+                            <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                            <p>Alterado por: {{$resultado->alterado_por}}</p>
+                            <p>Baixado por: {{$resultado->baixado_por}}</p>
                         </div>
                     </td>
                 </tr>
@@ -337,28 +334,22 @@
                         @endif
                     </td>
                 </tr>
-                <tr class="accordion-row">
+                <tr class="collapse" id="collapse{{$resultado->id}}">
                     <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
-                        <div class="accordion" id="accordion{{$resultado->id}}">
-                            <div class="accordion-item">
-                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{$resultado->id}}"
-                                    data-bs-parent="#accordion{{$resultado->id}}">
-                                    <div class="accordion-body">
-                                        <p>Pago em:
-                                            {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
-                                        </p>
-                                        <p>Valor pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
-                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
-                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
-                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row-collapse-table text-left">
+                            <p>Pago em:
+                                {{$resultado->data_pagamento == null ? '' : \Carbon\Carbon::parse($resultado->data_pagamento)->format('d/m/Y') }}
+                            </p>
+                            <p>Valor pago: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Telefones fornecedor: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
+                            <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                            <p>Alterado por: {{$resultado->alterado_por}}</p>
+                            <p>Baixado por: {{$resultado->baixado_por}}</p>
                         </div>
                     </td>
                 </tr>
+
                 @endforeach
             </tbody>
             @endif
@@ -475,13 +466,14 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_pagamento') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            var url = "{{ route('estornar_pagamento') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
                 "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
         });
-        
+
         $("#estornar_parcela").click(function(event) {
             event.preventDefault();
 
@@ -534,8 +526,9 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('pagar_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados.join(
-                ',') + "&origem=contas_pagar";
+            var url = "{{ route('pagar_alterar_vencimento') }}?checkboxes=" + checkboxesSelecionados
+                .join(
+                    ',') + "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
@@ -552,7 +545,8 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('pagar_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            var url = "{{ route('pagar_baixar_parcela') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
                 "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
@@ -570,13 +564,14 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_pagamento') }}?checkboxes=" + checkboxesSelecionados.join(',') +
+            var url = "{{ route('estornar_pagamento') }}?checkboxes=" + checkboxesSelecionados.join(
+                    ',') +
                 "&origem=contas_pagar";
 
             // Redirecione para a URL com os parâmetros
             window.location.href = url;
         });
-        
+
         $("#estornar_parcela").click(function(event) {
             event.preventDefault();
 

@@ -36,7 +36,8 @@
     Estornar recebimento
 </a>
 
-<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela_receber')}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" id="estornar_parcela" href="{{route('estornar_parcela_receber')}}"
+    style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         delete
     </span>
@@ -216,7 +217,7 @@
 
 @if(isset($data['resultados']))
 <div class="card">
-    <h5 class="card-header">Lista de cadastros</h5>
+    <h5 class="card-header">Parcelas</h5>
     <div class="card-footer">
         <a class="btn btn-add"
             href="../cliente/relatorio_pdf?nome={{request('nome')}}&cpf_cnpj={{request('cpf_cnpj')}}">PDF</a>
@@ -276,27 +277,18 @@
                         @endif
                     </td>
                 </tr>
-                <tr class="accordion-row">
+                <tr class="collapse" id="collapse{{$resultado->id}}">
                     <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
-                        <div class="accordion" id="accordion{{$resultado->id}}">
-                            <div class="accordion-item">
-                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{$resultado->id}}"
-                                    data-bs-parent="#accordion{{$resultado->id}}">
-                                    <div class="accordion-body">
-                                        <p>Recebimento em:
-                                            {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
-                                        </p>
-                                        <p>Valor recebido: R$
-                                            {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
-                                        <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
-                                        <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
-                                        <p>Alterado por: {{$resultado->alterado_por}}</p>
-                                        <p>Baixado por: {{$resultado->baixado_por}}</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row-collapse-table text-left">
+                            <p>Recebimento em:
+                                {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                            </p>
+                            <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
+                            <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                            <p>Alterado por: {{$resultado->alterado_por}}</p>
+                            <p>Baixado por: {{$resultado->baixado_por}}</p>
                         </div>
                     </td>
                 </tr>
@@ -340,26 +332,18 @@
                         @endif
                     </td>
                 </tr>
-                <tr class="accordion-row">
+                <tr class="collapse" id="collapse{{$resultado->id}}">
                     <td colspan="13">
                         <!-- Colspan igual ao número de colunas na tabela -->
-                        <div class="accordion" id="accordion{{$resultado->id}}">
-                            <div class="accordion-item">
-                                <div id="collapse{{$resultado->id}}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{$resultado->id}}"
-                                    data-bs-parent="#accordion{{$resultado->id}}">
-                                    <div class="accordion-body">
-                                        <p>Recebimento em:
-                                            {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
-                                        </p>
-                                        <p>Valor recebido: R$
-                                            {{number_format($resultado->parcela_recebido, 2, ',', '.')}}</p>
-                                        <p>Cadastrado por {{$resultado->cadastrado_por}}</p>
-                                        <p>Alterado por {{$resultado->alterado_por}}</p>
-                                        <p>Baixado por {{$resultado->baixado_por}}</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row-collapse-table text-left">
+                            <p>Recebimento em:
+                                {{$resultado->data_recebimento == null ? '' : \Carbon\Carbon::parse($resultado->data_recebimento)->format('d/m/Y') }}
+                            </p>
+                            <p>Valor recebido: R$ {{number_format($resultado->parcela_valor_pago, 2, ',', '.')}}</p>
+                            <p>Telefones cliente: {{$resultado->tel1}}, {{$resultado->tel2}}</p>
+                            <p>Cadastrado por: {{$resultado->cadastrado_por}}</p>
+                            <p>Alterado por: {{$resultado->alterado_por}}</p>
+                            <p>Baixado por: {{$resultado->baixado_por}}</p>
                         </div>
                     </td>
                 </tr>
@@ -496,7 +480,8 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados
+                .join(
                     ',') +
                 "&origem=contas_receber";
 
@@ -592,7 +577,8 @@ $(document).ready(function() {
             });
 
             // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados.join(
+            var url = "{{ route('estornar_parcela_receber') }}?checkboxes=" + checkboxesSelecionados
+                .join(
                     ',') +
                 "&origem=contas_receber";
 
