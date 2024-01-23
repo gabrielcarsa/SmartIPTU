@@ -95,6 +95,18 @@
             </div>
 
             <div class="col-md-4">
+                <label for="inputCategoria" class="form-label">Categoria</label>
+                <select id="inputCategoria" name="categoria" class="form-select form-control">
+                    <option value="0" select>-- Todos --</option>
+                    @foreach ($categoria as $cat)
+                    <option value="{{$cat->id}}">
+                        {{$cat->descricao}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4">
                 <label for="inputQuadra" class="form-label">Quadra</label>
                 <input type="text" name="quadra" value="{{request('quadra')}}" class="form-control" id="inputQuadra">
             </div>

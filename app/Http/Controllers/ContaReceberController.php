@@ -119,7 +119,9 @@ class ContaReceberController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        return view('conta_receber/contas_receber', compact('titular_conta'));
+        $categoria = CategoriaReceber::all();
+
+        return view('conta_receber/contas_receber', compact('titular_conta', 'categoria'));
     }
 
     //LISTAGEM E FILTRO CONTAS A RECEBER
@@ -139,6 +141,8 @@ class ContaReceberController extends Controller
         $isPeriodoLancamento = $request->input('periodoLancamento');
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
         $idParcela = $request->input('idParcela');
+        $categoria = $request->input('categoria');
+
 
     
         //select referente a parcelas de contas a receber de lotes
@@ -263,6 +267,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($categoria != 0) { // Categoria do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.categoria_receber_id', '=', $categoria);
+
+                }
+
                 $resultados = $queryReferenteLotes->get();
 
             }else{ //Se o titular da conta for específico
@@ -296,6 +307,13 @@ class ContaReceberController extends Controller
 
                     $resultados = $queryReferenteLotes
                     ->where('p.situacao', '=', 1);
+
+                }
+
+                if($categoria != 0) { // Categoria do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.categoria_receber_id', '=', $categoria);
 
                 }
 
@@ -340,6 +358,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($categoria != 0) { // Categoria do Conta a Receber
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cr.categoria_receber_id', '=', $categoria);
+
+                }
+
                 $resultados = $queryReferenteOutros->get();
 
             }else{ //Se o titular da conta for específico
@@ -378,6 +403,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($categoria != 0) { // Categoria do Conta a Receber
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cr.categoria_receber_id', '=', $categoria);
+
+                }
+
                 $resultados = $queryReferenteOutros->get();
 
             }      
@@ -392,6 +424,9 @@ class ContaReceberController extends Controller
         )
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
+
+        $categoria = CategoriaReceber::all();
+
 
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
@@ -415,7 +450,7 @@ class ContaReceberController extends Controller
             'totalValorParcelas' => $totalValorParcelas,
         ];
     
-        return view('conta_receber/contas_receber', compact('titular_conta', 'data'));
+        return view('conta_receber/contas_receber', compact('titular_conta', 'data'), compact('categoria'));
     }
 
      //RETORNA VIEW PARA REAJUSTAR PARCELA

@@ -28,7 +28,9 @@ class ContaPagarController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        return view('conta_pagar/contas_pagar', compact('titular_conta'));
+        $categoria = CategoriaPagar::all();
+
+        return view('conta_pagar/contas_pagar', compact('titular_conta', 'categoria'));
     }
 
     //RETORNA VIEW PARA CADASTRO DE NOVA DESPESA
@@ -128,6 +130,9 @@ class ContaPagarController extends Controller
         $titular_conta_id = $request->input('titular_conta_id');
         $isReferenteLotes = $request->input('referenteLotes');
         $isReferenteOutros = $request->input('referenteOutros');
+        $isSituacaoVencer = $request->input('situacaoVencer');
+        $isSituacaoPago = $request->input('situacaoPago');
+        $isSituacaoTodos = $request->input('situacaoTodos');
         $periodoDe = $request->input('periodoDe');
         $periodoAte = $request->input('periodoAte');
         $isPeriodoVencimento = $request->input('periodoVencimento');
@@ -135,6 +140,7 @@ class ContaPagarController extends Controller
         $isPeriodoLancamento = $request->input('periodoLancamento');
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
         $idParcela = $request->input('idParcela');
+        $categoria = $request->input('categoria');
     
 
         //select referente a parcelas de contas a pagar de lotes
@@ -280,19 +286,39 @@ class ContaPagarController extends Controller
 
                     $resultados = $queryReferenteOutros
                     ->where('p.data_vencimento', '>=', $periodoDe)
-                    ->where('p.data_vencimento', '<=', $periodoAte)
-                    ->get();
+                    ->where('p.data_vencimento', '<=', $periodoAte);
 
                 } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e Todos titulares
 
                     $resultados = $queryReferenteOutros
-                    ->where('p.id', '=', $idParcela)
-                    ->get();
+                    ->where('p.id', '=', $idParcela);
 
                 } else{ //Busca todos períodos referente a outras despesas
 
                     $resultados = $queryReferenteOutros->get();
+
                 }
+
+                if($isSituacaoVencer){ // Parcelas A VENCER
+
+                    $resultados = $queryReferenteOutros
+                    ->where('p.situacao', '=', 0);
+
+                }else if($isSituacaoPago){ // Parcelas PAGAS
+
+                    $resultados = $queryReferenteOutros
+                    ->where('p.situacao', '=', 1);
+
+                }
+
+                if($categoria != 0) { // Categoria do Conta a Pagar
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cp.categoria_pagar_id', '=', $categoria);
+
+                }
+
+                $resultados = $queryReferenteOutros->get();
 
             }else{ //Se o titular da conta for específico
                 
@@ -301,24 +327,42 @@ class ContaPagarController extends Controller
                     $resultados = $queryReferenteOutros
                     ->where('p.data_vencimento', '>=', $periodoDe)
                     ->where('p.data_vencimento', '<=', $periodoAte)
-                    ->where('cp.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('cp.titular_conta_id', $titular_conta_id);
 
                 } elseif(!empty($idParcela)){ //Busca por ID da parcela se for referente a outros e titular específico
 
                     $resultados = $queryReferenteOutros
                     ->where('p.id', '=', $idParcela)
-                    ->where('cp.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('cp.titular_conta_id', $titular_conta_id);
 
                 }
                 else{ //Busca todos períodos referente a outras receitas e titular específico
 
                     $resultados = $queryReferenteOutros
-                    ->where('cp.titular_conta_id', $titular_conta_id)
-                    ->get();
+                    ->where('cp.titular_conta_id', $titular_conta_id);
 
                 }
+
+                if($isSituacaoVencer){ // Parcelas A VENCER
+
+                    $resultados = $queryReferenteOutros
+                    ->where('p.situacao', '=', 0);
+
+                }else if($isSituacaoPago){ // Parcelas PAGAS
+
+                    $resultados = $queryReferenteOutros
+                    ->where('p.situacao', '=', 1);
+
+                }
+
+                if($categoria != 0) { // Categoria do Conta a Pagar
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cp.categoria_pagar_id', '=', $categoria);
+
+                }
+
+                $resultados = $queryReferenteOutros->get();
             }      
         } 
 
@@ -332,20 +376,23 @@ class ContaPagarController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-          // Inicialize uma variável para armazenar o valor total
-          $totalValorParcelas = 0;
-          $totalValorPago = 0;
+        $categoria = CategoriaPagar::all();
 
-          // Percorra a coleção de resultados
-          foreach ($resultados as $resultado) {
-            $totalValorParcelas += $resultado->valor_parcela;
 
-              // Verifique se a situação da parcela é igual a 1 (Pago)
-              if ($resultado->situacao_parcela == 1) {
-                  // Adicione o valor da parcela ao valor total
-                  $totalValorPago += $resultado->valor_parcela;
-              }
-          }
+        // Inicialize uma variável para armazenar o valor total
+        $totalValorParcelas = 0;
+        $totalValorPago = 0;
+
+        // Percorra a coleção de resultados
+        foreach ($resultados as $resultado) {
+        $totalValorParcelas += $resultado->valor_parcela;
+
+            // Verifique se a situação da parcela é igual a 1 (Pago)
+            if ($resultado->situacao_parcela == 1) {
+                // Adicione o valor da parcela ao valor total
+                $totalValorPago += $resultado->valor_parcela;
+            }
+        }
     
         $data = [
             'resultados' => $resultados,
@@ -354,7 +401,7 @@ class ContaPagarController extends Controller
             'totalValorParcelas' => $totalValorParcelas,
         ];
         
-        return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'));
+        return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'), compact('categoria'));
     }
 
        //RETORNA VIEW PARA REAJUSTAR PARCELA

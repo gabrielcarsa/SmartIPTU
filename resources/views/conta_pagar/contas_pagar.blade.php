@@ -94,6 +94,18 @@
             </div>
 
             <div class="col-md-4">
+                <label for="inputCategoria" class="form-label">Categoria</label>
+                <select id="inputCategoria" name="categoria" class="form-select form-control">
+                    <option value="0" select>-- Todos --</option>
+                    @foreach ($categoria as $cat)
+                    <option value="{{$cat->id}}">
+                        {{$cat->descricao}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4">
                 <label for="inputQuadra" class="form-label">Quadra</label>
                 <input type="text" name="quadra" value="{{request('quadra')}}" class="form-control" id="inputQuadra">
             </div>
@@ -147,15 +159,18 @@
                 <label for="" class="form-label">Situação</label><br>
 
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+                    <input class="form-check-input" type="checkbox" id="situacaoVencer" name="situacaoVencer"
+                        onclick="handleCheckboxClickSituacao('situacaoVencer')">
                     <label class="form-check-label" for="inlineCheckbox1">A vencer</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2">
+                    <input class="form-check-input" type="checkbox" id="situacaoPago" name="situacaoPago"
+                        onclick="handleCheckboxClickSituacao('situacaoPago')">
                     <label class="form-check-label" for="inlineCheckbox2">Pago</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+                    <input class="form-check-input" type="checkbox" checked id="situacaoTodos" name="situacaoTodos"
+                        onclick="handleCheckboxClickSituacao('situacaoTodos')">
                     <label class="form-check-label" for="inlineCheckbox1">Todos</label>
                 </div>
             </div>
@@ -361,6 +376,20 @@ function handleCheckboxClick(clickedCheckboxId) {
         document.getElementById('referenteOutros').checked = false;
     } else if (clickedCheckboxId === 'referenteOutros') {
         document.getElementById('referenteLotes').checked = false;
+    }
+}
+
+function handleCheckboxClickSituacao(clickedCheckboxId) {
+    // Desmarcar o outro checkbox
+    if (clickedCheckboxId === 'situacaoTodos') {
+        document.getElementById('situacaoPago').checked = false;
+        document.getElementById('situacaoVencer').checked = false;
+    } else if (clickedCheckboxId === 'situacaoPago') {
+        document.getElementById('situacaoVencer').checked = false;
+        document.getElementById('situacaoTodos').checked = false;
+    } else if (clickedCheckboxId === 'situacaoVencer') {
+        document.getElementById('situacaoPago').checked = false;
+        document.getElementById('situacaoTodos').checked = false;
     }
 }
 

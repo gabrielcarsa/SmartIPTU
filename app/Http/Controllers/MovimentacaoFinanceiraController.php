@@ -57,6 +57,7 @@ class MovimentacaoFinanceiraController extends Controller
         //Validação
         $validated = $request->validate([
             'data' => 'required|date',
+            'data_fim' => 'required|date',
             'titulares_conta' => 'required|numeric|min:1',
             'conta_corrente' => 'required|numeric|min:1',
         ]);
@@ -91,7 +92,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); 
 
-        $saldo_atual = SaldoDiario::where('data', $dataRef)
+        $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); // Saldo do dia
@@ -126,12 +127,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id');
 
         // Filtro
-        if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && empty($dataFim)) {
-            $query->where('data_movimentacao', '=', $dataRef)
-            ->where('mf.titular_conta_id', '=', $titular)
-            ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('id');
-        } else if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
+        if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
             $query->where('data_movimentacao', '>=', $dataRef)
             ->where('data_movimentacao', '<=', $dataFim)
             ->where('mf.titular_conta_id', '=', $titular)
