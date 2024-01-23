@@ -41,7 +41,7 @@
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Total de Parcelas Atrasadas</h3>
+                    <h3>Total Débitos Empresa</h3>
                     <p>R$ {{number_format($data['pagamentosAtrasados'], 2, ',', '.')}}</p>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Total de Débitos Atrasados</h3>
+                    <h3>Total de Débitos</h3>
                     <p>R$ {{number_format($data['totalDividaDebitos'], 2, ',', '.')}}</p>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                         <p>{{$categorias->categoria}}</p>
                         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{($categorias->total*100)/$data['totalSaidas']}}"
                             aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{($categorias->total*100)/$data['totalSaidas']}}%">R$ {{$categorias->total}}</div>
+                            <div class="progress-bar" style="width: {{($categorias->total*100)/$data['totalSaidas']}}%">R$ {{number_format($categorias->total, 2, ',', '.')}}</div>
                         </div>
                     </div>
                     @endforeach
