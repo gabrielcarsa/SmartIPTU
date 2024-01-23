@@ -12,6 +12,7 @@ use App\Models\Parcela;
 use App\Models\MovimentacaoFinanceira;
 use Carbon\Carbon;
 use App\Models\CategoriaReceber;
+use App\Models\TipoDebito;
 use App\Http\Requests\ContaReceberRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -119,7 +120,11 @@ class ContaReceberController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        return view('conta_receber/contas_receber', compact('titular_conta'));
+        $categoria = CategoriaReceber::all();
+
+        $tipo_debito = TipoDebito::all();
+
+        return view('conta_receber/contas_receber', compact('titular_conta', 'categoria'), compact('tipo_debito'));
     }
 
     //LISTAGEM E FILTRO CONTAS A RECEBER
@@ -139,6 +144,9 @@ class ContaReceberController extends Controller
         $isPeriodoLancamento = $request->input('periodoLancamento');
         $isPeriodoRecebimento = $request->input('periodoRecebimento');
         $idParcela = $request->input('idParcela');
+        $categoria = $request->input('categoria');
+        $tipo_debito = $request->input('tipo_debito');
+
 
     
         //select referente a parcelas de contas a receber de lotes
@@ -263,6 +271,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($tipo_debito != 0) { // Tipo do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
+
+                }
+
                 $resultados = $queryReferenteLotes->get();
 
             }else{ //Se o titular da conta for específico
@@ -296,6 +311,13 @@ class ContaReceberController extends Controller
 
                     $resultados = $queryReferenteLotes
                     ->where('p.situacao', '=', 1);
+
+                }
+
+                if($tipo_debito != 0) { // Tipo do Débito
+
+                    $resultados = $queryReferenteLotes
+                    ->where('d.tipo_debito_id', '=', $tipo_debito);
 
                 }
 
@@ -340,6 +362,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($categoria != 0) { // Categoria do Conta a Receber
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cr.categoria_receber_id', '=', $categoria);
+
+                }
+
                 $resultados = $queryReferenteOutros->get();
 
             }else{ //Se o titular da conta for específico
@@ -378,6 +407,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($categoria != 0) { // Categoria do Conta a Receber
+
+                    $resultados = $queryReferenteOutros
+                    ->where('cr.categoria_receber_id', '=', $categoria);
+
+                }
+
                 $resultados = $queryReferenteOutros->get();
 
             }      
@@ -392,6 +428,10 @@ class ContaReceberController extends Controller
         )
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
+
+        $categoria = CategoriaReceber::all();
+
+        $tipo_debito = TipoDebito::all();
 
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
@@ -414,8 +454,8 @@ class ContaReceberController extends Controller
             'totalValorPago' => $totalValorPago,
             'totalValorParcelas' => $totalValorParcelas,
         ];
-    
-        return view('conta_receber/contas_receber', compact('titular_conta', 'data'));
+
+        return view('conta_receber/contas_receber', compact('titular_conta', 'data'), compact('categoria', 'tipo_debito'));
     }
 
      //RETORNA VIEW PARA REAJUSTAR PARCELA
