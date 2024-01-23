@@ -95,6 +95,18 @@
             </div>
 
             <div class="col-md-4">
+                <label for="inputTipoDebito" class="form-label">Tipo Débito</label>
+                <select id="inputTipoDebito" name="tipo_debito" class="form-select form-control">
+                    <option value="0" select>-- Todos --</option>
+                    @foreach ($tipo_debito as $tipo)
+                    <option value="{{$tipo->id}}">
+                        {{$tipo->descricao}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4">
                 <label for="inputCategoria" class="form-label">Categoria</label>
                 <select id="inputCategoria" name="categoria" class="form-select form-control">
                     <option value="0" select>-- Todos --</option>
@@ -106,11 +118,11 @@
                 </select>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <label for="inputQuadra" class="form-label">Quadra</label>
                 <input type="text" name="quadra" value="{{request('quadra')}}" class="form-control" id="inputQuadra">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <label for="inputLote" class="form-label">Lote</label>
                 <input type="text" name="lote" value="{{request('lote')}}" class="form-control" id="inputLote">
             </div>

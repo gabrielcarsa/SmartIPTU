@@ -12,6 +12,7 @@ use App\Models\Parcela;
 use App\Models\MovimentacaoFinanceira;
 use Carbon\Carbon;
 use App\Models\CategoriaReceber;
+use App\Models\TipoDebito;
 use App\Http\Requests\ContaReceberRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -121,7 +122,9 @@ class ContaReceberController extends Controller
 
         $categoria = CategoriaReceber::all();
 
-        return view('conta_receber/contas_receber', compact('titular_conta', 'categoria'));
+        $tipo_debito = TipoDebito::all();
+
+        return view('conta_receber/contas_receber', compact('titular_conta', 'categoria'), compact('tipo_debito'));
     }
 
     //LISTAGEM E FILTRO CONTAS A RECEBER
@@ -427,6 +430,7 @@ class ContaReceberController extends Controller
 
         $categoria = CategoriaReceber::all();
 
+        $tipo_debito = TipoDebito::all();
 
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
@@ -449,8 +453,8 @@ class ContaReceberController extends Controller
             'totalValorPago' => $totalValorPago,
             'totalValorParcelas' => $totalValorParcelas,
         ];
-    
-        return view('conta_receber/contas_receber', compact('titular_conta', 'data'), compact('categoria'));
+        
+        return view('conta_receber/contas_receber', compact('titular_conta', 'data'), compact('categoria', 'tipo_debito'));
     }
 
      //RETORNA VIEW PARA REAJUSTAR PARCELA

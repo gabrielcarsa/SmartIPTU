@@ -11,6 +11,7 @@ use App\Models\ContaPagar;
 use App\Http\Requests\ContaPagarRequest;
 use App\Models\ParcelaContaPagar;
 use App\Models\Cliente;
+use App\Models\TipoDebito;
 use Carbon\Carbon;
 
 
@@ -30,7 +31,9 @@ class ContaPagarController extends Controller
 
         $categoria = CategoriaPagar::all();
 
-        return view('conta_pagar/contas_pagar', compact('titular_conta', 'categoria'));
+        $tipo_debito = TipoDebito::all();
+
+        return view('conta_pagar/contas_pagar', compact('titular_conta', 'categoria'), compact('tipo_debito'));
     }
 
     //RETORNA VIEW PARA CADASTRO DE NOVA DESPESA
@@ -378,6 +381,7 @@ class ContaPagarController extends Controller
 
         $categoria = CategoriaPagar::all();
 
+        $tipo_debito = TipoDebito::all();
 
         // Inicialize uma variável para armazenar o valor total
         $totalValorParcelas = 0;
@@ -400,8 +404,8 @@ class ContaPagarController extends Controller
             'totalValorPago' => $totalValorPago,
             'totalValorParcelas' => $totalValorParcelas,
         ];
-        
-        return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'), compact('categoria'));
+
+        return view('conta_pagar/contas_pagar', compact('titular_conta', 'data'), compact('categoria', 'tipo_debito'));
     }
 
        //RETORNA VIEW PARA REAJUSTAR PARCELA
