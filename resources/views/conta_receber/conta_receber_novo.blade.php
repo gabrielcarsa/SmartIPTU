@@ -119,11 +119,43 @@
 
 
 <script>
-  $(document).ready(function() {
-    $('#inputValorParcela').mask('000.000.000.000.000,00', { reverse: true });
-  });
-  $(document).ready(function() {
-    $('#inputValorEntrada').mask('000.000.000.000.000,00', { reverse: true });
-  });
+$(document).ready(function() {
+    $(document).on('input', 'input[id^="inputValorEntrada"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
+$(document).ready(function() {
+    $(document).on('input', 'input[id^="inputValorParcela"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
 </script>
 @endsection

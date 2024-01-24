@@ -283,7 +283,8 @@ class LoteController extends Controller
     //RETORNA VIEW NOVA LOTE      
     function nova_venda($id){
         $lote = Lote::find($id);
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nome')->get();
+
         $quadra = Quadra::where('id', $lote->quadra_id)->first();
 
         $data = [

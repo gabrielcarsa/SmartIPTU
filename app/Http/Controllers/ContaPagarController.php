@@ -51,7 +51,7 @@ class ContaPagarController extends Controller
 
         $categorias = CategoriaPagar::all();
 
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nome')->get();
 
         $data = [
             'titular_conta' => $titular_conta,
