@@ -459,7 +459,6 @@ class ContaReceberController extends Controller
 
      //RETORNA VIEW PARA REAJUSTAR PARCELA
      function reajustar_view(Request $request){
-
         // Verifique se a chave 'checkboxes' está presente na requisição
         if ($request->has('checkboxes') && $request->filled('checkboxes')) {
              // Recupere os valores dos checkboxes da consulta da URL
