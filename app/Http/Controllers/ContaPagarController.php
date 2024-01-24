@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\TitularConta;
+use App\Models\ContaPagar;
+use App\Models\ParcelaContaPagar;
 use App\Models\SaldoDiario;
+use App\Models\Cliente;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimentacaoFinanceira;
 use App\Models\CategoriaPagar;
-use App\Models\ContaPagar;
 use App\Http\Requests\ContaPagarRequest;
-use App\Models\ParcelaContaPagar;
-use App\Models\Cliente;
 use App\Models\TipoDebito;
 use Carbon\Carbon;
 
@@ -167,6 +168,8 @@ class ContaPagarController extends Controller
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
+            'c.telefone1 as tel1',
+            'c.telefone2 as tel2',
             'tpd.descricao as tipo_debito_descricao', 
             'l.lote as lote',
             'l.inscricao_municipal as inscricao',
@@ -212,6 +215,8 @@ class ContaPagarController extends Controller
             'c.nome as nome',
             'c.tipo_cadastro as tipo_cadastro',
             'c.razao_social as razao_social',
+            'c.telefone1 as tel1',
+            'c.telefone2 as tel2',
             'uc.name as cadastrado_por',
             DB::raw('COALESCE(ua.name) as alterado_por'),
             DB::raw('COALESCE(ub.name) as baixado_por'),

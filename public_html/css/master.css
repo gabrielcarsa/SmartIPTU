@@ -304,7 +304,13 @@ TABLE RESULTADOS
 .dropdown-item{
     font-size: 15px;
 }
-
+.row-collapse-table{
+    padding: 10px 15px;
+    background-color: #EDEDED;
+}
+.tbody-contas{
+    font-size: 14px;
+}
 
 .separacaoDebitos{
     border: 1px solid #b4b4b4;
