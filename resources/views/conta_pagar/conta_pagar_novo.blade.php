@@ -46,7 +46,8 @@
             </div>
             <div class="col-md-4">
                 <label for="inputCliente" class="form-label">Fornecedor</label>
-                <select id="inputCliente" name="cliente_id" class="form-select form-control @error('cliente_id') is-invalid @enderror">
+                <select id="inputCliente" name="cliente_id"
+                    class="form-select form-control @error('cliente_id') is-invalid @enderror">
                     <option value="0" {{ old('cliente_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['clientes'] as $cliente)
                     <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
@@ -66,7 +67,7 @@
                     <option value="0" {{ old('categoria_pagar_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                     @foreach ($data['categorias'] as $cat)
                     <option value="{{ $cat->id }}" {{ old('categoria_pagar_id') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->descricao }} 
+                        {{ $cat->descricao }}
 
                     </option>
                     @endforeach
@@ -116,12 +117,43 @@
 
 
 <script>
-  $(document).ready(function() {
-    $('#inputValorParcela').mask('000.000.000.000.000,00', { reverse: true });
-  });
-  $(document).ready(function() {
-    $('#inputValorEntrada').mask('000.000.000.000.000,00', { reverse: true });
-  });
+$(document).ready(function() {
+    $(document).on('input', 'input[id^="inputValorEntrada"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
 
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
+$(document).ready(function() {
+    $(document).on('input', 'input[id^="inputValorParcela"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
 </script>
 @endsection

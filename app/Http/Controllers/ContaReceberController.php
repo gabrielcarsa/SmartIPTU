@@ -32,7 +32,7 @@ class ContaReceberController extends Controller
 
         $categorias = CategoriaReceber::all();
 
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nome')->get();
 
         $data = [
             'titular_conta' => $titular_conta,
