@@ -141,9 +141,9 @@
                                 <li><a href="../../lote/negativar/{{$lote->lote_id}}"
                                         class="dropdown-item">Negativar</a>
                                 </li>
-                                <li><a href="../../lote/acordo/{{$lote->lote_id}}"
+                                <!--<li><a href=""
                                         class="dropdown-item">Acordo</a>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </td>
