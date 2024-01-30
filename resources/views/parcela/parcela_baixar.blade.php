@@ -68,13 +68,13 @@
                         </th>
                         <th scope="row">
                             <input type="text" name="valor[]"
-                                value="{{ old('valor.' . $index) != null ?  old('valor.' . $index) : '' }}"
+                                value="{{ old('valor.' . $index) != null ?  old('valor.' . $index) : number_format($parcela[0]->valor_parcela, 2, ',', '.') }}"
                                 class="form-control valor_pago @error('valor.' . $index) is-invalid @enderror"
                                 id="inputValor">
                         </th>
                         <th scope="row">
                             <input type="date" name="data[]"
-                                value="{{ old('data.' . $index) != null ?  old('data.' . $index) : '' }}"
+                                value="{{ old('data.' . $index) != null ?  old('data.' . $index) : $parcela[0]->data_vencimento  }}"
                                 class="form-control @error('data.' . $index) is-invalid @enderror" id="">
                         </th>
                         <th scope="row">
