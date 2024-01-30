@@ -295,12 +295,12 @@ class LoteController extends Controller
         return view('lote/lote_contrato', compact('data', 'clientes'));
     }
 
-    //ALTERAR LOTE
-    function cadastrar_venda($id, $usuario, Request $request){
+    //CADASTRAR VENDA LOTE
+    function cadastrar_venda($lote_id, $usuario, Request $request){
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');
 
-        $lote = Lote::find($id);
+        $lote = Lote::find($lote_id);
 
         if (!$lote) {
             return redirect()->back()->with('error', 'Lote não encontrado');
@@ -314,5 +314,24 @@ class LoteController extends Controller
 
         return redirect()->back()->with('success', 'Venda cadastrada com sucesso');
 
+    }
+
+    //NEGATIVAR
+    function negativar($lote_id){
+
+        $lote = Lote::find($lote_id);
+
+        if (!$lote) {
+            return redirect()->back()->with('error', 'Lote não encontrado');
+        }
+
+        if($lote->negativar != true){
+            $lote->negativar = true;
+        }else{
+            $lote->negativar = false;
+        }
+        $lote->save();
+
+        return redirect()->back()->with('success', 'Operação realizada com sucesso');
     }
 }

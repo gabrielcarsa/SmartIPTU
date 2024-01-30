@@ -331,6 +331,15 @@ TABLE RESULTADOS
     color: #5f5f5f;
 }
 
+#negativado{
+    font-size: 8px;
+    background-color: red;
+    padding: 5px;
+    color: #FFFF;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
 /*-----
 CALENDARIO
 -----*/
