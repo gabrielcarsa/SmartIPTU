@@ -25,7 +25,7 @@ class ImportarController extends Controller
                 //metragem_direita, metragem_esquerda, metragem_esquina, confrontacao_frente, confrontacao_fundo, confrontacao_direita,
                 // confrontacao_esquerda, cliente, data_venda
                 $nomeQuadra = $row[0];
-                $lote = $row[1];
+                $lote_nome = $row[1];
                 $metros_quadrados = $row[2];
                 $valor = $row[3];
                 $endereco = $row[4];
@@ -72,28 +72,28 @@ class ImportarController extends Controller
                 }
     
                 // Inserir na tabela lote
-                Lote::create([
-                    'quadra_id' => $idQuadra,
-                    'lote' => $lote,
-                    'metros_quadrados' => $metros_quadrados,
-                    'valor' => ($valor != '') ? floatval(str_replace(',', '.', $valor)) : null,
-                    'endereco' => $endereco,
-                    'matricula' => $matricula,
-                    'inscricao_municipal' => $inscricao_municipal,
-                    'metragem_frente' => $metragem_frente,
-                    'metragem_fundo' => $metragem_fundo,
-                    'metragem_direita' => $metragem_direita,
-                    'metragem_esquerda' => $metragem_esquerda ,
-                    'metragem_esquina' => $metragem_esquina ,
-                    'confrontacao_frente' => $confrontacao_frente,
-                    'confrontacao_fundo' => $confrontacao_fundo ,
-                    'confrontacao_direita' => $confrontacao_direita ,
-                    'confrontacao_esquerda' => $confrontacao_esquerda,
-                    'cliente_id' => $nomeCliente != "" ? $idCliente : null,
-                    'data_venda' => $data_venda,
-                    'data_cadastro' => Carbon::now()->format('Y-m-d H:i:s'),
-                    'cadastrado_usuario_id' => $user_id,
-                ]);
+                $lote = new Lote();
+                $lote->lote = $lote_nome;
+                $lote->quadra_id = $idQuadra;
+                $lote->cliente_id = $nomeCliente != "" ? $idCliente : null;
+                $lote->matricula = $matricula;
+                $lote->inscricao_municipal = $inscricao_municipal;
+                $lote->valor = ($valor != '') ? floatval(str_replace(',', '.', $valor)) : null;
+                $lote->endereco = $endereco;
+                $lote->metros_quadrados = $metros_quadrados;
+                $lote->metragem_frente = $metragem_frente;
+                $lote->metragem_fundo = $metragem_fundo;
+                $lote->metragem_direita = $metragem_direita;
+                $lote->metragem_esquerda = $metragem_esquerda;
+                $lote->metragem_esquina = $metragem_esquina;
+                $lote->confrontacao_frente = $confrontacao_frente;
+                $lote->confrontacao_fundo = $confrontacao_fundo;
+                $lote->confrontacao_direita = $confrontacao_direita;
+                $lote->confrontacao_esquerda = $confrontacao_esquerda;
+                $lote->data_venda = $data_venda;
+                $lote->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+                $lote->cadastrado_usuario_id = $user_id;
+                $lote->save();
             }
     
             return redirect()->back()->with('success', 'Dados importados com sucesso.');
