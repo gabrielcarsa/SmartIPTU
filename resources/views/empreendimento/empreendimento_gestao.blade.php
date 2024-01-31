@@ -22,12 +22,12 @@
 </div>
 @endif
 
-<h2>{{$empreendimento->nome}}</h2>
-<a class="btn btn-primary btn-add" href="../../quadra/novo/{{$empreendimento->id}}" style="margin-bottom: 20px">
+<h2>{{$data['empreendimento']->nome}}</h2>
+<a class="btn btn-primary btn-add" href="../../quadra/novo/{{$data['empreendimento']->id}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Nova Quadra</a>
-<a class="btn btn-primary btn-add" href="../../lote/novo/{{$empreendimento->id}}" style="margin-bottom: 20px">
+<a class="btn btn-primary btn-add" href="../../lote/novo/{{$data['empreendimento']->id}}" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         add
     </span>Novo Lote</a>
@@ -46,7 +46,7 @@
             </div>
             <div class="modal-body">
                 <p>Selecione o arquivo no formato .csv</p>
-                <form action="/importar_lotes/{{ Auth::user()->id}}/{{$empreendimento->id}}" method="post"
+                <form action="/importar_lotes/{{ Auth::user()->id}}/{{$data['empreendimento']->id}}" method="post"
                     enctype="multipart/form-data">
                     @csrf
                     <input type="file" name="csv_file" accept=".csv">
@@ -60,6 +60,16 @@
     </div>
 </div>
 
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-ranking text-center">
+            <h4>Débitos em atraso - EMPRESA X CLIENTES</h5>
+                <div class="card-body">
+                    <canvas id="graficoDividaClienteEmpresa"></canvas>
+                </div>
+        </div>
+    </div>
+</div>
 
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
@@ -115,7 +125,8 @@
                     @else
                     <td>{{$lote->nome_cliente}}</td>
                     @endif
-                    <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span id='negativado'>NEGATIVADO</span>" : "" !!}</td>
+                    <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span
+                            id='negativado'>NEGATIVADO</span>" : "" !!}</td>
                     <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                     </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
@@ -160,5 +171,38 @@
 
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+// Obtém os dados do PHP e armazena em variáveis JavaScript
+const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
+const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+
+
+new Chart(graficoDividaClienteEmpresa, {
+    type: 'pie',
+    data: {
+        labels: [
+            'Empresa',
+            'Clientes'
+        ],
+        datasets: [{
+            label: 'R$ Débitos',
+            data: [debitosPagarAtrasados, debitosReceberAtrasados],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+            ],
+            hoverOffset: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+    }
+});
+</script>
 
 @endsection
