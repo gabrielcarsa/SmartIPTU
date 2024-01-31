@@ -133,7 +133,7 @@
                                 </li>
                                 <li>
                                     <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
-                                        class="dropdown-item">Adicionar Débitos</a>
+                                        class="dropdown-item">Limpar e Adicionar Débitos</a>
                                 </li>
                                 <li>
                                     <a href="../../lote/editar/{{$lote->lote_id}}" class="dropdown-item">Ver/Editar</a>
