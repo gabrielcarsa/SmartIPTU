@@ -9,6 +9,8 @@ use App\Models\Lote;
 use App\Models\DescricaoDebito;
 use App\Models\TipoDebito;
 use App\Models\Debito;
+use App\Models\ContaPagar;
+use App\Models\ContaReceber;
 use App\Models\TitularConta;
 use App\Models\ParcelaContaReceber;
 use App\Models\ParcelaContaPagar;
@@ -210,6 +212,41 @@ class ScrapingIptuController extends Controller
     //ADICIONAR DEBITOS SCRAPING IPTU APENAS COM UM BOTÃO
     public function iptuCampoGrandeAdicionarDireto($inscricao_municipal, $lote_id, $usuario_id)
     {
+        $debito = Debito::where('lote_id', $lote_id)->get();
+        
+        $i = 0;
+        foreach ($debito as $d) {
+            $parcela_receber = ParcelaContaReceber::where('debito_id', $d->id)->get();
+            $parcela_pagar = ParcelaContaPagar::where('debito_id', $d->id)->get();
+            $debito = 0;
+            
+            if (count($parcela_receber) > 0) {
+                foreach ($parcela_receber as $p) {
+                    $debito = Debito::find($p->debito_id);
+                    //Se houver parcelas em aberto redireciona de volta
+                    if($p->situacao == 1){
+                        return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
+                    }
+                    $p->delete();       
+                }
+            } elseif (count($parcela_pagar) > 0) {
+                foreach ($parcela_pagar as $p) {
+                    $debito = Debito::find($p->debito_id);
+                    //Se houver parcelas em aberto redireciona de volta
+                    if($p->situacao == 1){
+                        return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
+                    }
+                    $p->delete(); 
+                }
+            }
+
+            if ($debito) {
+                $debito->delete();
+            }
+            
+            $i++;
+        }
+
         //instanciando controller
         $ScrapingController = new ScrapingIptuController();
 
