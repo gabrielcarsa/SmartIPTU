@@ -7,6 +7,7 @@ use App\Models\Quadra;
 use App\Models\Lote;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmpreendimentoRequest;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class EmpreendimentoController extends Controller
@@ -94,6 +95,35 @@ class EmpreendimentoController extends Controller
      function gestao($id, Request $request){
 
         $empreendimento = Empreendimento::find($id);
+        $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+
+        $debitosPagarAtrasados =  DB::table('parcela_conta_pagar')
+        ->join('debito', 'parcela_conta_pagar.debito_id', '=', 'debito.id')
+        ->join('lote', 'debito.lote_id', '=', 'lote.id')
+        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
+        ->join('empreendimento', 'quadra.empreendimento_id', '=', 'empreendimento.id')
+        ->whereDate('parcela_conta_pagar.data_vencimento', '<', $hoje)
+        ->where('parcela_conta_pagar.situacao', 0)
+        ->where('parcela_conta_pagar.debito_id', '!=', null)
+        ->where('empreendimento.id', $empreendimento->id) 
+        ->sum('parcela_conta_pagar.valor_parcela');
+    
+        $debitosReceberAtrasados =  DB::table('parcela_conta_receber')
+        ->join('debito', 'parcela_conta_receber.debito_id', '=', 'debito.id')
+        ->join('lote', 'debito.lote_id', '=', 'lote.id')
+        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
+        ->join('empreendimento', 'quadra.empreendimento_id', '=', 'empreendimento.id')
+        ->whereDate('parcela_conta_receber.data_vencimento', '<', $hoje)
+        ->where('parcela_conta_receber.situacao', 0)
+        ->where('parcela_conta_receber.debito_id', '!=', null)
+        ->where('empreendimento.id', $empreendimento->id) 
+        ->sum('parcela_conta_receber.valor_parcela');
+
+        $data = [
+            'debitosPagarAtrasados' => $debitosPagarAtrasados,
+            'debitosReceberAtrasados' => $debitosReceberAtrasados,
+            'empreendimento' => $empreendimento
+        ];
         
         $resultado = Quadra::select(
             'quadra.id as quadra_id',
@@ -119,6 +149,6 @@ class EmpreendimentoController extends Controller
 
         $total_lotes = $resultado->count();
 
-        return view('empreendimento/empreendimento_gestao', compact('resultado', 'total_lotes'), compact('empreendimento') );
+        return view('empreendimento/empreendimento_gestao', compact('resultado', 'total_lotes'), compact('data') );
     }
 }
