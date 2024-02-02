@@ -99,7 +99,7 @@ class ScrapingIptuController extends Controller
                 // Iterar sobre todas as linhas encontradas
                 $rows->each(function ($row) use (&$resultadoParcela, &$parcelas, &$i, &$titulo) {
                     $auxTitulo = $row->filter('tr')->eq(0)->text();
-
+                    
                     //Preencher tipo de Débito conforme o nome
                     if (
                         $auxTitulo == "Pagamento Parcelado (2023)" ||
@@ -109,11 +109,13 @@ class ScrapingIptuController extends Controller
                         $auxTitulo == "Débitos Ajuizados" ||
                         $auxTitulo == "Pagamento Parcelado (2024)" ||
                         $auxTitulo == "Débitos Anteriores" ||
+                        $auxTitulo == "Débitos a Vencer" ||
+                        $auxTitulo == "Inscrição sem débitos para o ano de 2024" ||
                         $auxTitulo == "Pagamento à Vista (2024)" 
+                        
                     ) {
                         $titulo[$i] = $auxTitulo;
                     }
-                    
                     //Deixar uma string vazia por padrão
                     $vencimento = "";
                     $descricao_debito = "";
@@ -145,7 +147,7 @@ class ScrapingIptuController extends Controller
                         
                     
                     }
-                
+                    
                     //Preencher parcelas se houver
                     if(!empty($vencimento)){
                         $parcelas[] = [
@@ -171,7 +173,7 @@ class ScrapingIptuController extends Controller
                 
                 });
             });
-
+            
             $resultado = [
                 'resultadoParcela' => $resultadoParcela,
                 'resultadoLote' => $resultadoLote
@@ -212,40 +214,62 @@ class ScrapingIptuController extends Controller
     //ADICIONAR DEBITOS SCRAPING IPTU APENAS COM UM BOTÃO
     public function iptuCampoGrandeAdicionarDireto($inscricao_municipal, $lote_id, $usuario_id)
     {
+        //Antes de adicionar novos débitos, temos que apagar se possuir algum para não ocorrer duplicações
+
+        //Buscar o Debito com base no vinculo com Lote
         $debito = Debito::where('lote_id', $lote_id)->get();
         
         $i = 0;
         foreach ($debito as $d) {
+
+            //Buscar se houver parcelas a pagar ou receber
             $parcela_receber = ParcelaContaReceber::where('debito_id', $d->id)->get();
             $parcela_pagar = ParcelaContaPagar::where('debito_id', $d->id)->get();
+
+            //Declarando variavel
             $debito = 0;
             
+            //Se houver parcelas a receber
             if (count($parcela_receber) > 0) {
                 foreach ($parcela_receber as $p) {
+                    //Buscando o debito relacionado a essa parcela
                     $debito = Debito::find($p->debito_id);
+
                     //Se houver parcelas em aberto redireciona de volta
                     if($p->situacao == 1){
                         return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
                     }
+
+                    //Excluindo Parcela
                     $p->delete();       
                 }
-            } elseif (count($parcela_pagar) > 0) {
+            } elseif (count($parcela_pagar) > 0) { //Se houver parcelas a pagar
                 foreach ($parcela_pagar as $p) {
+                    //Buscando o debito relacionado a essa parcela
                     $debito = Debito::find($p->debito_id);
+
                     //Se houver parcelas em aberto redireciona de volta
                     if($p->situacao == 1){
                         return redirect()->back()->with('error', 'Selecione apenas parcelas em aberto para estornar a parcela');
                     }
+
+                    //Excluindo Parcela
                     $p->delete(); 
                 }
             }
 
+            //Apagando debito relacionado se existir
             if ($debito) {
                 $debito->delete();
             }
             
+            //Incrementando
             $i++;
         }
+
+        //----------------------------
+        // FIM DA EXCLUSÃO DE PARCELAS
+        //----------------------------
 
         //instanciando controller
         $ScrapingController = new ScrapingIptuController();
