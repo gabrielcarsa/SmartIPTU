@@ -22,7 +22,7 @@ use App\Http\Controllers\ContaCorrenteController;
 use App\Http\Controllers\ScrapingIptuController;
 use App\Http\Controllers\ImportarController;
 use App\Http\Controllers\CobrancaController;
-
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -192,4 +192,6 @@ Route::middleware([
         // ROTAS PARA COBRANÇA
         Route::get('/cobranca',[CobrancaController::class, 'gestao_cobranca'])->name('cobranca');
 
+        // ROTAS PARA ENDPOINTS
+        Route::post('/endpoint/login', [AuthController::class, 'login']);
     });
