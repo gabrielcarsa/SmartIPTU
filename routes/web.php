@@ -35,6 +35,10 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+
+// ROTAS PARA ENDPOINTS
+Route::post('/endpoint/login', [AuthController::class, 'login']);
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -192,6 +196,4 @@ Route::middleware([
         // ROTAS PARA COBRANÇA
         Route::get('/cobranca',[CobrancaController::class, 'gestao_cobranca'])->name('cobranca');
 
-        // ROTAS PARA ENDPOINTS
-        Route::post('/endpoint/login', [AuthController::class, 'login']);
     });
