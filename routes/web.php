@@ -23,6 +23,8 @@ use App\Http\Controllers\ScrapingIptuController;
 use App\Http\Controllers\ImportarController;
 use App\Http\Controllers\CobrancaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParcelasAPIController;
+
 
 /*
 |--------------------------------------------------------------------------
