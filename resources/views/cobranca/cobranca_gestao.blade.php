@@ -7,44 +7,80 @@
 </h2>
 
 <div class="card">
-    <h5 class="card-header">*</h5>
-    @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-    @endif
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
+
+    <h5 class="card-header">Parcelamentos para esse mês</h5>
 
     <div class="card-body">
-        <form class="row g-3" action="" method="post" autocomplete="off">
-            @csrf
-            <div class="col-md-3">
-                <label for="inputEmpreendimento" class="form-label">Selecione o empreendimento*</label>
-                <select id="inputEmpreendimento" name="empreendimento_id"
-                    class="form-select form-control @error('empreendimento_id') is-invalid @enderror">
-                    <option value="0" {{ old('empreendimento_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
-                    @foreach ($data['empreendimentos'] as $empreendimento)
-                    <option value="{{$empreendimento->id}}" {{ old('empreendimento_id') == $empreendimento->id ? 'selected' : '' }}>
-                        {{$empreendimento->nome}}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-        
-            <div class="col-12">
-                <button type="submit" class="btn-submit">
-                    Gerar
-                </button>
-            </div>
-        </form>
+
+        @if(isset($data['parcelasParcelamento']))
+
+        <table class="table table-bordered table-striped text-center">
+
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <!--<th scope="col">Titular a receber</th>-->
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Nº parcela</th>
+                    <th scope="col">Tipo Débito</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Empreendimento</th>
+                    <th scope="col">QD / LT</th>
+                    <th scope="col">Inscrição</th>
+                    <th scope="col">Responsabilidade</th>
+                    <th scope="col">Vencimento</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Situação</th>
+                </tr>
+            </thead>
+            <tbody class="tbody-contas">
+
+                @foreach ($data['parcelasParcelamento'] as $resultado)
+                <tr>
+                    <td scope="row">{{$resultado->id}}</td>
+                    <!--<td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>-->
+                    @if($resultado->tipo_cadastro == 0)
+                    <td scope="row">{{$resultado->nome}}</td>
+                    @else
+                    <td scope="row">{{$resultado->razao_social}}</td>
+                    @endif
+                    <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
+                    <td>{{$resultado->tipo_debito_descricao}}</td>
+                    <td>{{$resultado->descricao}}</td>
+                    <td>{{$resultado->empreendimento}}</td>
+                    <td>{{$resultado->quadra}} / {{$resultado->lote}}</td>
+                    <td>{{$resultado->inscricao}}</td>
+                    <td>
+                        @if($resultado->tipo_cadastro == 0)
+                        {{$resultado->nome}}
+                        @else
+                        {{$resultado->razao_social}}
+                        @endif
+                    </td>
+                    <td>{{\Carbon\Carbon::parse($resultado->data_vencimento)->format('d/m/Y') }}</td>
+                    <td>R$ {{number_format($resultado->valor_parcela, 2, ',', '.')}}</td>
+                    <td>
+                        @if($resultado->situacao_parcela == 0)
+                        Em aberto
+                        @else
+                        Pago
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+        @if(isset($data['resultados']))
+        <div class="card-footer">
+            <p>Exibindo {{$data['resultados']->count()}} registros</p>
+            <p>Valor total das parcelas: R$ {{number_format($data['totalValorParcelas'], 2, ',', '.')}}</p>
+            <p>Valor total pago: R$ {{number_format($data['totalValorPago'], 2, ',', '.')}}</p>
+        </div>
+        @endif
+
+
+        @endif
     </div>
 </div>
 @endsection
