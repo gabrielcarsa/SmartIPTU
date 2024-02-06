@@ -20,7 +20,6 @@
                 <tr>
                     <th scope="col">ID</th>
                     <!--<th scope="col">Titular a receber</th>-->
-                    <th scope="col">Cliente</th>
                     <th scope="col">Nº parcela</th>
                     <th scope="col">Tipo Débito</th>
                     <th scope="col">Descrição</th>
@@ -39,11 +38,6 @@
                 <tr>
                     <td scope="row">{{$resultado->id}}</td>
                     <!--<td scope="row">{{$resultado->nome_cliente_ou_razao_social}}</td>-->
-                    @if($resultado->tipo_cadastro == 0)
-                    <td scope="row">{{$resultado->nome}}</td>
-                    @else
-                    <td scope="row">{{$resultado->razao_social}}</td>
-                    @endif
                     <td scope="row">{{$resultado->numero_parcela}} de {{$resultado->quantidade_parcela}}</td>
                     <td>{{$resultado->tipo_debito_descricao}}</td>
                     <td>{{$resultado->descricao}}</td>
