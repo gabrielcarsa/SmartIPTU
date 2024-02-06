@@ -38,6 +38,8 @@ use App\Http\Controllers\AuthController;
 
 // ROTAS PARA ENDPOINTS
 Route::post('/endpoint/login', [AuthController::class, 'login']);
+Route::get('/endpoint/valores_hoje', [ParcelasAPIController::class, 'paraPagarReceberHoje']);
+
 
 Route::get('/', function () {
     return view('welcome');
