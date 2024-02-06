@@ -28,6 +28,6 @@ class ParcelasAPIController extends Controller
             'receberHoje' => $receberHoje,
         ];
 
-        return response()->json($parcelas);
+        return response()->json($data);
     }
 }
