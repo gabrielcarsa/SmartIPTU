@@ -23,9 +23,25 @@ class ParcelasAPIController extends Controller
         ->where('situacao', 0)
         ->sum('valor_parcela');
 
+        //Valor de Debitos a pagar atrasados
+        $debitosEmpresa =  DB::table('parcela_conta_pagar')
+        ->whereDate('data_vencimento', '<', $hoje)
+        ->where('situacao', 0)
+        ->where('debito_id', '!=', null)
+        ->sum('valor_parcela');
+
+        //Valor de Debitos a receber atrasados
+        $debitosCliente =  DB::table('parcela_conta_receber')
+        ->whereDate('data_vencimento', '<', $hoje)
+        ->where('situacao', 0)
+        ->where('debito_id', '!=', null)
+        ->sum('valor_parcela');
+
         $data = [
             'pagarHoje' => $pagarHoje,
             'receberHoje' => $receberHoje,
+            'debitosEmpresa' => $debitosEmpresa,
+            'debitosCliente' => $debitosCliente,
         ];
 
         return response()->json($data);
