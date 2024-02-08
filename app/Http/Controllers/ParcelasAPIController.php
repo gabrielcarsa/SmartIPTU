@@ -46,4 +46,48 @@ class ParcelasAPIController extends Controller
 
         return response()->json($data);
     }
+
+    public function calendario_financeiro(Request $request){
+
+        $dataSolicitada = $request->query('data_solicitada');
+
+        $contasPagarOutros =  DB::table('parcela_conta_pagar as p')
+        ->select(
+            'p.id as id',
+            'p.numero_parcela as numero_parcela',
+            'p.data_vencimento as data_vencimento',
+            'p.valor_parcela as valor_parcela',
+            'p.situacao as situacao_parcela',
+            'p.valor_pago as parcela_valor_pago',
+            'p.data_pagamento as data_pagamento',
+            'p.data_baixa as data_baixa',
+            'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
+            'p.alterado_usuario_id as parcela_alterado_usuario_id',
+            'p.usuario_baixa_id as parcela_usuario_baixa_id',
+            'p.data_alteracao as parcela_data_alteracao',
+            'cp.quantidade_parcela as quantidade_parcela',
+            'ctp.descricao as descricao',
+            'c.nome as nome',
+            'c.tipo_cadastro as tipo_cadastro',
+            'c.razao_social as razao_social',
+        )
+        ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
+        ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+        ->join('cliente as c', 'cp.fornecedor_id', '=', 'c.id')
+        ->join('categoria_pagar as ctp', 'cp.categoria_pagar_id', '=', 'ctp.id')
+        ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
+        ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+        ->where('p.situacao', '=', 0)
+        ->where('p.data_vencimento', $dataSolicitada)
+        ->orderBy('p.data_vencimento', 'ASC')
+        ->get();
+
+        $data = [
+            'contasPagarOutros' => $contasPagarOutros,
+            
+        ];
+
+        return response()->json($data);
+
+    }
 }
