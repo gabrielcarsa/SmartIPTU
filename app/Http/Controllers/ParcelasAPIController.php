@@ -102,7 +102,7 @@ class ParcelasAPIController extends Controller
             'p.data_vencimento as data_vencimento',
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
-            'p.valor_pago as parcela_valor_pago',
+            'p.valor_recebido as parcela_valor_recebido',
             'p.data_pagamento as data_pagamento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
@@ -116,9 +116,9 @@ class ParcelasAPIController extends Controller
             'c.razao_social as razao_social',
         )
         ->selectRaw('CASE WHEN titular_conta_cliente.razao_social IS NOT NULL THEN titular_conta_cliente.razao_social ELSE titular_conta_cliente.nome END AS nome_cliente_ou_razao_social')
-        ->join('conta_receber as cr', 'p.conta_pagar_id', '=', 'cr.id')
-        ->join('cliente as c', 'cr.fornecedor_id', '=', 'c.id')
-        ->join('categoria_receber as ctr', 'cr.categoria_pagar_id', '=', 'ctr.id')
+        ->join('conta_receber as cr', 'p.conta_receber_id', '=', 'cr.id')
+        ->join('cliente as c', 'cr.cliente_id', '=', 'c.id')
+        ->join('categoria_receber as ctr', 'cr.categoria_receber_id', '=', 'ctr.id')
         ->join('titular_conta as td', 'cr.titular_conta_id', '=', 'td.id')
         ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
         ->where('p.situacao', '=', 0)
