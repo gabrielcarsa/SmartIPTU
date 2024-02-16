@@ -95,7 +95,7 @@ class ParcelasAPIController extends Controller
 
         $dataSolicitada = $request->query('data_solicitada');
 
-        $contasreceberOutros =  DB::table('parcela_conta_receber as p')
+        $contasReceberOutros =  DB::table('parcela_conta_receber as p')
         ->select(
             'p.id as id',
             'p.numero_parcela as numero_parcela',
