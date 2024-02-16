@@ -103,7 +103,7 @@ class ParcelasAPIController extends Controller
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
             'p.valor_recebido as parcela_valor_recebido',
-            'p.data_pagamento as data_pagamento',
+            'p.data_recebimento as data_recebimento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
             'p.alterado_usuario_id as parcela_alterado_usuario_id',
