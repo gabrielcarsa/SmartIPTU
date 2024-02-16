@@ -156,7 +156,7 @@ class ContaReceberController extends Controller
             'p.data_vencimento as data_vencimento',
             'p.valor_parcela as valor_parcela',
             'p.situacao as situacao_parcela',
-            'p.valor_recebido as parcela_valor_pago',
+            'p.valor_recebido as parcela_recebido',
             'p.data_recebimento as data_recebimento',
             'p.data_baixa as data_baixa',
             'p.cadastrado_usuario_id as parcela_cadastrado_usuario_id',
