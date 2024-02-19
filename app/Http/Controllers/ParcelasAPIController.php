@@ -82,8 +82,14 @@ class ParcelasAPIController extends Controller
         ->orderBy('p.data_vencimento', 'ASC')
         ->get();
 
+        $queryContasPagar = clone $contasPagarOutros;
+
+        // Adicione esta linha para somar os valores
+        $valorTotalContasPagar = $queryContasPagar->sum('valor');
+
         $data = [
             'contasPagarOutros' => $contasPagarOutros,
+            'valorTotalContasPagar' => $valorTotalContasPagar
             
         ];
 
@@ -126,8 +132,15 @@ class ParcelasAPIController extends Controller
         ->orderBy('p.data_vencimento', 'ASC')
         ->get();
 
+        $queryContasReceber = clone $contasReceberOutros;
+
+        // Adicione esta linha para somar os valores
+        $valorTotalContasReceber = $queryContasReceber->sum('valor');
+
+
         $data = [
             'contasReceberOutros' => $contasReceberOutros,
+            'valorTotalContasReceber' => $valorTotalContasReceber
             
         ];
 
