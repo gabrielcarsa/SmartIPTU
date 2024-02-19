@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     eventosOutros.forEach(function(item) {
-        eventosDoCalendario.push({
+        if(item.nome != null){
+            eventosDoCalendario.push({
             title: item.descricao + " | " + item.nome,
             start: item.data_vencimento,
             valor: item.valor_parcela,
@@ -64,6 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
             idParcela: item.id,
             lote: item.lote,
         });
+        }else{
+            eventosDoCalendario.push({
+            title: item.descricao + " | " + item.razao_social,
+            start: item.data_vencimento,
+            valor: item.valor_parcela,
+            numParcela: item.numero_parcela,
+            qtdParcela: item.quantidade_parcela,
+            data_vencimento: item.data_vencimento,
+            idParcela: item.id,
+            lote: item.lote,
+        });
+        }
+        
     });
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
