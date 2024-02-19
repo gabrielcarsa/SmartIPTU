@@ -224,7 +224,7 @@
         <a class="btn btn-add" href="">Excel</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered table-striped text-center">
+        <table class="table table-bordered text-center">
             @if($data['isReferenteLotes'])
             <thead>
                 <tr>
