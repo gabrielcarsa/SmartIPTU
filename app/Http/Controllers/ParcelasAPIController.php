@@ -87,7 +87,6 @@ class ParcelasAPIController extends Controller
         // Adicione esta linha para somar os valores
         $valorTotalContasPagar = $queryContasPagar->sum('p.valor_parcela');
 
-        $contasPagarOutros->get();
 
         $data = [
             'contasPagarOutros' => $contasPagarOutros,
@@ -138,8 +137,6 @@ class ParcelasAPIController extends Controller
 
         // Adicione esta linha para somar os valores
         $valorTotalContasReceber = $queryContasReceber->sum('p.valor_parcela');
-
-
 
         $data = [
             'contasReceberOutros' => $contasReceberOutros,
