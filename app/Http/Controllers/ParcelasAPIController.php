@@ -84,7 +84,7 @@ class ParcelasAPIController extends Controller
         $queryContasPagar = clone $contasPagarOutros;
 
         // Adicione esta linha para somar os valores
-        $valorTotalContasPagar = $queryContasPagar->sum('valor');
+        $valorTotalContasPagar = $queryContasPagar->sum('p.valor_parcela');
 
         $contasPagarOutros->get();
 
@@ -135,7 +135,7 @@ class ParcelasAPIController extends Controller
         $queryContasReceber = clone $contasReceberOutros;
 
         // Adicione esta linha para somar os valores
-        $valorTotalContasReceber = $queryContasReceber->sum('valor');
+        $valorTotalContasReceber = $queryContasReceber->sum('p.valor_parcela');
 
         $contasReceberOutros->get();
 
