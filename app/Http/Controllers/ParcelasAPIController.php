@@ -79,7 +79,8 @@ class ParcelasAPIController extends Controller
         ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
         ->where('p.situacao', '=', 0)
         ->where('p.data_vencimento', $dataSolicitada)
-        ->orderBy('p.data_vencimento', 'ASC');
+        ->orderBy('p.data_vencimento', 'ASC')
+        ->get();
 
         $queryContasPagar = clone $contasPagarOutros;
 
@@ -130,14 +131,14 @@ class ParcelasAPIController extends Controller
         ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
         ->where('p.situacao', '=', 0)
         ->where('p.data_vencimento', $dataSolicitada)
-        ->orderBy('p.data_vencimento', 'ASC');
+        ->orderBy('p.data_vencimento', 'ASC')
+        ->get();
 
         $queryContasReceber = clone $contasReceberOutros;
 
         // Adicione esta linha para somar os valores
         $valorTotalContasReceber = $queryContasReceber->sum('p.valor_parcela');
 
-        $contasReceberOutros->get();
 
 
         $data = [
