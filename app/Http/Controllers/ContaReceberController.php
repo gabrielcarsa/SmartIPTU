@@ -681,6 +681,7 @@ class ContaReceberController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorRecebido = $request->get('valor', []);
         $dataRecebimento = $request->get('data', []);
+        $ordem = $request->get('ordem', []);
 
          //Verificar para não ser possível dar baixa com datas futuras
          foreach ($dataRecebimento as $d) {
@@ -715,6 +716,7 @@ class ContaReceberController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaReceber->cliente_id;
                 $movimentacao_financeira->descricao = $contaReceber->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataRecebimento[$i];
+                $movimentacao_financeira->ordem = $ordem[$i];
                 $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
                 $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 

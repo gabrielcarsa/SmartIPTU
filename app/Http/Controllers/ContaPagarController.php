@@ -678,6 +678,7 @@ class ContaPagarController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorPago = $request->get('valor', []);
         $dataPagamento = $request->get('data', []);
+        $ordem = $request->get('ordem', []);
 
         //Verificar para não ser possível dar baixa com datas futuras
         foreach ($dataPagamento as $d) {
@@ -712,6 +713,7 @@ class ContaPagarController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
                 $movimentacao_financeira->descricao = $contaPagar->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataPagamento[$i];
+                $movimentacao_financeira->ordem = $ordem[$i];
                 $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
                 $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 

@@ -388,7 +388,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); 
 
-        $saldo_atual = SaldoDiario::where('data', $dataRef)
+        $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); // Saldo do dia
@@ -470,6 +470,7 @@ class MovimentacaoFinanceiraController extends Controller
             'data' => $dataRef,
             'data_fim' => $dataFim,
         ];
+
         $pdf = PDF::loadView('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
         return $pdf->download('movimentacao.pdf');
         //return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));

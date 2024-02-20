@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width, initial-scale=1">
-    <title>Relatório Clientes</title>
+    <title>Relatório Movimentação Financeira</title>
 
     <style>
     /* Estilo básico para tabelas */
@@ -64,7 +64,7 @@
     <p style="font-size: 10px;">SmartIPTU</p>
     <div class="">
         <h4 style="text-align: center !important; font-size: 20px;">
-            Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} - 
+            Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} -
             {{\Carbon\Carbon::parse($data['data_fim'])->format('d/m/Y')}}
         </h4>
         @if($movimentacao[0]->nome_titular != null)
@@ -83,11 +83,24 @@
                     <th scope="col">Descrição</th>
                     <th scope="col">Valor da Entrada</th>
                     <th scope="col">Valor da Saída</th>
+                    <th scope="col">Saldo</th>
                 </tr>
             </thead>
+            @php
+            $saldoAtual = isset($data['saldo_anterior'][0]) ? $data['saldo_anterior'][0]->saldo : 0; // Inicializa
+            @endphp
             <tbody>
                 @if(isset($movimentacao))
                 @foreach ($movimentacao as $mov)
+                <!-- Calcula o saldo atual com base na movimentação e no saldo anterior -->
+                @php
+                if ($mov->tipo_movimentacao == 0) { // Se for uma entrada
+                $saldoAtual += $mov->valor; // Adiciona o valor da entrada ao saldo atual
+                } else { // Se for uma saída
+                $saldoAtual -= $mov->valor; // Subtrai o valor da saída do saldo atual
+                }
+                @endphp
+
                 <tr>
                     <td>{{\Carbon\Carbon::parse($mov->data_movimentacao)->format('d/m/Y')}}</td>
                     @if($mov->tipo_cadastro == 0)
@@ -109,9 +122,11 @@
                     @if($mov->tipo_movimentacao == 0)
                     <td class="align-middle entradaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
+                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @else
                     <td class="align-middle"></td>
                     <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @endif
                 </tr>
 
@@ -126,6 +141,7 @@
                     <td><strong>Valor Total</strong></td>
                     <td><strong>R$ {{number_format($data['valorEntradas'], 2, ',', '.')}}</strong></td>
                     <td><strong>R$ {{number_format($data['valorSaidas'], 2, ',', '.')}}</strong></td>
+                    <td><strong>R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</strong></td>
 
                 </tr>
             </tfoot>
