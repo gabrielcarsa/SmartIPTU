@@ -172,7 +172,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->leftJoin('cliente AS c', 'c.id', '=', 't.cliente_id')
         ->get();
 
-        $clientes = Cliente::all();
+        $clientes = Cliente::orderBy('nome')->get();
 
 
         $data = [
