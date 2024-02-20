@@ -274,8 +274,10 @@
                     <td>
                         @if($resultado->situacao_parcela == 0)
                         Em aberto
-                        @else
+                        @elseif($resultado->situacao_parcela == 1)
                         Pago
+                        @else
+                        Pago parcialmente
                         @endif
                     </td>
                 </tr>
@@ -335,8 +337,10 @@
                     <td>
                         @if($resultado->situacao_parcela == 0)
                         Em aberto
-                        @else
+                        @elseif($resultado->situacao_parcela == 1)
                         Pago
+                        @else
+                        Pago parcialmente
                         @endif
                     </td>
                 </tr>

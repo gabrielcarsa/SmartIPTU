@@ -191,6 +191,7 @@ Route::middleware([
         Route::get('/movimentacao_financeira/conta_corrente/{titular_conta_id}', [MovimentacaoFinanceiraController::class, 'conta_corrente']);
         Route::post('/movimentacao_financeira/cadastrar/{usuario}',[MovimentacaoFinanceiraController::class, 'cadastrar']);
         Route::get('/movimentacao_financeira/relatorio_pdf',[MovimentacaoFinanceiraController::class, 'relatorio_pdf']);
+        Route::get('/movimentacao_financeira/alterar_ordem',[MovimentacaoFinanceiraController::class, 'alterar_ordem']);
 
         //SCRAPING  
         Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');

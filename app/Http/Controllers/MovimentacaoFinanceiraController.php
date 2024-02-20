@@ -124,7 +124,8 @@ class MovimentacaoFinanceiraController extends Controller
         ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
         ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
         ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
-        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id');
+        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
+        ->orderBy('mf.ordem');
 
         // Filtro
         if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
@@ -212,6 +213,7 @@ class MovimentacaoFinanceiraController extends Controller
             $movimentacao_financeira = new MovimentacaoFinanceira();
             $movimentacao_financeira->cliente_fornecedor_id = $movimentacaoData['cliente_fornecedor_id'];
             $movimentacao_financeira->descricao = $movimentacaoData['descricao'];
+            $movimentacao_financeira->ordem = $movimentacaoData['ordem'];
             $movimentacao_financeira->data_movimentacao = $request->input('data');
             $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
             $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
@@ -386,7 +388,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); 
 
-        $saldo_atual = SaldoDiario::where('data', $dataRef)
+        $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); // Saldo do dia
@@ -468,8 +470,24 @@ class MovimentacaoFinanceiraController extends Controller
             'data' => $dataRef,
             'data_fim' => $dataFim,
         ];
+
         $pdf = PDF::loadView('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
         return $pdf->download('movimentacao.pdf');
         //return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
+    }
+
+    //ALTERAR ORDEM 
+    public function alterar_ordem(Request $request){
+        // Obter o ID da movimentação e a nova ordem do corpo da solicitação
+        $movimentacaoId = $request->input('movimentacao_id');
+        $novaOrdem = $request->input('nova_ordem');
+
+        // Atualizar a ordem no banco de dados
+        $movimentacao = MovimentacaoFinanceira::find($movimentacaoId);
+        $movimentacao->ordem = $novaOrdem;
+        $movimentacao->save();
+
+        return redirect()->back();
+
     }
 }

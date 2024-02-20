@@ -678,6 +678,7 @@ class ContaPagarController extends Controller
         $idParcelas = $request->get('id_parcela', []);
         $valorPago = $request->get('valor', []);
         $dataPagamento = $request->get('data', []);
+        $ordem = $request->get('ordem', []);
 
         //Verificar para não ser possível dar baixa com datas futuras
         foreach ($dataPagamento as $d) {
@@ -695,7 +696,14 @@ class ContaPagarController extends Controller
             $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
-            $parcela->situacao = 1;
+            if (request()->has('baixa_parcial')) {
+                // O checkbox está selecionado
+                $parcela->situacao = 2;
+
+            } else {
+                // O checkbox não está selecionado
+                $parcela->situacao = 1;
+            }
 
              //Selecionar ID do contas a pagar
              $conta_pagar_id = $parcela->conta_pagar_id;
@@ -712,6 +720,7 @@ class ContaPagarController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
                 $movimentacao_financeira->descricao = $contaPagar->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataPagamento[$i];
+                $movimentacao_financeira->ordem = $ordem[$i];
                 $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
                 $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
                 

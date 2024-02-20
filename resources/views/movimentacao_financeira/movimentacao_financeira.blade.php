@@ -64,11 +64,13 @@
             @csrf
             <div class="col-md-2">
                 <label for="inputData" class="form-label">Data início</label>
-                <input type="date" name="data" value="{{request('data')}}" class="form-control @error('data') is-invalid @enderror" id="inputData">
+                <input type="date" name="data" value="{{request('data')}}"
+                    class="form-control @error('data') is-invalid @enderror" id="inputData">
             </div>
             <div class="col-md-2">
                 <label for="inputData" class="form-label">Data fim</label>
-                <input type="date" name="data_fim" value="{{request('data_fim')}}" class="form-control @error('data_fim') is-invalid @enderror" id="inputData">
+                <input type="date" name="data_fim" value="{{request('data_fim')}}"
+                    class="form-control @error('data_fim') is-invalid @enderror" id="inputData">
             </div>
             <div class="col-md-3">
                 <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
@@ -76,7 +78,8 @@
                     class="form-select form-control @error('titulares_conta') is-invalid @enderror">
                     <option value="0">-- Selecione --</option>
                     @foreach ($data['titulares_conta'] as $titular)
-                    <option value="{{ $titular->id }}" {{ request('titulares_conta') == $titular->id ? 'selected' : '' }}>
+                    <option value="{{ $titular->id }}"
+                        {{ request('titulares_conta') == $titular->id ? 'selected' : '' }}>
                         @if(empty($titular->nome))
                         {{$titular->razao_social}}
                         @else
@@ -146,12 +149,26 @@
                     <th scope="col">Descrição</th>
                     <th scope="col">Valor da Entrada</th>
                     <th scope="col">Valor da Saída</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Ordem</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
+            @php
+            $saldoAtual = isset($data['saldo_anterior'][0]) ? $data['saldo_anterior'][0]->saldo : 0; // Inicializa
+            @endphp
+
             <tbody>
                 @if(isset($movimentacao))
                 @foreach ($movimentacao as $mov)
+                <!-- Calcula o saldo atual com base na movimentação e no saldo anterior -->
+                @php
+                if ($mov->tipo_movimentacao == 0) { // Se for uma entrada
+                $saldoAtual += $mov->valor; // Adiciona o valor da entrada ao saldo atual
+                } else { // Se for uma saída
+                $saldoAtual -= $mov->valor; // Subtrai o valor da saída do saldo atual
+                }
+                @endphp
                 <tr>
                     <th scope="row">{{$mov->id}}</th>
                     @if($mov->tipo_cadastro == 0)
@@ -173,10 +190,18 @@
                     @if($mov->tipo_movimentacao == 0)
                     <td class="align-middle entradaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
+                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @else
                     <td class="align-middle"></td>
                     <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @endif
+
+                    <td class="align-middle">
+                        <input type="text" style="width:60px;" name="movimentacoes[0][ordem]" value="{{ $mov->ordem }}"
+                            class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
+                    </td>
+
 
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
@@ -215,6 +240,34 @@
 
 <script>
 $(document).ready(function() {
+    // Quando o valor do input de ordem é alterado
+    $('input[name^="movimentacoes"]').change(function() {
+        var newValue = $(this).val(); // Obter o novo valor de ordem
+        var movimentacaoId = $(this).closest('tr').find('th').text(); // Obter o ID da movimentação
+        var row = $(this).closest('tr'); // Referência à linha da tabela
+
+        // Enviar uma solicitação AJAX para atualizar a ordem
+        $.ajax({
+            _token: '{{ csrf_token() }}',
+            url: '/movimentacao_financeira/alterar_ordem',
+            method: 'GET',
+            data: {
+                movimentacao_id: movimentacaoId,
+                nova_ordem: newValue
+            },
+            success: function(response) {
+
+                // Recarrega a página atual
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Se ocorrer um erro durante a solicitação AJAX, você pode lidar com isso aqui
+                console.error(error);
+            }
+        });
+
+
+    });
 
     // Quando o titular da conta é selecionado
     $('#inputTitularConta').change(function() {
