@@ -240,6 +240,34 @@
 
 <script>
 $(document).ready(function() {
+    // Quando o valor do input de ordem é alterado
+    $('input[name^="movimentacoes"]').change(function() {
+        var newValue = $(this).val(); // Obter o novo valor de ordem
+        var movimentacaoId = $(this).closest('tr').find('th').text(); // Obter o ID da movimentação
+        var row = $(this).closest('tr'); // Referência à linha da tabela
+
+        // Enviar uma solicitação AJAX para atualizar a ordem
+        $.ajax({
+            _token: '{{ csrf_token() }}',
+            url: '/movimentacao_financeira/alterar_ordem',
+            method: 'GET',
+            data: {
+                movimentacao_id: movimentacaoId,
+                nova_ordem: newValue
+            },
+            success: function(response) {
+
+                // Recarrega a página atual
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Se ocorrer um erro durante a solicitação AJAX, você pode lidar com isso aqui
+                console.error(error);
+            }
+        });
+
+
+    });
 
     // Quando o titular da conta é selecionado
     $('#inputTitularConta').change(function() {

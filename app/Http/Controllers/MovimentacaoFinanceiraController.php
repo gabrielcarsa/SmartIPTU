@@ -475,4 +475,19 @@ class MovimentacaoFinanceiraController extends Controller
         return $pdf->download('movimentacao.pdf');
         //return view('movimentacao_financeira.movimentacao_financeira_pdf', compact('data', 'movimentacao'));
     }
+
+    //ALTERAR ORDEM 
+    public function alterar_ordem(Request $request){
+        // Obter o ID da movimentação e a nova ordem do corpo da solicitação
+        $movimentacaoId = $request->input('movimentacao_id');
+        $novaOrdem = $request->input('nova_ordem');
+
+        // Atualizar a ordem no banco de dados
+        $movimentacao = MovimentacaoFinanceira::find($movimentacaoId);
+        $movimentacao->ordem = $novaOrdem;
+        $movimentacao->save();
+
+        return redirect()->back();
+
+    }
 }
