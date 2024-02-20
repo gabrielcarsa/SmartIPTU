@@ -39,16 +39,15 @@
         <div class="offcanvas-body-content" style="max-height: 80vh; overflow-y: auto;">
             <ul class="list-offcanvas">
                 <li><a href="/empreendimento">
-                        <span class="material-symbols-outlined">pie_chart</span>Gestão de Lotes/Inscrições
-                    </a>
+                        <span class="material-symbols-outlined">pie_chart</span>Gestão de propriedades</a>
                 </li>
                 <li><a href="/cliente"><span class="material-symbols-outlined">
                             person_add
-                        </span>Cadastro de clientes</a>
+                        </span>Cadastro de cliente e fornecedores</a>
                 </li>
                 <li><a href="/usuario"><span class="material-symbols-outlined">
                             group
-                        </span>Cadastro e controle de usuários</a>
+                        </span>Cadastro de usuários</a>
                 </li>
                 <li><a href="/cobranca"><span class="material-symbols-outlined">
                             call_quality
@@ -64,7 +63,7 @@
                         <li><a class="dropdown-item" href="{{ route('calendario') }}"><span
                                     class="material-symbols-outlined">
                                     calendar_month
-                                </span>Calendário Financeiro</a></li>
+                                </span>Calendário financeiro</a></li>
                         <li><a class="dropdown-item" href="{{ route('contas_receber') }}"><span
                                     class="material-symbols-outlined">
                                     attach_money
@@ -76,7 +75,7 @@
                         <li><a class="dropdown-item" href="{{ route('movimentacao_financeira') }}"><span
                                     class="material-symbols-outlined">
                                     currency_exchange
-                                </span>Movimentação Financeira</a></li>
+                                </span>Movimentação financeira</a></li>
                     </ul>
                 </li>
 
