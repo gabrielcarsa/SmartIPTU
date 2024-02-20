@@ -36,12 +36,14 @@
                 <div class="col-md-2 adicionar-linha d-flex align-items-center ms-auto">
                     <a href="" id="adicionarMovimentacao">+ Nova linha</a>
                 </div>
+                <div class="col-md-2 remover-linha d-flex align-items-center ms-auto">
+                    <a href="" id="removerMovimentacao">- Remover linha</a>
+                </div>
             </div>
             <hr>
             <div class="row row-form movimentacao">
-                <div class="col-md-2">
-                    <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo
-                        Movimentação*</label>
+                <div class="col-md-1">
+                    <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo*</label>
                     <select id="inputTipoMovimentacao" name="movimentacoes[0][tipo_movimentacao]"
                         class="form-select form-control">
                         <option value="0" select>-- Selecione --</option>
@@ -84,6 +86,11 @@
                     <label for="inputDescricao" id="descricao" class="form-label">Descrição*</label>
                     <input type="text" name="movimentacoes[0][descricao]" value="{{ old('descricao') }}"
                         class="form-control @error('descricao') is-invalid @enderror" id="inputDescricao">
+                </div>
+                <div class="col-md-1">
+                    <label for="inputOrdem" id="ordem" class="form-label">Ordem</label>
+                    <input type="text" name="movimentacoes[0][ordem]" value="{{ old('ordem') }}"
+                        class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
                 </div>
             </div>
             <hr>
@@ -133,7 +140,7 @@ $(document).ready(function() {
     $(document).on('input', 'input[name^="movimentacoes["][name$="[valor]"]', function() {
         // Remova os caracteres não numéricos
         var unmaskedValue = $(this).val().replace(/\D/g, '');
-        
+
         // Adicione a máscara apenas ao input de valor relacionado à mudança
         $(this).val(mask(unmaskedValue));
     });
@@ -143,7 +150,9 @@ $(document).ready(function() {
         var numberValue = parseFloat(value) / 100;
 
         // Formata o número com vírgula como separador decimal e duas casas decimais
-        return numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
     }
 });
 $(document).ready(function() {
@@ -160,12 +169,26 @@ $(document).ready(function() {
 
         // Incrementa os índices dos campos clonados para garantir que o Laravel os interprete como um array
         novaMovimentacao.find('[name^="movimentacoes"]').each(function() {
-            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $('.movimentacao').length + ']');
+            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $('.movimentacao')
+                .length + ']');
             $(this).attr('name', newName);
         });
 
         // Adiciona a nova div de movimentação no final do formulário
         $('.movimentacao:last').after(novaMovimentacao);
+    });
+
+    // Remove a linha de movimentação ao clicar no botão de exclusão
+    $(document).on('click', '#removerMovimentacao', function(e) {
+        e.preventDefault(); // Impede o comportamento padrão do link
+        // Verifique se há mais de uma linha de movimentação antes de remover
+        if ($('.movimentacao').length > 1) {
+            // Remova a última linha de movimentação
+            $('.movimentacao:last').remove();
+        } else {
+            // Caso contrário, limpe os valores da última linha
+            $('.movimentacao:last input, .movimentacao:last select').val('');
+        }
     });
 
     // Quando o tipo de movimentação é selecionado

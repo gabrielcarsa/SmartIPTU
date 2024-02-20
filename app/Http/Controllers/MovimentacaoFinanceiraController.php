@@ -124,7 +124,8 @@ class MovimentacaoFinanceiraController extends Controller
         ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
         ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
         ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
-        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id');
+        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
+        ->orderBy('mf.ordem');
 
         // Filtro
         if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
@@ -212,6 +213,7 @@ class MovimentacaoFinanceiraController extends Controller
             $movimentacao_financeira = new MovimentacaoFinanceira();
             $movimentacao_financeira->cliente_fornecedor_id = $movimentacaoData['cliente_fornecedor_id'];
             $movimentacao_financeira->descricao = $movimentacaoData['descricao'];
+            $movimentacao_financeira->ordem = $movimentacaoData['ordem'];
             $movimentacao_financeira->data_movimentacao = $request->input('data');
             $movimentacao_financeira->titular_conta_id = $request->input('titular_conta_id');
             $movimentacao_financeira->conta_corrente_id = $request->input('conta_corrente_id');
