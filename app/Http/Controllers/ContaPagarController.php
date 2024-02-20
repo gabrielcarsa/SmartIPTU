@@ -696,7 +696,14 @@ class ContaPagarController extends Controller
             $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
-            $parcela->situacao = 1;
+            if (request()->has('baixa_parcial')) {
+                // O checkbox está selecionado
+                $parcela->situacao = 2;
+
+            } else {
+                // O checkbox não está selecionado
+                $parcela->situacao = 1;
+            }
 
              //Selecionar ID do contas a pagar
              $conta_pagar_id = $parcela->conta_pagar_id;

@@ -115,6 +115,10 @@
                         <option value="0" selected> Selecione --</option>
                     </select>
                 </div>
+                <div class="col-md-2" >
+                    <label for="inputParcial" class="form-label">Baixa parcial? </label>
+                    <input id="inputParcial" type="checkbox" name="baixa_parcial">
+                </div>
             </div>
 
             <div class="col-12">
