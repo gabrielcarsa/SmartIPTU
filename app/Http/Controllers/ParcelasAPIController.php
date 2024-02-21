@@ -15,7 +15,7 @@ class ParcelasAPIController extends Controller
     public function paraPagarReceberHoje(Request $request){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
             //Soma das parcelas a Pagar no dia de Hoje
@@ -62,7 +62,7 @@ class ParcelasAPIController extends Controller
     public function calendario_financeiro_pagar(Request $request){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             $dataSolicitada = $request->query('data_solicitada');
 
             $contasPagarOutros =  DB::table('parcela_conta_pagar as p')
@@ -125,7 +125,7 @@ class ParcelasAPIController extends Controller
     public function calendario_financeiro_receber(Request $request){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             $dataSolicitada = $request->query('data_solicitada');
 
             $contasReceberOutros =  DB::table('parcela_conta_receber as p')
@@ -185,7 +185,7 @@ class ParcelasAPIController extends Controller
     public function titulares_conta(Request $request){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             //Selecionar Titulares de Conta
             $titulares_conta = DB::table('titular_conta as tc')
             ->select(
@@ -210,7 +210,7 @@ class ParcelasAPIController extends Controller
     function conta_corrente(Request $request, $titular_conta_id){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             $conta_corrente = ContaCorrente::where('titular_conta_id',$titular_conta_id)->get();
             return response()->json($conta_corrente);
         }else{
@@ -224,7 +224,7 @@ class ParcelasAPIController extends Controller
     public function movimentacao_financeira_listar(Request $request){
         $key = $request->query('key');
 
-        if($key == "AmbienteAplicativo01#"){
+        if($key == "AmbienteAplicativo01"){
             $movimentacao = MovimentacaoFinanceira::all();    
         
             $titular = $request->input('titulares_conta');

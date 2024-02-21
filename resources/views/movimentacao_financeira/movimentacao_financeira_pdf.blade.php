@@ -83,8 +83,8 @@
                     <th scope="col">Cliente / Fornecedor</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor da Entrada (R$)</th>
-                    <th scope="col">Valor da Saída (R$)</th>
+                    <th scope="col">Valor Entrada (R$)</th>
+                    <th scope="col">Valor Saída (R$)</th>
                     <th scope="col">Saldo (R$)</th>
                 </tr>
             </thead>
