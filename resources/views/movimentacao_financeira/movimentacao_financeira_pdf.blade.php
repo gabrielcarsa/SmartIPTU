@@ -11,7 +11,7 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 10px;
+        font-size: 8px;
         color: #212529;
     }
 
@@ -61,7 +61,7 @@
 </head>
 
 <body>
-    <p style="font-size: 10px;">SmartIPTU</p>
+    <p style="font-size: 8px;">GHC Tecnologia - <strong>SmartIPTU</strong></p>
     <div class="">
         <h4 style="text-align: center !important; font-size: 20px;">
             Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} -
