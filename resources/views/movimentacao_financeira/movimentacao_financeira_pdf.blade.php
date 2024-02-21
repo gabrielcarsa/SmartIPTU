@@ -11,12 +11,13 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 9px;
+        font-size: 8px;
         color: #212529;
     }
 
     /* Estilo para cabeçalho de tabela */
     .table th {
+        color: #6002ee;
         padding: 0.75rem;
         vertical-align: top;
         border-top: 1px solid #dee2e6;
@@ -63,16 +64,16 @@
 <body>
     <p style="font-size: 8px;">GHC Tecnologia - <strong>SmartIPTU</strong></p>
     <div class="">
-        <h4 style="text-align: center !important; font-size: 20px;">
+        <h4 style="text-align: center !important; font-size: 216px;">
             Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} -
             {{\Carbon\Carbon::parse($data['data_fim'])->format('d/m/Y')}}
         </h4>
         @if($movimentacao[0]->nome_titular != null)
-        <p style="font-size: 11px;">{{$movimentacao[0]->nome_titular}}</p>
+        <p style="font-size: 10px;">{{$movimentacao[0]->nome_titular}}</p>
         @else
-        <p style="font-size: 11px">{{$movimentacao[0]->razao_social_titular}}</p>
+        <p style="font-size: 10px">{{$movimentacao[0]->razao_social_titular}}</p>
         @endif
-        <p style="font-size: 11px;">{{$movimentacao[0]->conta_corrente}}</p>
+        <p style="font-size: 10px;">{{$movimentacao[0]->conta_corrente}}</p>
 
         <table class="table table-striped text-center">
             <thead>
