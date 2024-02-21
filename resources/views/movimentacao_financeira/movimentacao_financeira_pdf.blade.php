@@ -64,7 +64,7 @@
 <body>
     <p style="font-size: 8px;">GHC Tecnologia - <strong>SmartIPTU</strong></p>
     <div class="">
-        <h4 style="text-align: center !important; font-size: 216px;">
+        <h4 style="text-align: center !important; font-size: 26px;">
             Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} -
             {{\Carbon\Carbon::parse($data['data_fim'])->format('d/m/Y')}}
         </h4>

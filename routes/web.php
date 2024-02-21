@@ -43,6 +43,10 @@ Route::post('/endpoint/login', [AuthController::class, 'login']);
 Route::get('/endpoint/valores_hoje', [ParcelasAPIController::class, 'paraPagarReceberHoje']);
 Route::get('/endpoint/calendario_pagar', [ParcelasAPIController::class, 'calendario_financeiro_pagar']);
 Route::get('/endpoint/calendario_receber', [ParcelasAPIController::class, 'calendario_financeiro_receber']);
+Route::get('/endpoint/titulares_conta', [ParcelasAPIController::class, 'titulares_conta']);
+Route::get('/endpoint/conta_corrente', [ParcelasAPIController::class, 'conta_corrente']);
+Route::get('/endpoint/movimentacao_financeira', [ParcelasAPIController::class, 'movimentacao_financeira_listar']);
+
 
 
 Route::get('/', function () {

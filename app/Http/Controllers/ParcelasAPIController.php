@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\MovimentacaoFinanceira;
+use App\Models\SaldoDiario;
+use App\Models\ContaCorrente;
+
 
 class ParcelasAPIController extends Controller
 {
@@ -148,6 +152,102 @@ class ParcelasAPIController extends Controller
             'contasReceberOutros' => $contasReceberOutros,
             'valorTotalContasReceber' => $valorTotalContasReceber
             
+        ];
+
+        return response()->json($data);
+
+    }
+
+    public function titulares_conta(){
+        //Selecionar Titulares de Conta
+        $titulares_conta = DB::table('titular_conta as tc')
+        ->select(
+            'tc.*',
+            'c.nome as nome',
+            'c.razao_social as razao_social'
+        )
+        ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
+        ->get();
+
+        return response()->json($titulares_conta);
+
+    }
+    
+    //RETORNA UM JSON COM A CONTA CORRENTE ESPECÍFICA
+    function conta_corrente($titular_conta_id){
+        $conta_corrente = ContaCorrente::where('titular_conta_id',$titular_conta_id)->get();
+        return response()->json($conta_corrente);
+    }
+
+    public function movimentacao_financeira_listar(Request $request){
+
+        $movimentacao = MovimentacaoFinanceira::all();    
+        
+        $titular = $request->input('titulares_conta');
+        $conta_corrente = $request->input('conta_corrente');
+        $dataRef = $request->input('data');
+        $dataFim = $request->input('data_fim');
+
+        // Saldo anterior
+        $saldo_anterior = SaldoDiario::orderBy('data', 'desc')
+        ->where('data', '<', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); 
+
+        $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
+        ->where('titular_conta_id', '=', $titular)
+        ->where('conta_corrente_id', '=', $conta_corrente)
+        ->get(); // Saldo do dia
+
+        $total_movimentacao = $movimentacao->count();
+
+        $query = DB::table('movimentacao_financeira as mf')
+        ->select(
+            'mf.*',
+            'cr.descricao as categoria_receber',
+            'cp.descricao as categoria_pagar',
+            'td.descricao as tipo_debito',
+            'c.nome as nome',
+            'c.tipo_cadastro as tipo_cadastro',
+            'c.razao_social as razao_social',
+            'pr.id as id_parcela_receber', 
+            'pr.id as id_parcela_receber', 
+            'pr.debito_id as parcela_receber_debito', 
+            'pg.id as id_parcela_pagar',
+            'pg.debito_id as parcela_pagar_debito', 
+            'tc.id as titular_conta_id',
+            'c2.nome as nome_titular',
+            'c2.razao_social as razao_social_titular'
+        )
+        ->leftjoin('categoria_receber as cr', 'mf.categoria_receber_id', '=', 'cr.id')
+        ->leftjoin('categoria_pagar as cp', 'mf.categoria_pagar_id', '=', 'cp.id')
+        ->leftjoin('tipo_debito as td', 'mf.tipo_debito_id', '=', 'td.id')
+        ->join('cliente as c', 'mf.cliente_fornecedor_id', '=', 'c.id')
+        ->leftjoin('parcela_conta_receber as pr', 'pr.movimentacao_financeira_id', '=', 'mf.id')
+        ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
+        ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
+        ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
+        ->orderBy('mf.ordem');
+
+        // Filtro
+        if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
+            $query->where('data_movimentacao', '>=', $dataRef)
+            ->where('data_movimentacao', '<=', $dataFim)
+            ->where('mf.titular_conta_id', '=', $titular)
+            ->where('mf.conta_corrente_id', '=', $conta_corrente)
+            ->orderBy('id');
+        }
+
+        // Execute a consulta e obtenha os resultados
+        $movimentacao = $query->get();
+
+        $data = [
+            'saldo_anterior' => $saldo_anterior,
+            'saldo_atual' => $saldo_atual,
+            'total_movimentacao' => $total_movimentacao,
+            'entradas' => $entradas,
+            'saidas' => $saidas
         ];
 
         return response()->json($data);
