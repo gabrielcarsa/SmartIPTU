@@ -692,14 +692,13 @@ class ContaPagarController extends Controller
             $parcela = ParcelaContaPagar::find($id);
 
             $valor = str_replace(',', '.', $valorPago[$i]);
-            $parcela->valor_pago = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             $parcela->data_pagamento = $dataPagamento[$i];
             $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
             $parcela->usuario_baixa_id = $user_id;
             if (request()->has('baixa_parcial')) {
                 // O checkbox está selecionado
                 $parcela->situacao = 2;
-
+                $parcela->valor_pago += (double) $valor; // Converter a string diretamente para um número em ponto flutuante
             } else {
                 // O checkbox não está selecionado
                 $parcela->situacao = 1;
@@ -711,10 +710,10 @@ class ContaPagarController extends Controller
              //Obter titular da conta
              $contaPagar = ContaPagar::find($conta_pagar_id);
  
-               //Se a conta está relacionada a uma movimentação
-            if ($parcela->movimentacao_financeira_id != null) {
+            //Se a conta está relacionada a uma movimentação
+            //if ($parcela->movimentacao_financeira_id != null) {
                 
-            }else{ //Se não estiver relacionado
+           // }else{ //Se não estiver relacionado
  
                 $movimentacao_financeira = new MovimentacaoFinanceira();
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
@@ -794,7 +793,7 @@ class ContaPagarController extends Controller
 
                 //Vincular parcela com Movimentação
                 $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
-             }
+            // }
 
             $parcela->save();
             $i++;
