@@ -893,27 +893,32 @@ class ContaReceberController extends Controller
 
                 $dataFormatada = Carbon::createFromFormat('d-m-Y', str_replace('/', '-', $dataRecebimento[$i]))->format('Y-m-d');;
 
+                //Corrigindo valor para salvar
+                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorRecebido[$i]));
+
                 //Variavel de saldo para manipulacao e verificacao do saldo
                 $saldo = SaldoDiario::where('data', $dataFormatada)
                 ->where('titular_conta_id', $titular_conta_id)
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
-                $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+
+                if($saldo[0] != null){
+                    $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
-                //variavel que será responsavel por alterar-lo
-                $saldo_model = SaldoDiario::where('data', $dataFormatada)
-                ->where('titular_conta_id', $titular_conta_id)
-                ->where('conta_corrente_id', $conta_corrente_id)
-                ->first();
+                    //variavel que será responsavel por alterar-lo
+                    $saldo_model = SaldoDiario::where('data', $dataFormatada)
+                    ->where('titular_conta_id', $titular_conta_id)
+                    ->where('conta_corrente_id', $conta_corrente_id)
+                    ->first();
+    
+                 
+                    //Atualizando o saldo
+                    $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 
+    
+                    //Salvando alterações
+                    $saldo_model->save();
+                }
 
-                //Corrigindo valor para salvar
-                $valor = (double) str_replace(',', '.', str_replace('.', '', $valorRecebido[$i]));
-
-                //Atualizando o saldo
-                $saldo_model->saldo = $valor_desatualizado_saldo - $valor; 
-
-                //Salvando alterações
-                $saldo_model->save();
                 $parcela->save();
                 $movimentacao_financeira->delete();
 
