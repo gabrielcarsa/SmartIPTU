@@ -11,7 +11,7 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 8px;
+        font-size: 7px;
         color: #212529;
     }
 
@@ -19,6 +19,7 @@
     .table th {
         color: #6002ee;
         padding: 0.75rem;
+        font-size: 10px;
         vertical-align: top;
         border-top: 1px solid #dee2e6;
     }
