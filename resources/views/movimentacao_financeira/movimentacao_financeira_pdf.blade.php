@@ -139,9 +139,9 @@
                     <td></td>
                     <td></td>
                     <td><strong>Valor Total</strong></td>
-                    <td><strong>R$ {{number_format($data['valorEntradas'], 2, ',', '.')}}</strong></td>
-                    <td><strong>R$ {{number_format($data['valorSaidas'], 2, ',', '.')}}</strong></td>
-                    <td><strong>R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</strong></td>
+                    <td><strong>{{number_format($data['valorEntradas'], 2, ',', '.')}}</strong></td>
+                    <td><strong>{{number_format($data['valorSaidas'], 2, ',', '.')}}</strong></td>
+                    <td><strong>{{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</strong></td>
 
                 </tr>
             </tfoot>
