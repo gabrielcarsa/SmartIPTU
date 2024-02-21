@@ -182,7 +182,7 @@ class ParcelasAPIController extends Controller
 
     }
 
-    public function titulares_conta(){
+    public function titulares_conta(Request $request){
         $key = $request->query('key');
 
         if($key == "AmbienteAplicativo01#"){
@@ -207,7 +207,7 @@ class ParcelasAPIController extends Controller
     }
     
     //RETORNA UM JSON COM A CONTA CORRENTE ESPECÍFICA
-    function conta_corrente($titular_conta_id){
+    function conta_corrente(Request $request, $titular_conta_id){
         $key = $request->query('key');
 
         if($key == "AmbienteAplicativo01#"){
