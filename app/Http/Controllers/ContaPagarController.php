@@ -905,7 +905,7 @@ class ContaPagarController extends Controller
                 ->where('conta_corrente_id', $conta_corrente_id)
                 ->get(); // Saldo do dia
 
-                if($saldo[0] != null){
+                if($saldo != null){
                     $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
                  
                     //variavel que será responsavel por alterar-lo
