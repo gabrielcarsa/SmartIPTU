@@ -11,7 +11,7 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 8px;
+        font-size: 9px;
         color: #212529;
     }
 
@@ -81,9 +81,9 @@
                     <th scope="col">Cliente / Fornecedor</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor da Entrada</th>
-                    <th scope="col">Valor da Saída</th>
-                    <th scope="col">Saldo</th>
+                    <th scope="col">Valor da Entrada (R$)</th>
+                    <th scope="col">Valor da Saída (R$)</th>
+                    <th scope="col">Saldo (R$)</th>
                 </tr>
             </thead>
             @php
@@ -120,13 +120,13 @@
                     <td class="align-middle">{{$mov->descricao}}</td>
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle entradaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle entradaMovimentacao">{{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
-                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
+                    <td class="align-middle">{{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @else
                     <td class="align-middle"></td>
-                    <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
-                    <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
+                    <td class="align-middle saidaMovimentacao">{{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle">{{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @endif
                 </tr>
 
