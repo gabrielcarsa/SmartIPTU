@@ -290,9 +290,7 @@ class ParcelasAPIController extends Controller
                 'saldo_anterior' => $saldo_anterior,
                 'saldo_atual' => $saldo_atual,
                 'total_movimentacao' => $total_movimentacao,
-                'movimentacao' => $movimentacao,
-                'entradas' => $entradas,
-                'saidas' => $saidas
+                'movimentacao' => $movimentacao
             ];
     
             return response()->json($data);
