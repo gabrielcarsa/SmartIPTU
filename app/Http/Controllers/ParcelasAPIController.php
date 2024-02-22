@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\MovimentacaoFinanceira;
 use App\Models\SaldoDiario;
 use App\Models\ContaCorrente;
+use App\Models\TitularConta;
+use App\Models\Cliente;
 
 
 class ParcelasAPIController extends Controller
@@ -211,10 +213,21 @@ class ParcelasAPIController extends Controller
         $key = $request->query('key');
         $TitularNomeOuRazaoSocial = $request->query('titular_conta');
 
-        $titular_conta_id = TitularConta::where('razao_social', $TitularNomeOuRazaoSocial);
+        $cliente_id = Cliente::where('razao_social', $TitularNomeOuRazaoSocial)->first();
+        if (!$cliente_id) {
+            $data = "Titular não encontrado";
+            return response()->json($data);
+        }
+
+        $titular_conta_id = TitularConta::where('cliente_id', $cliente_id->id)->first();
+      
+        if (!$titular_conta_id) {
+            $data = "Titular de conta não encontrado";
+            return response()->json($data);
+        }
 
         if($key == "AmbienteAplicativo01"){
-            $conta_corrente = ContaCorrente::where('titular_conta_id',$titular_conta_id)->get();
+            $conta_corrente = ContaCorrente::where('titular_conta_id', $titular_conta_id->id)->get();
             return response()->json($conta_corrente);
         }else{
             $data = "Chave inválida";
