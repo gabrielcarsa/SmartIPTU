@@ -207,8 +207,11 @@ class ParcelasAPIController extends Controller
     }
     
     //RETORNA UM JSON COM A CONTA CORRENTE ESPECÍFICA
-    function conta_corrente(Request $request, $titular_conta_id){
+    function conta_corrente(Request $request){
         $key = $request->query('key');
+        $TitularNomeOuRazaoSocial = $request->query('titular_conta');
+
+        $titular_conta_id = TitularConta::where('razao_social', $TitularNomeOuRazaoSocial);
 
         if($key == "AmbienteAplicativo01"){
             $conta_corrente = ContaCorrente::where('titular_conta_id',$titular_conta_id)->get();
