@@ -263,7 +263,7 @@ class ParcelasAPIController extends Controller
     
     
             $conta_corrente = ContaCorrente::where('apelido', $conta_corrente)->first();
-
+     
             if (!$conta_corrente) {
                 $data = "Conta Corrente não encontrada";
                 return response()->json($data);
@@ -272,13 +272,13 @@ class ParcelasAPIController extends Controller
             // Saldo anterior
             $saldo_anterior = SaldoDiario::orderBy('data', 'desc')
             ->where('data', '<', $dataRef)
-            ->where('titular_conta_id', '=', $titular)
-            ->where('conta_corrente_id', '=', $conta_corrente)
+            ->where('titular_conta_id', '=', $titular_conta_id->id)
+            ->where('conta_corrente_id', '=', $conta_corrente->id)
             ->get(); 
     
             $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
-            ->where('titular_conta_id', '=', $titular)
-            ->where('conta_corrente_id', '=', $conta_corrente)
+            ->where('titular_conta_id', '=', $titular_conta_id->id)
+            ->where('conta_corrente_id', '=', $conta_corrente->id)
             ->get(); // Saldo do dia
     
             $total_movimentacao = $movimentacao->count();
@@ -312,16 +312,17 @@ class ParcelasAPIController extends Controller
             ->orderBy('mf.ordem');
     
             // Filtro
-            if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
+            if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular_conta_id) && !empty($dataFim)) {
                 $query->where('data_movimentacao', '>=', $dataRef)
                 ->where('data_movimentacao', '<=', $dataFim)
-                ->where('mf.titular_conta_id', '=', $titular)
-                ->where('mf.conta_corrente_id', '=', $conta_corrente)
+                ->where('mf.titular_conta_id', '=', $titular_conta_id->id)
+                ->where('mf.conta_corrente_id', '=', $conta_corrente->id)
                 ->orderBy('id');
             }
     
             // Execute a consulta e obtenha os resultados
             $movimentacao = $query->get();
+
     
             $data = [
                 'saldo_anterior' => $saldo_anterior,
