@@ -243,10 +243,11 @@ class ParcelasAPIController extends Controller
         if($key == "AmbienteAplicativo01"){
             $movimentacao = MovimentacaoFinanceira::all();    
         
-            $titular = $request->input('titulares_conta');
+            $titular = $request->input('titular_conta');
             $conta_corrente = $request->input('conta_corrente');
             $dataRef = $request->input('data');
             $dataFim = $request->input('data_fim');
+         
 
             $cliente_id = Cliente::where('razao_social', $titular)->first();
             if (!$cliente_id) {
@@ -254,12 +255,12 @@ class ParcelasAPIController extends Controller
                 return response()->json($data);
             }
     
-            $titular = TitularConta::where('cliente_id', $cliente_id->id)->first();
-          
-            if (!$titular) {
+            $titular_conta_id = TitularConta::where('cliente_id', $cliente_id->id)->first();
+            if (!$titular_conta_id) {
                 $data = "Titular de conta não encontrado";
                 return response()->json($data);
             }
+    
     
             $conta_corrente = ContaCorrente::where('apelido', $conta_corrente)->first();
 
