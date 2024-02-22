@@ -247,6 +247,26 @@ class ParcelasAPIController extends Controller
             $conta_corrente = $request->input('conta_corrente');
             $dataRef = $request->input('data');
             $dataFim = $request->input('data_fim');
+
+            $cliente_id = Cliente::where('razao_social', $titular)->first();
+            if (!$cliente_id) {
+                $data = "Titular não encontrado";
+                return response()->json($data);
+            }
+    
+            $titular = TitularConta::where('cliente_id', $cliente_id->id)->first();
+          
+            if (!$titular) {
+                $data = "Titular de conta não encontrado";
+                return response()->json($data);
+            }
+    
+            $conta_corrente = ContaCorrente::where('apelido', $conta_corrente)->first();
+
+            if (!$conta_corrente) {
+                $data = "Conta Corrente não encontrada";
+                return response()->json($data);
+            }
     
             // Saldo anterior
             $saldo_anterior = SaldoDiario::orderBy('data', 'desc')
