@@ -97,8 +97,8 @@
             <div class="row row-form row-form-destacar">
                 <div class="col-md-4">
                     <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
-                    <select id="inputTitularConta" name="titular_conta_id" class="form-select form-control">
-                        <option value="0" {{ old('titular_conta_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
+                    <select id="inputTitularConta" required name="titular_conta_id" class="form-select form-control">
+                        <option value="" {{ old('titular_conta_id') == 0 ? 'selected' : '' }}>-- Selecione --</option>
                         @foreach ($data['titular_conta'] as $t)
                         <option value="{{ $t->id_titular_conta }}"
                             {{ old('titular_conta_id') == $t->id_titular_conta ? 'selected' : '' }}>
@@ -114,8 +114,8 @@
 
                 <div class="col-md-4" id="contaBancariaField">
                     <label for="inputContaCorrente" class="form-label">Conta Corrente*</label>
-                    <select id="inputContaCorrente" name="conta_corrente_id" class="form-select form-control">
-                        <option value="0" selected> Selecione --</option>
+                    <select id="inputContaCorrente" required name="conta_corrente_id" class="form-select form-control">
+                        <option value="" selected> Selecione --</option>
                     </select>
                 </div>
             </div>
