@@ -428,13 +428,13 @@ class MovimentacaoFinanceiraController extends Controller
             $query->where('data_movimentacao', '=', '%' . $dataRef)
             ->where('mf.titular_conta_id', '=', $titular)
             ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('id');
+            ->orderBy('ordem');
         } else if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
             $query->where('data_movimentacao', '>=', $dataRef)
             ->where('data_movimentacao', '<=', $dataFim)
             ->where('mf.titular_conta_id', '=', $titular)
             ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('id');
+            ->orderBy('ordem');
         }
 
     
