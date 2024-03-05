@@ -52,6 +52,10 @@ Route::get('/endpoint/movimentacao_financeira', [ParcelasAPIController::class, '
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/privacidade', function () {
+    return view('politica_privacidade');
+});
+
 
 Route::middleware([
     'auth:sanctum',
