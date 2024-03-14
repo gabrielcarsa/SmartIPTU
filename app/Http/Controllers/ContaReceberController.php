@@ -145,6 +145,7 @@ class ContaReceberController extends Controller
         $idParcela = $request->input('idParcela');
         $categoria = $request->input('categoria');
         $tipo_debito = $request->input('tipo_debito');
+        $cliente = $request->input('cliente');
 
 
     
@@ -277,6 +278,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($cliente != "") { // Cliente
+
+                    $resultados = $queryReferenteLotes
+                    ->where('c.nome', '=', $cliente);
+
+                }
+
                 $resultados = $queryReferenteLotes->get();
 
             }else{ //Se o titular da conta for específico
@@ -317,6 +325,14 @@ class ContaReceberController extends Controller
 
                     $resultados = $queryReferenteLotes
                     ->where('d.tipo_debito_id', '=', $tipo_debito);
+
+                }
+
+
+                if($cliente != "") { // Cliente
+
+                    $resultados = $queryReferenteLotes
+                    ->where('c.nome', '=', $cliente);
 
                 }
 
@@ -368,6 +384,13 @@ class ContaReceberController extends Controller
 
                 }
 
+                if($cliente != "") { // Cliente
+
+                    $resultados = $queryReferenteLotes
+                    ->where('c.nome', '=', $cliente);
+
+                }
+
                 $resultados = $queryReferenteOutros->get();
 
             }else{ //Se o titular da conta for específico
@@ -410,6 +433,13 @@ class ContaReceberController extends Controller
 
                     $resultados = $queryReferenteOutros
                     ->where('cr.categoria_receber_id', '=', $categoria);
+
+                }
+
+                if($cliente != "") { // Cliente
+
+                    $resultados = $queryReferenteLotes
+                    ->where('c.nome', '=', $cliente);
 
                 }
 
