@@ -92,7 +92,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); 
 
-        $saldo_atual = SaldoDiario::where('data', '=', $dataFim)
+        $saldo_atual = SaldoDiario::where('data', '<=', $dataFim)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); // Saldo do dia
@@ -388,7 +388,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); 
 
-        $saldo_atual = SaldoDiario::where('data', '=', $dataFim)
+        $saldo_atual = SaldoDiario::where('data', '<=', $dataFim)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
         ->get(); // Saldo do dia
