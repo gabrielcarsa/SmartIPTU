@@ -62,7 +62,6 @@ class MovimentacaoFinanceiraController extends Controller
             'conta_corrente' => 'required|numeric|min:1',
         ]);
     
-
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
 
@@ -95,6 +94,7 @@ class MovimentacaoFinanceiraController extends Controller
         $saldo_atual = SaldoDiario::where('data', '<=', $dataFim)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
+        ->orderBy('data', 'desc')
         ->get(); // Saldo do dia
 
         $total_movimentacao = $movimentacao->count();
@@ -391,6 +391,7 @@ class MovimentacaoFinanceiraController extends Controller
         $saldo_atual = SaldoDiario::where('data', '<=', $dataFim)
         ->where('titular_conta_id', '=', $titular)
         ->where('conta_corrente_id', '=', $conta_corrente)
+        ->orderBy('data', 'desc')
         ->get(); // Saldo do dia
 
         $query = DB::table('movimentacao_financeira as mf')
