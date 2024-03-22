@@ -173,7 +173,7 @@ class ScrapingIptuController extends Controller
                 
                 });
             });
-            
+            dd($resultado);
             $resultado = [
                 'resultadoParcela' => $resultadoParcela,
                 'resultadoLote' => $resultadoLote
@@ -276,7 +276,7 @@ class ScrapingIptuController extends Controller
 
         //atribuindo a variavel resultado da funcao scraping Campo Grande
         $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
-        dd($resultadoScraping);
+        
         try{
             //separando variaveis conforme resultado
             $resultadoParcela = $resultadoScraping['resultadoParcela'];
