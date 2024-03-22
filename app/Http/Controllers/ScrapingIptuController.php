@@ -182,6 +182,8 @@ class ScrapingIptuController extends Controller
             return $resultado;
      
          } catch (\Exception $e) {
+            dd($e);
+
             //dd('Erro durante a requisição GET: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
 
