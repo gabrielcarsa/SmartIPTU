@@ -271,25 +271,24 @@ class ScrapingIptuController extends Controller
         //----------------------------
         // FIM DA EXCLUSÃO DE PARCELAS
         //----------------------------
-
-        //instanciando controller
-        $ScrapingController = new ScrapingIptuController();
-
-        //atribuindo a variavel resultado da funcao scraping Campo Grande
-        $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
         
-        // Verificando se o resultado é um redirecionamento
-        if ($resultadoScraping instanceof Illuminate\Http\RedirectResponse) {
-            // Se for um redirecionamento, retorne o próprio redirecionamento
-            return $resultadoScraping;
-        }
-
         try{
+
+            //instanciando controller
+            $ScrapingController = new ScrapingIptuController();
+
+            //atribuindo a variavel resultado da funcao scraping Campo Grande
+            $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
+
             //separando variaveis conforme resultado
             $resultadoParcela = $resultadoScraping['resultadoParcela'];
             $resultadoLote = $resultadoScraping['resultadoLote'];
-        }catch(\Exception $e){
-            //dd('Erro durante a requisição GET: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Tratando exceção de redirecionamento
+            if ($e instanceof \Illuminate\Http\RedirectResponse) {
+                return $e;
+            }
+            // Lidando com outros tipos de exceção
             return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
         }
        
