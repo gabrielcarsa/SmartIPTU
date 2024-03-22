@@ -173,7 +173,7 @@ class ScrapingIptuController extends Controller
                 
                 });
             });
-            dd($resultado);
+
             $resultado = [
                 'resultadoParcela' => $resultadoParcela,
                 'resultadoLote' => $resultadoLote
@@ -182,7 +182,6 @@ class ScrapingIptuController extends Controller
             return $resultado;
      
          } catch (\Exception $e) {
-            dd($e);
 
             //dd('Erro durante a requisição GET: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Erro ao tentar obter dados! Se o problema persistir entre em contato com o suporte');
@@ -279,6 +278,12 @@ class ScrapingIptuController extends Controller
         //atribuindo a variavel resultado da funcao scraping Campo Grande
         $resultadoScraping = $ScrapingController->scrapingCampoGrande($inscricao_municipal);
         
+        // Verificando se o resultado é um redirecionamento
+        if ($resultadoScraping instanceof Illuminate\Http\RedirectResponse) {
+            // Se for um redirecionamento, retorne o próprio redirecionamento
+            return $resultadoScraping;
+        }
+
         try{
             //separando variaveis conforme resultado
             $resultadoParcela = $resultadoScraping['resultadoParcela'];
