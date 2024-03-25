@@ -110,7 +110,7 @@ class ParcelasAPIController extends Controller
             ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
             ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
             ->where('p.situacao', '=', 0)
-            ->where('p.data_vencimento', '>=', $dataSolicitada)
+            ->where('p.data_vencimento', '<=', $dataSolicitada)
             ->orderBy('p.data_vencimento', 'ASC')
             ->get();
     
