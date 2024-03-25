@@ -45,12 +45,38 @@ class ParcelasAPIController extends Controller
             ->where('situacao', 0)
             ->where('debito_id', '!=', null)
             ->sum('valor_parcela');
+
+            //Valor Contas a Pagar Empresa
+            $totalContasPagarEmpresa =  DB::table('parcela_conta_pagar')
+            ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+            ->join('cliente as c', 'cp.fornecedor_id', '=', 'c.id')
+            ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+            ->whereDate('data_vencimento', '<=', $hoje)
+            ->where('td.id', 1)
+            ->where('situacao', 0)
+            ->where('debito_id', '=', null)
+            ->sum('valor_parcela');
+
+            //Valor Contas a Pagar Empresa
+            $totalContasPagarPessoal =  DB::table('parcela_conta_pagar')
+            ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+            ->join('cliente as c', 'cp.fornecedor_id', '=', 'c.id')
+            ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
+            ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+            ->whereDate('data_vencimento', '<=', $hoje)
+            ->where('td.id', 2)
+            ->where('situacao', 0)
+            ->where('debito_id', '=', null)
+            ->sum('valor_parcela');
     
             $data = [
                 'pagarHoje' => $pagarHoje,
                 'receberHoje' => $receberHoje,
                 'debitosEmpresa' => $debitosEmpresa,
                 'debitosCliente' => $debitosCliente,
+                'totalContasPagarEmpresa' => $totalContasPagarEmpresa,
+                'totalContasPagarPessoal' => $totalContasPagarPessoal,
             ];
     
             return response()->json($data);
