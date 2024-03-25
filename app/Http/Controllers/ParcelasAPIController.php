@@ -10,7 +10,7 @@ use App\Models\SaldoDiario;
 use App\Models\ContaCorrente;
 use App\Models\TitularConta;
 use App\Models\Cliente;
-
+use App\Models\CategoriaPagar;
 
 class ParcelasAPIController extends Controller
 {
@@ -61,6 +61,22 @@ class ParcelasAPIController extends Controller
         }
     }
 
+
+    public function categoria_pagar(Request $request){
+        $key = $request->query('key');
+
+        if($key == "AmbienteAplicativo01"){
+            $categoriasPagar = CategoriaPagar::all();
+    
+            return response()->json($categoriasPagar);
+        }else{
+            $data = "Chave inválida";
+            return response()->json($data);
+
+        }
+    }
+
+
     public function calendario_financeiro_pagar(Request $request){
         $key = $request->query('key');
 
@@ -94,7 +110,7 @@ class ParcelasAPIController extends Controller
             ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
             ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
             ->where('p.situacao', '=', 0)
-            ->where('p.data_vencimento', $dataSolicitada)
+            ->where('p.data_vencimento', '>=', $dataSolicitada)
             ->orderBy('p.data_vencimento', 'ASC')
             ->get();
     

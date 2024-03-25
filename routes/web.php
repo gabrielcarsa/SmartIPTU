@@ -41,6 +41,7 @@ use App\Http\Controllers\ParcelasAPIController;
 // ROTAS PARA ENDPOINTS
 Route::post('/endpoint/login', [AuthController::class, 'login']);
 Route::get('/endpoint/valores_hoje', [ParcelasAPIController::class, 'paraPagarReceberHoje']);
+Route::get('/endpoint/categoria_pagar', [ParcelasAPIController::class, 'categoria_pagar']);
 Route::get('/endpoint/calendario_pagar', [ParcelasAPIController::class, 'calendario_financeiro_pagar']);
 Route::get('/endpoint/calendario_receber', [ParcelasAPIController::class, 'calendario_financeiro_receber']);
 Route::get('/endpoint/titulares_conta', [ParcelasAPIController::class, 'titulares_conta']);
