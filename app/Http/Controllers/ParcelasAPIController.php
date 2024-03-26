@@ -101,6 +101,7 @@ class ParcelasAPIController extends Controller
 
     public function calendario_financeiro_pagar(Request $request){
         $key = $request->query('key');
+        $categoria = $request->query('categoria');
 
         if($key == "AmbienteAplicativo01"){
             $dataSolicitada = $request->query('data_solicitada');
@@ -133,8 +134,13 @@ class ParcelasAPIController extends Controller
             ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
             ->where('p.situacao', '=', 0)
             ->where('p.data_vencimento', '<=', $dataSolicitada)
-            ->orderBy('p.data_vencimento', 'ASC')
-            ->get();
+            ->orderBy('p.data_vencimento', 'ASC');
+
+            if($categoria == '- Todas Categorias -'){
+                $contasPagarOutros->get();
+            }else{
+                $contasPagarOutros->where('ctp.descricao', $categoria)->get();
+            }
     
            
             // Inicialize o valor total como zero
