@@ -137,9 +137,9 @@ class ParcelasAPIController extends Controller
             ->orderBy('p.data_vencimento', 'ASC');
 
             if($categoria == '- Todas Categorias -'){
-                $contasPagarOutros->get();
+                $contasPagarOutros = $contasPagarOutros->get();
             }else{
-                $contasPagarOutros->where('ctp.descricao', $categoria)->get();
+                $contasPagarOutros = $contasPagarOutros->where('ctp.descricao', $categoria)->get();
             }
     
            
