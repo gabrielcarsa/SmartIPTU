@@ -74,7 +74,7 @@ class ParcelasAPIController extends Controller
             ->where('td.id', 1)
             ->where('p.situacao', 0)
             ->where('p.debito_id', '=', null)
-            ->where('cp.descricao', '=', 'PAGAMENTO DE RESCISÃO CONTRATUAL')
+            ->where('p.conta_pagar_id', 1)
             ->sum('p.valor_parcela');
     
             $data = [
