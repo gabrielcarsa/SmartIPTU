@@ -65,6 +65,17 @@ class ParcelasAPIController extends Controller
             ->where('p.situacao', 0)
             ->where('p.debito_id', '=', null)
             ->sum('p.valor_parcela');
+
+            //Valor Contas a Pagar Empresa
+            $totalRescisao =  DB::table('parcela_conta_pagar as p')
+            ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+            ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
+            ->whereDate('p.data_vencimento', '<=', $hoje)
+            ->where('td.id', 1)
+            ->where('p.situacao', 0)
+            ->where('p.debito_id', '=', null)
+            ->where('cp.descricao', '=', 'PAGAMENTO DE RESCISÃO CONTRATUAL')
+            ->sum('p.valor_parcela');
     
             $data = [
                 'pagarHoje' => $pagarHoje,
@@ -73,6 +84,7 @@ class ParcelasAPIController extends Controller
                 'debitosCliente' => $debitosCliente,
                 'totalContasPagarEmpresa' => $totalContasPagarEmpresa,
                 'totalContasPagarPessoal' => $totalContasPagarPessoal,
+                'totalRescisao' => $totalRescisao,
             ];
     
             return response()->json($data);
