@@ -71,10 +71,9 @@ class ParcelasAPIController extends Controller
             ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
             ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
             ->whereDate('p.data_vencimento', '<=', $hoje)
-            ->where('td.id', 1)
             ->where('p.situacao', 0)
             ->where('p.debito_id', '=', null)
-            ->where('p.conta_pagar_id', 1)
+            ->where('cp.categoria_pagar_id', 1)
             ->sum('p.valor_parcela');
     
             $data = [
