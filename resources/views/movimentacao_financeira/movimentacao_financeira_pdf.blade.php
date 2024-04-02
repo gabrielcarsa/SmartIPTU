@@ -11,7 +11,7 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 11px;
+        font-size: 10px;
         color: #212529;
     }
 
