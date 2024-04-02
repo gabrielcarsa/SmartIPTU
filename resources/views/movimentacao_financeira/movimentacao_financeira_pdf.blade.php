@@ -11,16 +11,16 @@
     .table {
         width: 100%;
         margin-bottom: 1rem;
-        font-size: 10px;
+        font-size: 11px;
         color: #212529;
     }
 
     /* Estilo para cabeçalho de tabela */
     .table th {
-        color: #6002ee;
         padding: 0.75rem;
-        font-size: 10px;
+        font-size: 12px;
         vertical-align: top;
+        font-weight: bold;
         border-top: 1px solid #dee2e6;
     }
 
@@ -83,8 +83,7 @@
                     <th scope="col">Cliente / Fornecedor</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor Entrada (R$)</th>
-                    <th scope="col">Valor Saída (R$)</th>
+                    <th scope="col">Valor (R$)</th>
                     <th scope="col">Saldo (R$)</th>
                 </tr>
             </thead>
@@ -123,11 +122,9 @@
 
                     @if($mov->tipo_movimentacao == 0)
                     <td class="align-middle entradaMovimentacao">{{number_format($mov->valor, 2, ',', '.')}}</td>
-                    <td class="align-middle"></td>
                     <td class="align-middle">{{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @else
-                    <td class="align-middle"></td>
-                    <td class="align-middle saidaMovimentacao">{{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle saidaMovimentacao">- {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle">{{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @endif
                 </tr>
@@ -137,7 +134,6 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td><strong>Valor Total</strong></td>

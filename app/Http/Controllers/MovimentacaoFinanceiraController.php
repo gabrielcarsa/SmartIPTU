@@ -125,6 +125,7 @@ class MovimentacaoFinanceiraController extends Controller
         ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
         ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
         ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
+        ->orderBy('mf.data_movimentacao')
         ->orderBy('mf.ordem');
 
         // Filtro
@@ -132,8 +133,7 @@ class MovimentacaoFinanceiraController extends Controller
             $query->where('data_movimentacao', '>=', $dataRef)
             ->where('data_movimentacao', '<=', $dataFim)
             ->where('mf.titular_conta_id', '=', $titular)
-            ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('id');
+            ->where('mf.conta_corrente_id', '=', $conta_corrente);
         }
 
         // Execute a consulta e obtenha os resultados
@@ -421,21 +421,20 @@ class MovimentacaoFinanceiraController extends Controller
         ->leftjoin('parcela_conta_pagar as pg', 'pg.movimentacao_financeira_id',  '=', 'mf.id')
         ->join('titular_conta as tc', 'mf.titular_conta_id', '=', 'tc.id')
         ->join('cliente as c2', 'tc.cliente_id', '=', 'c2.id')
-        ->join('conta_corrente as cc', 'mf.conta_corrente_id', '=', 'cc.id');
-    
+        ->join('conta_corrente as cc', 'mf.conta_corrente_id', '=', 'cc.id')
+        ->orderBy('mf.data_movimentacao')
+        ->orderBy('mf.ordem');
 
         // Filtro
         if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && empty($dataFim)) {
             $query->where('data_movimentacao', '=', '%' . $dataRef)
             ->where('mf.titular_conta_id', '=', $titular)
-            ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('ordem');
+            ->where('mf.conta_corrente_id', '=', $conta_corrente);
         } else if (!empty($dataRef) && !empty($conta_corrente) && !empty($titular) && !empty($dataFim)) {
             $query->where('data_movimentacao', '>=', $dataRef)
             ->where('data_movimentacao', '<=', $dataFim)
             ->where('mf.titular_conta_id', '=', $titular)
-            ->where('mf.conta_corrente_id', '=', $conta_corrente)
-            ->orderBy('ordem');
+            ->where('mf.conta_corrente_id', '=', $conta_corrente);
         }
 
     
