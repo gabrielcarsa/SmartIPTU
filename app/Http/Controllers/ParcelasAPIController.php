@@ -132,6 +132,7 @@ class ParcelasAPIController extends Controller
                 'p.usuario_baixa_id as parcela_usuario_baixa_id',
                 'p.data_alteracao as parcela_data_alteracao',
                 'cp.quantidade_parcela as quantidade_parcela',
+                'cp.descricao as conta_descricao',
                 'ctp.descricao as descricao',
                 'c.nome as nome',
                 'c.tipo_cadastro as tipo_cadastro',
