@@ -11,6 +11,9 @@ use App\Models\ContaCorrente;
 use App\Models\TitularConta;
 use App\Models\Cliente;
 use App\Models\CategoriaPagar;
+use App\Models\ParcelaContaPagar;
+use App\Models\ContaPagar;
+
 
 class ParcelasAPIController extends Controller
 {
@@ -394,5 +397,144 @@ class ParcelasAPIController extends Controller
 
         }
       
+    }
+
+     //BAIXAR PARCELAS
+     function baixar_parcela(Request $request){
+
+        $key = $request->query('key');
+
+        if($key == "AmbienteAplicativo01"){
+            //Transformar em formato correto para salvar no BD e validação
+            $request->merge([
+                'valor' => str_replace(['.', ','], ['', '.'], $request->get('valor')),
+            ]);
+
+            $id = $request->get('id');
+            $valorPago = $request->get('valor');
+            $dataPagamento = \Carbon\Carbon::createFromFormat('d/m/Y', $request->get('data'))->format('Y-m-d');
+            $user_id = $request->get('user_id');
+
+            //Verificar para não ser possível dar baixa com datas futuras
+
+            if (strtotime($dataPagamento) > strtotime(date('Y-m-d'))) {
+                $data = "Não é possível baixar com datas futuras!";
+                return response()->json($data);        
+                
+            }   
+
+
+            $parcela = ParcelaContaPagar::find($id);
+
+            $valor = str_replace(',', '.', $valorPago);
+            $parcela->data_pagamento = $dataPagamento;
+            $parcela->data_baixa = Carbon::now()->format('Y-m-d H:i:s');
+            $parcela->usuario_baixa_id = $user_id;
+            if (request()->has('baixa_parcial')) {
+                // O checkbox está selecionado
+                $parcela->situacao = 2;
+                $parcela->valor_pago += (double) $valor; // Converter a string diretamente para um número em ponto flutuante
+            } else {
+                // O checkbox não está selecionado
+                $parcela->situacao = 1;
+            }
+
+            //Selecionar ID do contas a pagar
+            $conta_pagar_id = $parcela->conta_pagar_id;
+            
+            //Obter titular da conta
+            $contaPagar = ContaPagar::find($conta_pagar_id);
+
+            //Se a conta está relacionada a uma movimentação
+            //if ($parcela->movimentacao_financeira_id != null) {
+                
+            // }else{ //Se não estiver relacionado
+
+                $movimentacao_financeira = new MovimentacaoFinanceira();
+                $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
+                $movimentacao_financeira->descricao = $contaPagar->descricao;
+                $movimentacao_financeira->data_movimentacao = $dataPagamento;
+                $movimentacao_financeira->titular_conta_id = 2;
+                $movimentacao_financeira->conta_corrente_id = 1;
+                
+                // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
+                // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
+                $movimentacao_financeira->tipo_movimentacao = 1; //Contas a Pagar é Saida
+
+                $valor = str_replace(',', '.', $valorPago);
+                $movimentacao_financeira->valor = (double) $valor; // Converter a string diretamente para um número em ponto flutuante
+                $valor_movimentacao = (double) $valor; //Armazenar em uma variavel o valor da movimentação
+            
+                $movimentacao_financeira->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+                $movimentacao_financeira->cadastrado_usuario_id = $user_id;
+
+                //Variavel de saldo para manipulacao e verificacao do saldo
+                $saldo = SaldoDiario::where('data', $dataPagamento)
+                ->where('titular_conta_id', $request->input('titular_conta_id'))
+                ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                ->get(); // Saldo do dia
+
+
+                //Se não houver saldo para aquele dia
+                if(!isset($saldo[0]->saldo)){
+                    //Último saldo cadastrado
+                    $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')
+                    ->where('titular_conta_id', $request->input('titular_conta_id'))
+                    ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                    ->where('data', '<', $dataPagamento)
+                    ->first();
+                    
+                    //Cadastrar saldo daquela data com o último saldo para depois fazer a movimentação
+                    $addSaldo = new SaldoDiario();
+
+                    //Se saldo for null
+                    if($ultimo_saldo == null){
+                        $addSaldo->saldo = 0;
+                    }else{
+                        $addSaldo->saldo = $ultimo_saldo->saldo;
+                    }
+                    $addSaldo->titular_conta_id = $request->input('titular_conta_id');
+                    $addSaldo->conta_corrente_id = $request->input('conta_corrente_id');
+                    $addSaldo->data = $dataPagamento;
+                    $addSaldo->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
+                    $addSaldo->save();
+
+                    $saldo = $addSaldo;
+                    $valor_desatualizado_saldo =  $saldo->saldo; //Armazenar o ultimo saldo
+
+                }else{//Caso houver saldo para aquele dia
+                    $valor_desatualizado_saldo =  $saldo[0]->saldo; //Armazenar o ultimo saldo
+                }
+
+                //variavel que será responsavel por alterar-lo
+                $saldo_model = SaldoDiario::where('data', $dataPagamento)
+                ->where('titular_conta_id', $request->input('titular_conta_id'))
+                ->where('conta_corrente_id', $request->input('conta_corrente_id'))
+                ->first();
+
+                //Adicionando categoria
+                $movimentacao_financeira->categoria_pagar_id = $contaPagar->categoria_pagar_id;
+
+                //Atualizando o saldo
+                $saldo_model->saldo = $valor_desatualizado_saldo - $valor_movimentacao; 
+                $saldo_model->save();
+
+                //Vincular Conta com Movimentacao
+                $movimentacao_financeira->conta_pagar_id = $contaPagar->id;
+
+                //salvar movimentação
+                $movimentacao_financeira->save();
+
+                //Vincular parcela com Movimentação
+                $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
+            // }
+
+            $parcela->save();
+
+            return redirect("contas_pagar")->with('success', 'Parcelas baixadas com sucesso');   
+        }else{
+            $data = "Chave inválida";
+            return response()->json($data);
+        }
     }
 }
