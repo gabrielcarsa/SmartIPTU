@@ -454,7 +454,7 @@ class ParcelasAPIController extends Controller
                 $movimentacao_financeira->cliente_fornecedor_id = $contaPagar->fornecedor_id;
                 $movimentacao_financeira->descricao = $contaPagar->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataPagamento;
-                $movimentacao_financeira->titular_conta_id = 1;
+                $movimentacao_financeira->titular_conta_id = 2;
                 $movimentacao_financeira->conta_corrente_id = 1;
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
@@ -470,7 +470,7 @@ class ParcelasAPIController extends Controller
 
                 //Variavel de saldo para manipulacao e verificacao do saldo
                 $saldo = SaldoDiario::where('data', $dataPagamento)
-                ->where('titular_conta_id', 1)
+                ->where('titular_conta_id', 2)
                 ->where('conta_corrente_id', 1)
                 ->get(); // Saldo do dia
 
@@ -479,7 +479,7 @@ class ParcelasAPIController extends Controller
                 if(!isset($saldo[0]->saldo)){
                     //Último saldo cadastrado
                     $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')
-                    ->where('titular_conta_id', 1)
+                    ->where('titular_conta_id', 2)
                     ->where('conta_corrente_id', 1)
                     ->where('data', '<', $dataPagamento)
                     ->first();
@@ -493,7 +493,7 @@ class ParcelasAPIController extends Controller
                     }else{
                         $addSaldo->saldo = $ultimo_saldo->saldo;
                     }
-                    $addSaldo->titular_conta_id = 1;
+                    $addSaldo->titular_conta_id = 2;
                     $addSaldo->conta_corrente_id = 1;
                     $addSaldo->data = $dataPagamento;
                     $addSaldo->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
@@ -508,7 +508,7 @@ class ParcelasAPIController extends Controller
 
                 //variavel que será responsavel por alterar-lo
                 $saldo_model = SaldoDiario::where('data', $dataPagamento)
-                ->where('titular_conta_id', 1)
+                ->where('titular_conta_id', 2)
                 ->where('conta_corrente_id', 1)
                 ->first();
 
