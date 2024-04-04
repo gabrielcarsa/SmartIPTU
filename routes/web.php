@@ -47,6 +47,8 @@ Route::get('/endpoint/calendario_receber', [ParcelasAPIController::class, 'calen
 Route::get('/endpoint/titulares_conta', [ParcelasAPIController::class, 'titulares_conta']);
 Route::get('/endpoint/conta_corrente', [ParcelasAPIController::class, 'conta_corrente']);
 Route::get('/endpoint/movimentacao_financeira', [ParcelasAPIController::class, 'movimentacao_financeira_listar']);
+Route::get('/endpoint/baixar_parcela', [ParcelasAPIController::class, 'baixar_parcela']);
+
 
 
 
