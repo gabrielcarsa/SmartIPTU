@@ -405,10 +405,6 @@ class ParcelasAPIController extends Controller
         $key = $request->query('key');
 
         if($key == "AmbienteAplicativo01"){
-            //Transformar em formato correto para salvar no BD e validação
-            $request->merge([
-                'valor' => str_replace(['.', ','], ['', '.'], $request->get('valor')),
-            ]);
 
             $id = $request->get('id');
             $valorPago = $request->get('valor');
