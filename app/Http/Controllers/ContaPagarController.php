@@ -702,6 +702,7 @@ class ContaPagarController extends Controller
             } else {
                 // O checkbox não está selecionado
                 $parcela->situacao = 1;
+                $parcela->valor_pago = (double) $valor;
             }
 
              //Selecionar ID do contas a pagar
