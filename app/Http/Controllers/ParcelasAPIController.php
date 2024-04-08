@@ -450,7 +450,7 @@ class ParcelasAPIController extends Controller
                 $movimentacao_financeira->descricao = $contaPagar->descricao;
                 $movimentacao_financeira->data_movimentacao = $dataPagamento;
                 $movimentacao_financeira->titular_conta_id = 2;
-                $movimentacao_financeira->conta_corrente_id = 1;
+                $movimentacao_financeira->conta_corrente_id = 4;
                 
                 // No Banco de Dados o 'tipo_movimentacao' é boolean = False (Entrada 0) e True(Saida 1)
                 // Porém no input 0 (Selecione), 1 (Entrada) e 2 (Saída)
@@ -462,11 +462,11 @@ class ParcelasAPIController extends Controller
             
                 $movimentacao_financeira->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                 $movimentacao_financeira->cadastrado_usuario_id = $user_id;
-
+            
                 //Variavel de saldo para manipulacao e verificacao do saldo
                 $saldo = SaldoDiario::where('data', $dataPagamento)
                 ->where('titular_conta_id', 2)
-                ->where('conta_corrente_id', 1)
+                ->where('conta_corrente_id', 4)
                 ->get(); // Saldo do dia
 
 
@@ -475,7 +475,7 @@ class ParcelasAPIController extends Controller
                     //Último saldo cadastrado
                     $ultimo_saldo = SaldoDiario::orderBy('data', 'desc')
                     ->where('titular_conta_id', 2)
-                    ->where('conta_corrente_id', 1)
+                    ->where('conta_corrente_id', 4)
                     ->where('data', '<', $dataPagamento)
                     ->first();
                     
@@ -489,7 +489,7 @@ class ParcelasAPIController extends Controller
                         $addSaldo->saldo = $ultimo_saldo->saldo;
                     }
                     $addSaldo->titular_conta_id = 2;
-                    $addSaldo->conta_corrente_id = 1;
+                    $addSaldo->conta_corrente_id = 4;
                     $addSaldo->data = $dataPagamento;
                     $addSaldo->data_cadastro = Carbon::now()->format('Y-m-d H:i:s');
                     $addSaldo->save();
@@ -504,7 +504,7 @@ class ParcelasAPIController extends Controller
                 //variavel que será responsavel por alterar-lo
                 $saldo_model = SaldoDiario::where('data', $dataPagamento)
                 ->where('titular_conta_id', 2)
-                ->where('conta_corrente_id', 1)
+                ->where('conta_corrente_id', 4)
                 ->first();
 
                 //Adicionando categoria
@@ -516,14 +516,14 @@ class ParcelasAPIController extends Controller
 
                 //Vincular Conta com Movimentacao
                 $movimentacao_financeira->conta_pagar_id = $contaPagar->id;
-
+                
                 //salvar movimentação
                 $movimentacao_financeira->save();
 
                 //Vincular parcela com Movimentação
                 $parcela->movimentacao_financeira_id = $movimentacao_financeira->id;
             // }
-
+          
             $parcela->save();
 
             $data = "Parcela baixada com sucesso";
