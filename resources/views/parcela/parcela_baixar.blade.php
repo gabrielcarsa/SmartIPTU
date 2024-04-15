@@ -79,7 +79,7 @@
                                 class="form-control @error('data.' . $index) is-invalid @enderror" id="">
                         </th>
                         <th scope="row">
-                            <input type="text" style="width:80px" name="ordem[]" value="{{ old('ordem') }}"
+                            <input type="text" style="width:80px" name="ordem[]"
                                 class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
                         </th>
                     </tr>

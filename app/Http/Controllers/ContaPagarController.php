@@ -672,7 +672,7 @@ class ContaPagarController extends Controller
         //Validação
         $validated = $request->validate([
             'data.*' => 'required|date',
-            'valor.*' => 'required|numeric|min:0.1',
+            'valor.*' => 'required|numeric',
         ]);
 
         $idParcelas = $request->get('id_parcela', []);
