@@ -151,7 +151,6 @@
                     <th scope="col">Valor da Saída</th>
                     <th scope="col">Saldo</th>
                     <th scope="col">Ordem</th>
-                    <th scope="col">parcela</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
