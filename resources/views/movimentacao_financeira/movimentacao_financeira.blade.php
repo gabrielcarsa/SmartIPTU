@@ -151,6 +151,7 @@
                     <th scope="col">Valor da Saída</th>
                     <th scope="col">Saldo</th>
                     <th scope="col">Ordem</th>
+                    <th scope="col">parcela</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
@@ -202,7 +203,7 @@
                             class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
                     </td>
 
-
+                    <td class="align-middle">{{$mov->tipo_movimentacao == 0 ? $mov->id_parcela_receber : $mov->id_parcela_pagar}}</td>
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
                         <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
