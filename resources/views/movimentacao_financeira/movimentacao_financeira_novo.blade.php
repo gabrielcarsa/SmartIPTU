@@ -44,7 +44,7 @@
             <div class="row row-form movimentacao">
                 <div class="col-md-1">
                     <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo*</label>
-                    <select id="inputTipoMovimentacao" name="movimentacoes[0][tipo_movimentacao]"
+                    <select id="inputTipoMovimentacao" required name="movimentacoes[0][tipo_movimentacao]"
                         class="form-select form-control">
                         <option value="0" select>-- Selecione --</option>
                         <option value="1">Entrada</option>
@@ -54,14 +54,14 @@
 
                 <div class="col-md-3" id="categoriaField">
                     <label for="inputCategoria" class="form-label">Categoria*</label>
-                    <select id="inputCategoria" name="movimentacoes[0][categoria_id]" class="form-select form-control">
+                    <select id="inputCategoria" required name="movimentacoes[0][categoria_id]" class="form-select form-control">
                         <option value="0" selected>-- Selecione --</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
                     <label for="inputCliente" class="form-label">Cliente / Fornecedor*</label>
-                    <select id="inputCliente" name="movimentacoes[0][cliente_fornecedor_id]"
+                    <select id="inputCliente" required name="movimentacoes[0][cliente_fornecedor_id]"
                         class="form-select form-control @error('cliente_fornecedor_id') is-invalid @enderror">
                         <option value="0" {{ old('cliente_fornecedor_id') == 0 ? 'selected' : '' }}>-- Selecione --
                         </option>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="inputValor" id="valor" class="form-label">Valor da Entrada / Saída*</label>
-                    <input type="text" name="movimentacoes[0][valor]" value="{{ old('valor') }}"
+                    <input type="text" name="movimentacoes[0][valor]" required value="{{ old('valor') }}"
                         class="form-control @error('valor') is-invalid @enderror" id="inputValor">
                 </div>
                 <div class="col-md-2">
