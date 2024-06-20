@@ -335,9 +335,10 @@ class ParcelasAPIController extends Controller
             ->where('conta_corrente_id', '=', $conta_corrente->id)
             ->get(); 
     
-            $saldo_atual = SaldoDiario::where('data', '=', $dataRef)
+            $saldo_atual = SaldoDiario::where('data', '<=', $dataFim)
             ->where('titular_conta_id', '=', $titular_conta_id->id)
             ->where('conta_corrente_id', '=', $conta_corrente->id)
+            ->orderBy('data', 'desc')
             ->get(); // Saldo do dia
     
             $total_movimentacao = $movimentacao->count();
