@@ -2,12 +2,16 @@
 
 @section('conteudo')
 
+<!-- TITULO -->
 <h2>
     Nova Movimentação
 </h2>
+<!-- FIM TITULO -->
 
+<!-- CARD -->
 <div class="card">
-    <h5 class="card-header">Preencha os campos requisitados *</h5>
+
+    <!-- MENSAGENS -->
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -22,25 +26,46 @@
         </ul>
     </div>
     @endif
+    <!-- FIM MENSAGENS -->
 
+    <!-- CARD HEADER -->
+    <div class="card-header">
+        <h5 class="">Preencha os campos requisitados*</h5>
+    </div>
+    <!-- FIM CARD HEADER -->
+
+    <!-- CARD BODY -->
     <div class="card-body">
+
+        <!-- BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
+        <div class="d-flex justify-content-end bg-white">
+            <div class="adicionar-conta-fixa">
+                <a href="" class="btn btn-primary m-1" id="adicionarMovimentacaoContaFixaPagar">+ Conta Fixa Pagar</a>
+            </div>
+            <div class="adicionar-linha">
+                <a href="" class="btn btn-primary m-1" id="adicionarMovimentacao">+ Nova linha</a>
+            </div>
+            <div class="remover-linha">
+                <a href="" class="btn btn-danger m-1" id="removerMovimentacao">- Remover linha</a>
+            </div>
+        </div>
+        <!-- FIM BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
+
+        <!-- FORM -->
         <form class="" action="{{ '/movimentacao_financeira/cadastrar/' . Auth::user()->id }}" method="post"
             autocomplete="off">
             @csrf
-            <div class="row row-form row-form-destacar">
+
+            <div class="row">
                 <div class="col-md-2">
                     <label for="inputData" id="data" class="form-label">Data da movimentação*</label>
                     <input type="date" name="data" value="{{ old('data') }}"
                         class="form-control @error('data') is-invalid @enderror" id="inputData">
                 </div>
-                <div class="col-md-2 adicionar-linha d-flex align-items-center ms-auto">
-                    <a href="" id="adicionarMovimentacao">+ Nova linha</a>
-                </div>
-                <div class="col-md-2 remover-linha d-flex align-items-center ms-auto">
-                    <a href="" id="removerMovimentacao">- Remover linha</a>
-                </div>
             </div>
+
             <hr>
+
             <div class="row row-form movimentacao">
                 <div class="col-md-1">
                     <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo*</label>
@@ -54,7 +79,8 @@
 
                 <div class="col-md-3" id="categoriaField">
                     <label for="inputCategoria" class="form-label">Categoria*</label>
-                    <select id="inputCategoria" required name="movimentacoes[0][categoria_id]" class="form-select form-control">
+                    <select id="inputCategoria" required name="movimentacoes[0][categoria_id]"
+                        class="form-select form-control">
                         <option value="0" selected>-- Selecione --</option>
                     </select>
                 </div>
@@ -93,7 +119,37 @@
                         class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
                 </div>
             </div>
+
             <hr>
+            <p class="fw-semibold fs-5">Contas a Pagar Fixas</p>
+
+            <div class="row row-form conta-fixa-movimentacao">
+                <div class="form-floating">
+                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                        name="parcela_conta_fixa_pagar[]">
+                        <option value="0" {{ old('parcela_conta_fixa_pagar') == 0 ? 'selected' : '' }}>
+                            Selecione a parcela a pagar
+                        </option>
+                        @foreach ($data['parcelas_pagar'] as $parcela)
+                        <option value="{{ $parcela->id }}"
+                            {{ old('parcela_conta_fixa_pagar') == $parcela->id ? 'selected' : '' }}>
+                            {{$parcela->numero_parcela}} / {{$parcela->quantidade_parcela}} -
+                            {{\Carbon\Carbon::parse($parcela->data_vencimento)->format('d/m/Y')}} -
+                            R$ {{number_format($parcela->valor_parcela, 2, ',', '.')}} - {{$parcela->categoria}} -
+                            @if(empty($parcela->nome))
+                            {{$parcela->razao_social}}
+                            @else
+                            {{$parcela->nome}}
+                            @endif
+                        </option>
+                        @endforeach
+                    </select>
+                    <label for="floatingSelect" class="ml-2">Conta a Pagar - Parcelas</label>
+                </div>
+            </div>
+
+            <hr>
+
             <div class="row row-form row-form-destacar">
                 <div class="col-md-4">
                     <label for="inputTitularConta" class="form-label">Titular da Conta*</label>
@@ -126,8 +182,13 @@
                 </button>
             </div>
         </form>
+        <!-- FORM -->
+
     </div>
+    <!-- FIM CARD BODY -->
+
 </div>
+<!-- FIM CARD -->
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -156,6 +217,26 @@ $(document).ready(function() {
     }
 });
 $(document).ready(function() {
+
+    // Adiciona uma nova linha de conta fixa a pagar
+    $(document).on('click', '#adicionarMovimentacaoContaFixaPagar', function(e) {
+        e.preventDefault();
+
+        // Clona a div de movimentação de conta fixa
+        var novaMovimentacaoContaFixa = $('.conta-fixa-movimentacao:first').clone();
+
+        // Limpa os valores dos campos clonados
+        novaMovimentacaoContaFixa.find('select').val('');
+
+        // Incrementa os índices dos campos clonados para garantir que o Laravel os interprete como um array
+        novaMovimentacaoContaFixa.find('select[name^="parcela_conta_fixa_pagar"]').each(function() {
+            var newIndex = $('.conta-fixa-movimentacao').length;
+            $(this).attr('name', 'parcela_conta_fixa_pagar[' + newIndex + ']');
+        });
+
+        // Adiciona a nova div de movimentação de conta fixa no final do formulário
+        $('.conta-fixa-movimentacao:last').after(novaMovimentacaoContaFixa);
+    });
 
     // Adiciona uma nova linha de movimentação ao clicar em "+"
     $(document).on('click', '#adicionarMovimentacao', function(e) {

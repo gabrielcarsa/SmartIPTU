@@ -175,10 +175,32 @@ class MovimentacaoFinanceiraController extends Controller
 
         $clientes = Cliente::orderBy('nome')->get();
 
+        $parcelas_pagar = DB::table('parcela_conta_pagar as p')
+        ->select(
+            'p.id as id',
+            'p.numero_parcela as numero_parcela',
+            'p.data_vencimento as data_vencimento',
+            'p.valor_parcela as valor_parcela',
+            'p.situacao as situacao_parcela',
+            'cp.quantidade_parcela as quantidade_parcela',
+            'cp.descricao as descricao',
+            'ctp.descricao as categoria',
+            'c.nome as nome',
+            'c.tipo_cadastro as tipo_cadastro',
+            'c.razao_social as razao_social',
+        )
+        ->join('conta_pagar as cp', 'p.conta_pagar_id', '=', 'cp.id')
+        ->join('cliente as c', 'cp.fornecedor_id', '=', 'c.id')
+        ->join('categoria_pagar as ctp', 'cp.categoria_pagar_id', '=', 'ctp.id')
+        ->join('titular_conta as td', 'cp.titular_conta_id', '=', 'td.id')
+        ->leftJoin('cliente AS titular_conta_cliente', 'td.cliente_id', '=', 'titular_conta_cliente.id')
+        ->orderBy('data_vencimento', 'ASC')
+        ->get();
 
         $data = [
             'titular_conta' => $titular_conta,
             'clientes' => $clientes,
+            'parcelas_pagar' => $parcelas_pagar,
         ];
         return view('movimentacao_financeira/movimentacao_financeira_novo', compact('data'));
     }
