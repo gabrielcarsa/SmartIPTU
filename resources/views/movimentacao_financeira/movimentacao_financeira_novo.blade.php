@@ -59,7 +59,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <label for="inputData" id="data" class="form-label">Data da movimentação*</label>
-                    <input type="date" name="data" value="{{ old('data') }}"
+                    <input type="date" name="data" value="{{ old('data') }}" required
                         class="form-control @error('data') is-invalid @enderror" id="inputData">
                 </div>
             </div>
@@ -124,9 +124,10 @@
             <p class="fw-semibold fs-5">Contas a Pagar Fixas</p>
 
             <div class="row row-form conta-fixa-movimentacao">
-                <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
-                        name="parcela_conta_fixa_pagar[]">
+                <div class="col-md-9">
+                    <label for="inputParcela" class="form-label">Conta a Pagar - Parcelas</label>
+                    <select class="form-select form-control @error('parcela_conta_fixa_pagar') is-invalid @enderror"
+                        name="parcela_conta_fixa_pagar[0][parcela_id]" id="inputParcela">
                         <option value="0" {{ old('parcela_conta_fixa_pagar') == 0 ? 'selected' : '' }}>
                             Selecione a parcela a pagar
                         </option>
@@ -144,7 +145,16 @@
                         </option>
                         @endforeach
                     </select>
-                    <label for="floatingSelect" class="ml-2">Conta a Pagar - Parcelas</label>
+                </div>
+                <div class="col-md-2">
+                    <label for="inputValor" id="valor" class="form-label">Valor Pago</label>
+                    <input type="text" name="parcela_conta_fixa_pagar[0][valor]" required value="{{ old('valor') }}"
+                        class="form-control @error('valor') is-invalid @enderror" id="inputValor">
+                </div>
+                <div class="col-md-1">
+                    <label for="inputOrdem" id="ordem" class="form-label">Ordem</label>
+                    <input type="text" name="parcela_conta_fixa_pagar[0][ordem]" value="{{ old('ordem') }}"
+                        class="form-control @error('ordem') is-invalid @enderror" id="inputOrdem">
                 </div>
             </div>
 
@@ -197,6 +207,29 @@
 
 
 <script>
+
+// Formatar campo valor em dinheiro com pontos e virgulas dos valores movimentações
+$(document).ready(function() {
+    $(document).on('input', 'input[name^="parcela_conta_fixa_pagar["][name$="[valor]"]', function() {
+        // Remova os caracteres não numéricos
+        var unmaskedValue = $(this).val().replace(/\D/g, '');
+
+        // Adicione a máscara apenas ao input de valor relacionado à mudança
+        $(this).val(mask(unmaskedValue));
+    });
+
+    function mask(value) {
+        // Converte o valor para número
+        var numberValue = parseFloat(value) / 100;
+
+        // Formata o número com vírgula como separador decimal e duas casas decimais
+        return numberValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2
+        });
+    }
+});
+
+// Formatar campo valor em dinheiro com pontos e virgulas dos valores parcelas contas fixas
 $(document).ready(function() {
     $(document).on('input', 'input[name^="movimentacoes["][name$="[valor]"]', function() {
         // Remova os caracteres não numéricos
@@ -216,6 +249,7 @@ $(document).ready(function() {
         });
     }
 });
+
 $(document).ready(function() {
 
     // Adiciona uma nova linha de conta fixa a pagar
