@@ -66,6 +66,21 @@
 
             <hr>
 
+            <p class="fw-semibold fs-5">Movimentações variáveis</p>
+
+            <div class="bg-light p-3 m-3 rounded border d-flex" style="width: 400px">
+                <span class="material-symbols-outlined">
+                    lightbulb
+                </span>
+                <div class="ml-2">
+                    <p class="fw-semibold m-0 p-0">Dica</p>
+                    <p class="text-secondary m-0 p-0">
+                        Aqui você vai cadastrar as movimentações variáveis, como: tarifas de banco, entradas de clientes
+                        ...
+                    </p>
+                </div>
+            </div>
+
             <div class="row row-form movimentacao">
                 <div class="col-md-1">
                     <label for="inputTipoMovimentacao" id="tipo_movimentacao" class="form-label">Tipo*</label>
@@ -121,7 +136,20 @@
             </div>
 
             <hr>
+
             <p class="fw-semibold fs-5">Contas a Pagar Fixas</p>
+
+            <div class="bg-light p-3 m-3 rounded border d-flex" style="width: 400px">
+                <span class="material-symbols-outlined">
+                    lightbulb
+                </span>
+                <div class="ml-2">
+                    <p class="fw-semibold m-0 p-0">Dica</p>
+                    <p class="text-secondary m-0 p-0">
+                        Aqui você vai dar baixa nas parcelas de contas fixas, como: salários, rescisões ...
+                    </p>
+                </div>
+            </div>
 
             <div class="row row-form conta-fixa-movimentacao">
                 <div class="col-md-9">
@@ -148,7 +176,7 @@
                 </div>
                 <div class="col-md-2">
                     <label for="inputValor" id="valor" class="form-label">Valor Pago</label>
-                    <input type="text" name="parcela_conta_fixa_pagar[0][valor]" required value="{{ old('valor') }}"
+                    <input type="text" name="parcela_conta_fixa_pagar[0][valor]" value="{{ old('valor') }}"
                         class="form-control @error('valor') is-invalid @enderror" id="inputValor">
                 </div>
                 <div class="col-md-1">
@@ -207,7 +235,6 @@
 
 
 <script>
-
 // Formatar campo valor em dinheiro com pontos e virgulas dos valores movimentações
 $(document).ready(function() {
     $(document).on('input', 'input[name^="parcela_conta_fixa_pagar["][name$="[valor]"]', function() {
@@ -260,12 +287,13 @@ $(document).ready(function() {
         var novaMovimentacaoContaFixa = $('.conta-fixa-movimentacao:first').clone();
 
         // Limpa os valores dos campos clonados
-        novaMovimentacaoContaFixa.find('select').val('');
+        novaMovimentacaoContaFixa.find('input, select').val('');
 
         // Incrementa os índices dos campos clonados para garantir que o Laravel os interprete como um array
-        novaMovimentacaoContaFixa.find('select[name^="parcela_conta_fixa_pagar"]').each(function() {
-            var newIndex = $('.conta-fixa-movimentacao').length;
-            $(this).attr('name', 'parcela_conta_fixa_pagar[' + newIndex + ']');
+        novaMovimentacaoContaFixa.find('[name^="parcela_conta_fixa_pagar"]').each(function() {
+            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $('.conta-fixa-movimentacao')
+                .length + ']');
+            $(this).attr('name', newName);
         });
 
         // Adiciona a nova div de movimentação de conta fixa no final do formulário
