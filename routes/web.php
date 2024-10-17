@@ -118,8 +118,6 @@ Route::middleware([
         Route::post('/parcela/definir_baixar_parcela/{usuario}',[DebitoController::class, 'definir_baixar_parcela']);
         Route::get('/debito/cadastrar_scraping',[DebitoController::class, 'cadastrar_scraping'])->name('cadastrar_scraping');
 
-
-
         //ROTAS PRESCRIÇÃO
         Route::get('/prescricao/{lote_id}',[PrescricaoController::class, 'prescricao'])->name('prescricao');
         Route::get('/prescricao/novo/{lote_id}',function ($lote_id) {return view('prescricao/prescricao_novo', ['lote_id' => $lote_id]);})->name('prescricao_novo');
@@ -208,7 +206,8 @@ Route::middleware([
 
         //SCRAPING  
         Route::get('/scraping/{inscricao_municipal}/{lote_id}',[ScrapingIptuController::class, 'iptuCampoGrande'])->name('iptuCampoGrande');
-        Route::get('/scraping/{inscricao_municipal}/{lote_id}/{user_id}',[ScrapingIptuController::class, 'iptuCampoGrandeAdicionarDireto'])->name('iptuCampoGrandeAdicionarDireto');
+        Route::get('/scraping/{inscricao_municipal}/{lote_id}/{is_empreendimento}/{user_id}',[ScrapingIptuController::class, 'iptuCampoGrandeAdicionarDireto'])->name('iptuCampoGrandeAdicionarDireto');
+        Route::get('/scraping/cadastrar_scraping_empreendimento',[ScrapingIptuController::class, 'cadastrar_scraping_empreendimento'])->name('cadastrar_scraping_empreendimento');
         
         //SUBIR PLANILHAS DE DADOS
         Route::post('/importar_lotes/{user_id}/{empreendimento_id}', [ImportarController::class, 'importarLotesCSV'])->name('importarLotesCSV');

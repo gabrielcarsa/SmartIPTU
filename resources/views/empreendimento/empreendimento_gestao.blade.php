@@ -34,7 +34,13 @@
 <a class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         expand_less
-    </span>Subir planilha de Lotes</a>
+    </span>
+    Subir planilha de Lotes
+</a>
+<a href="{{ route('cadastrar_scraping_empreendimento', ['id' => $data['empreendimento']->id, 'usuario_id' => Auth::user()->id]) }}"
+    class="btn btn-warning text-white fw-semibold" style="margin-bottom: 20px">
+    PMCG importar total
+</a>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -196,8 +202,13 @@
                                         Contrato</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->id, 'user_id' => Auth::user()->id]) }}"
-                                        class="dropdown-item">Limpar e Adicionar Débitos</a>
+                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', [
+                                        'inscricao_municipal' => $lote->inscricao_municipal, 
+                                        'lote_id' => $lote->id, 
+                                        'is_empreendimento' => 0,
+                                        'user_id' => Auth::user()->id, 
+                                        ]) }}" class="dropdown-item">Limpar e Adicionar Débitos
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="../../lote/editar/{{$lote->id}}" class="dropdown-item">Ver/Editar</a>
