@@ -31,4 +31,14 @@ class Lote extends Model
         'cliente_id',
         'data_venda',
     ];
+
+    public function quadra()
+    {
+        return $this->belongsTo(Quadra::class);
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
 }

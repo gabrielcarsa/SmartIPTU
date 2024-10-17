@@ -94,6 +94,10 @@ class EmpreendimentoController extends Controller
      // GESTÃO EMPREENDIMENTO
      function gestao($id, Request $request){
 
+        $empreendimento_teste = Lote::with('quadra', 'cliente')->first();
+
+        dd($empreendimento_teste->cliente->nome);
+
         $empreendimento = Empreendimento::find($id);
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 

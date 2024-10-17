@@ -10,4 +10,9 @@ class Cliente extends Model
     use HasFactory;
     protected $table = 'cliente';
     public $timestamps = false;
+
+    public function lote()
+    {
+        return $this->hasMany(Lote::class);
+    }
 }
