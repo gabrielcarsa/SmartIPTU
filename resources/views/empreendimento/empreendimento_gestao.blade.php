@@ -151,8 +151,18 @@
                     <td>{{$lote->id}}</td>
                     <td>{{$lote->quadra->nome}}</td>
                     <th scope="row">{{$lote->lote}}</th>
+
+                    @if($lote->cliente)
+
                     @if(empty($lote->cliente->nome))
-                   
+                    <td class="d-flex align-items-center">
+                        {{$lote->cliente->razao_social}}
+                        @if($lote->cliente->is_contato_verificado == true)
+                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                            call
+                        </span>
+                        @endif
+                    </td>
                     @else
                     <td class="">
                         {{$lote->cliente->nome}}
@@ -228,6 +238,7 @@
                             </ul>
                         </div>
                     </td>
+                    @endif
                 </tr>
                 @endforeach
                 @endif
@@ -247,8 +258,12 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
-const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+const debitosPagarAtrasados = {
+    !!json_encode($data['debitosPagarAtrasados']) !!
+};
+const debitosReceberAtrasados = {
+    !!json_encode($data['debitosReceberAtrasados']) !!
+};
 
 
 new Chart(graficoDividaClienteEmpresa, {
