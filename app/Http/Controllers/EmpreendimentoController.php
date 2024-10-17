@@ -130,10 +130,13 @@ class EmpreendimentoController extends Controller
         ->whereHas('quadra', function ($query) use ($id) {
             $query->where('empreendimento_id', $id);
         })
+        ->select('lote.*', 'quadra.nome as quadra_nome') 
         ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
         ->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED)')
         ->orderByRaw('CAST(lote.lote AS UNSIGNED)')
         ->get();
+
+        //->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED), CAST(lote.lote AS UNSIGNED)')
 
         $total_lotes = $resultado->count();
 

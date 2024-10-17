@@ -10,4 +10,9 @@ class TipoDebito extends Model
     use HasFactory;
     protected $table = 'tipo_debito';
     public $timestamps = false;
+
+    public function debito()
+    {
+        return $this->hasMany(Debito::class);
+    }
 }
