@@ -331,4 +331,44 @@ class LoteController extends Controller
 
         return redirect()->back()->with('success', 'Operação realizada com sucesso');
     }
+
+    //ACORDO PARCIAL
+    function acordo_parcial(Request $request){
+        $id = $request->get('id');
+
+        $lote = Lote::find($id);
+
+        if (!$lote) {
+            return redirect()->back()->with('error', 'Lote não encontrado');
+        }
+
+        if($lote->is_acordo_parcial != true){
+            $lote->is_acordo_parcial = true;
+        }else{
+            $lote->is_acordo_parcial = false;
+        }
+        $lote->save();
+
+        return redirect()->back()->with('success', 'Operação realizada com sucesso');
+    }
+
+    //ACORDO
+    function acordo(Request $request){
+        $id = $request->get('id');
+
+        $lote = Lote::find($id);
+
+        if (!$lote) {
+            return redirect()->back()->with('error', 'Lote não encontrado');
+        }
+
+        if($lote->is_acordo_total != true){
+            $lote->is_acordo_total = true;
+        }else{
+            $lote->is_acordo_total = false;
+        }
+        $lote->save();
+
+        return redirect()->back()->with('success', 'Operação realizada com sucesso');
+    }
 }

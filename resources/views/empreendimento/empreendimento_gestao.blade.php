@@ -100,6 +100,31 @@
     </div>
     @endif
     <div class="card-body">
+        <p>
+            <span class="bg-danger p-1 text-white rounded fw-bold mr-2">
+                N
+            </span>
+            Negativado
+        </p>
+        <p>
+            <span class="bg-warning p-1 text-white rounded fw-bold mr-2">
+                AC PAR
+            </span>
+            Acordo parcial feito
+        </p>
+        <p>
+            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+                AC
+            </span>
+            Acordo total feito
+        </p>
+        <p>
+            <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6 mr-2">
+                call
+            </span>
+            Telefone verificado
+        </p>
+
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
@@ -139,8 +164,23 @@
                         @endif
                     </td>
                     @endif
-                    <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span
-                            id='negativado'>NEGATIVADO</span>" : "" !!}</td>
+                    <td>{{ $lote->inscricao_municipal }}
+                        @if($lote->negativar == true)
+                        <span class="bg-danger p-1 text-white rounded fw-bold">
+                            N
+                        </span>
+                        @endif
+                        @if($lote->is_acordo_parcial == true)
+                        <span class="bg-warning p-1 text-white rounded fw-bold">
+                            AC PAR
+                        </span>
+                        @endif
+                        @if($lote->is_acordo_total == true)
+                        <span class="bg-success p-1 text-white rounded fw-bold">
+                            AC
+                        </span>
+                        @endif
+                    </td>
                     <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                     </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
@@ -170,9 +210,17 @@
                                         Telefone verificado
                                     </a>
                                 </li>
-                                <!--<li><a href=""
-                                        class="dropdown-item">Acordo</a>
-                                </li>-->
+                                <li>
+                                    <a href="{{ route('lote.acordo_parcial', ['id' => $lote->id] ) }}"
+                                        class="dropdown-item">
+                                        Acordo parcial
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('lote.acordo', ['id' => $lote->id] ) }}" class="dropdown-item">
+                                        Acordo
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </td>

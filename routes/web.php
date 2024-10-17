@@ -104,7 +104,8 @@ Route::middleware([
         Route::get('/lote/nova_venda/{id}',[LoteController::class, 'nova_venda'])->name('nova_venda');
         Route::post('/lote/cadastrar_venda/{id}/{usuario}',[LoteController::class, 'cadastrar_venda']);
         Route::get('/lote/negativar/{id}',[LoteController::class, 'negativar']);
-
+        Route::get('/lote/acordo_parcial',[LoteController::class, 'acordo_parcial'])->name('lote.acordo_parcial');
+        Route::get('/lote/acordo',[LoteController::class, 'acordo'])->name('lote.acordo');
 
         //ROTAS DEBITO
         Route::get('/debito/novo/{lote_id}',[DebitoController::class, 'novo'])->name('debito_novo');
