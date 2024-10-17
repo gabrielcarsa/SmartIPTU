@@ -78,6 +78,7 @@ Route::middleware([
         Route::post('/cliente/alterar/{id}/{usuario}',[ClienteController::class, 'alterar']);
         Route::get('/cliente/excluir/{id}/',[ClienteController::class, 'excluir']);
         Route::get('/cliente/relatorio_pdf',[ClienteController::class, 'relatorio_pdf']);
+        Route::get('/cliente/contato-verificado',[ClienteController::class, 'contato_verificado'])->name('cliente.contato-verificado');
 
         //ROTAS EMPREENDIMETO
         Route::get('/empreendimento',[EmpreendimentoController::class, 'listar']);

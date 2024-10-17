@@ -121,9 +121,23 @@
                     <td>{{$lote->quadra->nome}}</td>
                     <th scope="row">{{$lote->lote}}</th>
                     @if(empty($lote->cliente->nome))
-                    <td>{{$lote->cliente->razao_social}}</td>
+                    <td class="d-flex align-items-center">
+                        {{$lote->cliente->razao_social}}
+                        @if($lote->cliente->is_contato_verificado == true)
+                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                            call
+                        </span>
+                        @endif
+                    </td>
                     @else
-                    <td>{{$lote->cliente->nome}}</td>
+                    <td class="">
+                        {{$lote->cliente->nome}}
+                        @if($lote->cliente->is_contato_verificado == true)
+                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                            call
+                        </span>
+                        @endif
+                    </td>
                     @endif
                     <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span
                             id='negativado'>NEGATIVADO</span>" : "" !!}</td>
@@ -138,8 +152,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('nova_venda', ['id' => $lote->id]) }}"
-                                        class="dropdown-item">Novo
+                                    <a href="{{ route('nova_venda', ['id' => $lote->id]) }}" class="dropdown-item">Novo
                                         Contrato</a>
                                 </li>
                                 <li>
@@ -149,8 +162,13 @@
                                 <li>
                                     <a href="../../lote/editar/{{$lote->id}}" class="dropdown-item">Ver/Editar</a>
                                 </li>
-                                <li><a href="../../lote/negativar/{{$lote->id}}"
-                                        class="dropdown-item">Negativar</a>
+                                <li><a href="../../lote/negativar/{{$lote->id}}" class="dropdown-item">Negativar</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('cliente.contato-verificado', ['id' => $lote->cliente->id] ) }}"
+                                        class="dropdown-item">
+                                        Telefone verificado
+                                    </a>
                                 </li>
                                 <!--<li><a href=""
                                         class="dropdown-item">Acordo</a>
@@ -177,8 +195,12 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
-const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+const debitosPagarAtrasados = {
+    !!json_encode($data['debitosPagarAtrasados']) !!
+};
+const debitosReceberAtrasados = {
+    !!json_encode($data['debitosReceberAtrasados']) !!
+};
 
 
 new Chart(graficoDividaClienteEmpresa, {
