@@ -254,12 +254,8 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {
-    !!json_encode($data['debitosPagarAtrasados']) !!
-};
-const debitosReceberAtrasados = {
-    !!json_encode($data['debitosReceberAtrasados']) !!
-};
+const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
+const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
 
 
 new Chart(graficoDividaClienteEmpresa, {
