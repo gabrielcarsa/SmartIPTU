@@ -94,6 +94,7 @@ class EmpreendimentoController extends Controller
      // GESTÃO EMPREENDIMENTO
      function gestao($id, Request $request){
 
+
         $empreendimento = Empreendimento::find($id);
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
@@ -125,27 +126,17 @@ class EmpreendimentoController extends Controller
             'empreendimento' => $empreendimento
         ];
         
-        $resultado = Quadra::select(
-            'quadra.id as quadra_id',
-            'quadra.nome as quadra_nome',
-            'quadra.empreendimento_id as quadra_empreendimento_id',
-            'lote.id as lote_id',
-            'lote.lote as lote',
-            'lote.inscricao_municipal as inscricao_municipal',
-            'lote.data_venda as data_venda',
-            'lote.negativar as negativar',
-            'lote.quadra_id as lote_quadra_id',
-            'lote.cliente_id as lote_cliente_id',
-            'cliente.nome as nome_cliente',
-            'cliente.razao_social as razao_social__cliente',
-            'cliente.telefone1 as tel1',
-            'cliente.telefone2 as tel2',
-        )
-        ->leftJoin('lote', 'quadra.id', '=', 'lote.quadra_id')
-        ->join('cliente', 'cliente.id', '=', 'lote.cliente_id')
-        ->where('quadra.empreendimento_id', '=', $id)
-        ->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED), CAST(lote.lote AS UNSIGNED)')
+        $resultado = Lote::with('quadra', 'cliente')
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })
+        ->select('lote.*', 'quadra.nome as quadra_nome') 
+        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
+        ->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED)')
+        ->orderByRaw('CAST(lote.lote AS UNSIGNED)')
         ->get();
+
+        //->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED), CAST(lote.lote AS UNSIGNED)')
 
         $total_lotes = $resultado->count();
 

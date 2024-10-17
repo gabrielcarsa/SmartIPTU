@@ -10,4 +10,14 @@ class Quadra extends Model
     use HasFactory;
     protected $table = 'quadra';
     public $timestamps = false;
+
+    public function empreendimento()
+    {
+        return $this->belongsTo(Empreendimento::class);
+    }
+
+    public function lote()
+    {
+        return $this->hasMany(Lote::class);
+    }
 }

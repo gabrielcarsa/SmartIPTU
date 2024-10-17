@@ -10,4 +10,9 @@ class ParcelaContaPagar extends Model
     use HasFactory;
     protected $table = 'parcela_conta_pagar';
     public $timestamps = false;
+
+    public function debito()
+    {
+        return $this->belongsTo(Debito::class);
+    }
 }

@@ -34,7 +34,13 @@
 <a class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-bottom: 20px">
     <span class="material-symbols-outlined">
         expand_less
-    </span>Subir planilha de Lotes</a>
+    </span>
+    Subir planilha de Lotes
+</a>
+<a href="{{ route('cadastrar_scraping_empreendimento', ['id' => $data['empreendimento']->id, 'usuario_id' => Auth::user()->id]) }}"
+    class="btn btn-warning text-white fw-semibold" style="margin-bottom: 20px">
+    PMCG importar total
+</a>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -100,6 +106,31 @@
     </div>
     @endif
     <div class="card-body">
+        <p>
+            <span class="bg-danger p-1 text-white rounded fw-bold mr-2">
+                N
+            </span>
+            Negativado
+        </p>
+        <p>
+            <span class="bg-warning p-1 text-white rounded fw-bold mr-2">
+                AC PAR
+            </span>
+            Acordo parcial feito
+        </p>
+        <p>
+            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+                AC
+            </span>
+            Acordo total feito
+        </p>
+        <p>
+            <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6 mr-2">
+                call
+            </span>
+            Telefone verificado
+        </p>
+
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
@@ -117,44 +148,90 @@
                 @if(isset($resultado))
                 @foreach ($resultado as $lote)
                 <tr>
-                    <td>{{$lote->lote_id}}</td>
-                    <td>{{$lote->quadra_nome}}</td>
+                    <td>{{$lote->id}}</td>
+                    <td>{{$lote->quadra->nome}}</td>
                     <th scope="row">{{$lote->lote}}</th>
-                    @if(empty($lote->nome_cliente))
-                    <td>{{$lote->razao_social__cliente}}</td>
+                    @if(empty($lote->cliente->nome))
+                    <td class="d-flex align-items-center">
+                        {{$lote->cliente->razao_social}}
+                        @if($lote->cliente->is_contato_verificado == true)
+                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                            call
+                        </span>
+                        @endif
+                    </td>
                     @else
-                    <td>{{$lote->nome_cliente}}</td>
+                    <td class="">
+                        {{$lote->cliente->nome}}
+                        @if($lote->cliente->is_contato_verificado == true)
+                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                            call
+                        </span>
+                        @endif
+                    </td>
                     @endif
-                    <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span
-                            id='negativado'>NEGATIVADO</span>" : "" !!}</td>
+                    <td>{{ $lote->inscricao_municipal }}
+                        @if($lote->negativar == true)
+                        <span class="bg-danger p-1 text-white rounded fw-bold">
+                            N
+                        </span>
+                        @endif
+                        @if($lote->is_acordo_parcial == true)
+                        <span class="bg-warning p-1 text-white rounded fw-bold">
+                            AC PAR
+                        </span>
+                        @endif
+                        @if($lote->is_acordo_total == true)
+                        <span class="bg-success p-1 text-white rounded fw-bold">
+                            AC
+                        </span>
+                        @endif
+                    </td>
                     <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                     </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
                         <div class="dropdown">
-                            <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
+                            <a href="../../lote/gestao/{{$lote->id}}" class="btn-acao-listagem">Parcelas</a>
                             <a class="btn-acao-listagem dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
-                                        class="dropdown-item">Novo
+                                    <a href="{{ route('nova_venda', ['id' => $lote->id]) }}" class="dropdown-item">Novo
                                         Contrato</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
-                                        class="dropdown-item">Limpar e Adicionar Débitos</a>
+                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', [
+                                        'inscricao_municipal' => $lote->inscricao_municipal, 
+                                        'lote_id' => $lote->id, 
+                                        'is_empreendimento' => 0,
+                                        'user_id' => Auth::user()->id, 
+                                        ]) }}" class="dropdown-item">Limpar e Adicionar Débitos
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="../../lote/editar/{{$lote->lote_id}}" class="dropdown-item">Ver/Editar</a>
+                                    <a href="../../lote/editar/{{$lote->id}}" class="dropdown-item">Ver/Editar</a>
                                 </li>
-                                <li><a href="../../lote/negativar/{{$lote->lote_id}}"
-                                        class="dropdown-item">Negativar</a>
+                                <li><a href="../../lote/negativar/{{$lote->id}}" class="dropdown-item">Negativar</a>
                                 </li>
-                                <!--<li><a href=""
-                                        class="dropdown-item">Acordo</a>
-                                </li>-->
+                                <li>
+                                    <a href="{{ route('cliente.contato-verificado', ['id' => $lote->cliente->id] ) }}"
+                                        class="dropdown-item">
+                                        Telefone verificado
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('lote.acordo_parcial', ['id' => $lote->id] ) }}"
+                                        class="dropdown-item">
+                                        Acordo parcial
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('lote.acordo', ['id' => $lote->id] ) }}" class="dropdown-item">
+                                        Acordo
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </td>
@@ -177,8 +254,12 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
-const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+const debitosPagarAtrasados = {
+    !!json_encode($data['debitosPagarAtrasados']) !!
+};
+const debitosReceberAtrasados = {
+    !!json_encode($data['debitosReceberAtrasados']) !!
+};
 
 
 new Chart(graficoDividaClienteEmpresa, {

@@ -254,4 +254,23 @@ class ClienteController extends Controller
         return $pdf->download('cliente_relatorio.pdf');
     }
 
+    //CONTATO VERIFICADO
+    function contato_verificado(Request $request){
+        $id = $request->get('id');
+
+        $cliente = Cliente::find($id);
+
+        if (!$cliente) {
+            return redirect()->back()->with('error', 'Cliente não encontrado');
+        }
+
+        if($cliente->is_contato_verificado != true){
+            $cliente->is_contato_verificado = true;
+        }else{
+            $cliente->is_contato_verificado = false;
+        }
+        $cliente->save();
+
+        return redirect()->back()->with('success', 'Operação realizada com sucesso');
+    }
 }

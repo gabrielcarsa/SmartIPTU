@@ -14,6 +14,7 @@ use App\Models\ContaReceber;
 use App\Models\TitularConta;
 use App\Models\ParcelaContaReceber;
 use App\Models\ParcelaContaPagar;
+use App\Models\Quadra;
 
 class ScrapingIptuController extends Controller
 {
@@ -213,13 +214,13 @@ class ScrapingIptuController extends Controller
     }
 
     //ADICIONAR DEBITOS SCRAPING IPTU APENAS COM UM BOTÃO
-    public function iptuCampoGrandeAdicionarDireto($inscricao_municipal, $lote_id, $usuario_id)
+    public function iptuCampoGrandeAdicionarDireto($inscricao_municipal, $lote_id, $is_empreendimento, $usuario_id)
     {
         //Antes de adicionar novos débitos, temos que apagar se possuir algum para não ocorrer duplicações
 
         //Buscar o Debito com base no vinculo com Lote
         $debito = Debito::where('lote_id', $lote_id)->get();
-        
+
         $i = 0;
         foreach ($debito as $d) {
 
@@ -229,7 +230,7 @@ class ScrapingIptuController extends Controller
 
             //Declarando variavel
             $debito = 0;
-            
+
             //Se houver parcelas a receber
             if (count($parcela_receber) > 0) {
                 foreach ($parcela_receber as $p) {
@@ -344,7 +345,9 @@ class ScrapingIptuController extends Controller
             }
             
         }
-        return redirect()->back()->with('success', 'Débito do lote '. $lote->lote .' cadastrado com sucesso');
+        if($is_empreendimento != true){
+            return redirect()->back()->with('success', 'Débito do lote '. $lote->lote .' cadastrado com sucesso');
+        }
     }
 
     //FUNCÃO PARA CADASTRAR DEBITOS
@@ -441,5 +444,31 @@ class ScrapingIptuController extends Controller
         $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $resultadoParcela[$i-1]['parcelas'][$j-1]['vencimento'])->format('Y-m-d');
 
         $parcela->save();
+    }
+
+    //ADICIONAR TODOS DEBITOS DO RANCHO
+    public function cadastrar_scraping_empreendimento(Request $request){
+
+        //instanciando controller
+        $scrapingController = new ScrapingIptuController();
+
+        $empreendimento_id = $request->get('id');
+        $usuario_id = $request->get('usuario_id');
+
+        $quadras = Quadra::where('empreendimento_id', $empreendimento_id)->get();
+
+        foreach($quadras as $quadra){
+
+            $lotes = Lote::where('quadra_id', $quadra->id)->get();
+
+            foreach($lotes as $lote){
+
+                $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
+        
+            }
+
+        }
+
+        return redirect()->back()->with('success', 'Débitos cadastrados com sucesso');
     }
 }

@@ -10,4 +10,9 @@ class Empreendimento extends Model
     use HasFactory;
     protected $table = 'empreendimento';
     public $timestamps = false;
+
+    public function quadra()
+    {
+        return $this->hasMany(Quadra::class);
+    }
 }
