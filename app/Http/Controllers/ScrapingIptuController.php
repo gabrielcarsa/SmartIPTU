@@ -463,7 +463,12 @@ class ScrapingIptuController extends Controller
 
             foreach($lotes as $lote){
 
-                $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
+                try {
+                    $debito = $ScrapingController->cadastrarDebitos($resultadoParcela, $i, $j, $data_vencimento_aux, $lote_id, $usuario_id);
+                } catch (\Exception $e) {
+                    \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
+                }
         
             }
 
