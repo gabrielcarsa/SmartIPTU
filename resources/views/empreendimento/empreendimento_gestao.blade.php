@@ -117,13 +117,13 @@
                 @if(isset($resultado))
                 @foreach ($resultado as $lote)
                 <tr>
-                    <td>{{$lote->lote_id}}</td>
-                    <td>{{$lote->quadra_nome}}</td>
+                    <td>{{$lote->id}}</td>
+                    <td>{{$lote->quadra->nome}}</td>
                     <th scope="row">{{$lote->lote}}</th>
-                    @if(empty($lote->nome_cliente))
-                    <td>{{$lote->razao_social__cliente}}</td>
+                    @if(empty($lote->cliente->nome))
+                    <td>{{$lote->cliente->razao_social}}</td>
                     @else
-                    <td>{{$lote->nome_cliente}}</td>
+                    <td>{{$lote->cliente->nome}}</td>
                     @endif
                     <td>{!! $lote->inscricao_municipal !!} {!! $lote->negativar != null ? "<br><span
                             id='negativado'>NEGATIVADO</span>" : "" !!}</td>
@@ -132,24 +132,24 @@
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
                         <div class="dropdown">
-                            <a href="../../lote/gestao/{{$lote->lote_id}}" class="btn-acao-listagem">Parcelas</a>
+                            <a href="../../lote/gestao/{{$lote->id}}" class="btn-acao-listagem">Parcelas</a>
                             <a class="btn-acao-listagem dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('nova_venda', ['id' => $lote->lote_id]) }}"
+                                    <a href="{{ route('nova_venda', ['id' => $lote->id]) }}"
                                         class="dropdown-item">Novo
                                         Contrato</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->lote_id, 'user_id' => Auth::user()->id]) }}"
+                                    <a href="{{ route('iptuCampoGrandeAdicionarDireto', ['inscricao_municipal' => $lote->inscricao_municipal, 'lote_id' => $lote->id, 'user_id' => Auth::user()->id]) }}"
                                         class="dropdown-item">Limpar e Adicionar Débitos</a>
                                 </li>
                                 <li>
-                                    <a href="../../lote/editar/{{$lote->lote_id}}" class="dropdown-item">Ver/Editar</a>
+                                    <a href="../../lote/editar/{{$lote->id}}" class="dropdown-item">Ver/Editar</a>
                                 </li>
-                                <li><a href="../../lote/negativar/{{$lote->lote_id}}"
+                                <li><a href="../../lote/negativar/{{$lote->id}}"
                                         class="dropdown-item">Negativar</a>
                                 </li>
                                 <!--<li><a href=""
