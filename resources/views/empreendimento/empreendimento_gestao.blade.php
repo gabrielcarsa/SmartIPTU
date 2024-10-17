@@ -173,6 +173,9 @@
                         @endif
                     </td>
                     @endif
+
+                    @endif
+
                     <td>{{ $lote->inscricao_municipal }}
                         @if($lote->negativar == true)
                         <span class="bg-danger p-1 text-white rounded fw-bold">
@@ -218,12 +221,18 @@
                                 </li>
                                 <li><a href="../../lote/negativar/{{$lote->id}}" class="dropdown-item">Negativar</a>
                                 </li>
+
+                                @if($lote->cliente)
+
                                 <li>
                                     <a href="{{ route('cliente.contato-verificado', ['id' => $lote->cliente->id] ) }}"
                                         class="dropdown-item">
                                         Telefone verificado
                                     </a>
                                 </li>
+
+                                @endif
+
                                 <li>
                                     <a href="{{ route('lote.acordo_parcial', ['id' => $lote->id] ) }}"
                                         class="dropdown-item">
@@ -238,7 +247,6 @@
                             </ul>
                         </div>
                     </td>
-                    @endif
                 </tr>
                 @endforeach
                 @endif
@@ -258,12 +266,8 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {
-    !!json_encode($data['debitosPagarAtrasados']) !!
-};
-const debitosReceberAtrasados = {
-    !!json_encode($data['debitosReceberAtrasados']) !!
-};
+const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
+const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
 
 
 new Chart(graficoDividaClienteEmpresa, {
