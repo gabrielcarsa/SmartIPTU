@@ -139,6 +139,8 @@
                     <th scope="col">Lote</th>
                     <th scope="col">Responsabilidade</th>
                     <th scope="col">Inscrição Municipal</th>
+                    <th scope="col">R$ Cliente</th>
+                    <th scope="col">R$ Empresa</th>
                     <th scope="col">Data da Venda</th>
                     <th scope="col">Telefones</th>
                     <th scope="col">Ações</th>
@@ -193,7 +195,52 @@
                         </span>
                         @endif
                     </td>
-                    <td>{{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
+                    <td class="text-danger fw-semibold">
+                        @php
+                        $debito = $lote->debito; // Isso é uma coleção (array) de Debito
+                        $valorTotalCliente = 0;
+                        @endphp
+
+                        @if($debito != null)
+                        @foreach($debito as $d) 
+
+                        @foreach($d->parcelaContaReceber as $parcela)
+
+                        @php
+                        $valorTotalCliente += $parcela->valor_parcela;
+                        @endphp
+
+                        @endforeach
+
+                        @endforeach
+                        @endif
+
+                        R$ {{number_format($valorTotalCliente, 2, ',', '.')}}
+                    </td>
+                    <td>
+                    @php
+                        $debito = $lote->debito; // Isso é uma coleção (array) de Debito
+                        $valorTotalEmpresa = 0;
+                        @endphp
+
+                        @if($debito != null)
+                        @foreach($debito as $d) 
+
+                        @foreach($d->parcelaContaPagar as $parcela)
+
+                        @php
+                        $valorTotalEmpresa += $parcela->valor_parcela;
+                        @endphp
+
+                        @endforeach
+
+                        @endforeach
+                        @endif
+
+                        R$ {{number_format($valorTotalEmpresa, 2, ',', '.')}}
+                    </td>
+                    <td>
+                        {{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                     </td>
                     <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
                     <td>
