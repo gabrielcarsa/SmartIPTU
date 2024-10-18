@@ -126,7 +126,7 @@ class EmpreendimentoController extends Controller
             'empreendimento' => $empreendimento
         ];
         
-        $resultado = Lote::with('quadra', 'cliente')
+        $resultado = Lote::with('quadra', 'cliente', 'debito')
         ->whereHas('quadra', function ($query) use ($id) {
             $query->where('empreendimento_id', $id);
         })
