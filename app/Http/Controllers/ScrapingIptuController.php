@@ -449,31 +449,35 @@ class ScrapingIptuController extends Controller
     //ADICIONAR TODOS DEBITOS DO RANCHO
     public function cadastrar_scraping_empreendimento(Request $request){
 
-        //instanciando controller
-        $scrapingController = new ScrapingIptuController();
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+            //instanciando controller
+            $scrapingController = new ScrapingIptuController();
 
-        $usuario_id = $request->get('usuario_id');
+            $usuario_id = $request->get('usuario_id');
 
-        // Recuperando os valores dos checkboxes da consulta da URL
-        $checkboxesSelecionados = $request->input('checkboxes');
+            // Recuperando os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
 
-        // Converta os valores dos checkboxes em um array
-        $idsLotes = explode(',', $checkboxesSelecionados); 
+            // Converta os valores dos checkboxes em um array
+            $idsLotes = explode(',', $checkboxesSelecionados); 
 
-        //Percorrendo IDs lotes
-        foreach($idsLotes as $lote_id){
+            //Percorrendo IDs lotes
+            foreach($idsLotes as $lote_id){
 
-            $lote = Lote::find($lote_id);
+                $lote = Lote::find($lote_id);
 
-            try {
-                $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
-            } catch (\Exception $e) {
-                \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
+                try {
+                    $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
+                } catch (\Exception $e) {
+                    \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
+                }
+
             }
 
+            return redirect()->back()->with('success', 'Débitos cadastrados com sucesso');
+        }else{
+            return redirect()->back()->with('error', 'Selecione os lotes para importar dados.');
         }
-
-        return redirect()->back()->with('success', 'Débitos cadastrados com sucesso');
     }
 }
