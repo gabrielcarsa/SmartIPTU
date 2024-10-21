@@ -38,7 +38,7 @@
     Subir planilha de Lotes
 </a>
 <a href="{{ route('cadastrar_scraping_empreendimento', ['id' => $data['empreendimento']->id, 'usuario_id' => Auth::user()->id]) }}"
-    class="btn btn-warning text-white fw-semibold" style="margin-bottom: 20px">
+    class="btn btn-warning text-white fw-semibold" id="importar_pmcg" style="margin-bottom: 20px">
     PMCG importar total
 </a>
 
@@ -134,6 +134,7 @@
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
+                    <th></th>
                     <th scope="col">ID</th>
                     <th scope="col">Quadra</th>
                     <th scope="col">Lote</th>
@@ -150,9 +151,12 @@
                 @if(isset($resultado))
                 @foreach ($resultado as $lote)
                 <tr>
+                    <td>
+                        <input type="checkbox" name="checkboxes[]" value="{{ $lote->id }}" id="inputCheckLote">
+                    </td>
                     <td>{{$lote->id}}</td>
                     <td>{{$lote->quadra->nome}}</td>
-                    <th scope="row">{{$lote->lote}}</th>
+                    <td scope="row">{{$lote->lote}}</td>
 
                     @if($lote->cliente)
 
@@ -202,7 +206,7 @@
                         @endphp
 
                         @if($debito != null)
-                        @foreach($debito as $d) 
+                        @foreach($debito as $d)
 
                         @foreach($d->parcelaContaReceber as $parcela)
 
@@ -218,13 +222,13 @@
                         R$ {{number_format($valorTotalCliente, 2, ',', '.')}}
                     </td>
                     <td>
-                    @php
+                        @php
                         $debito = $lote->debito; // Isso é uma coleção (array) de Debito
                         $valorTotalEmpresa = 0;
                         @endphp
 
                         @if($debito != null)
-                        @foreach($debito as $d) 
+                        @foreach($debito as $d)
 
                         @foreach($d->parcelaContaPagar as $parcela)
 
@@ -310,6 +314,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
@@ -338,6 +343,28 @@ new Chart(graficoDividaClienteEmpresa, {
         responsive: true,
         maintainAspectRatio: false,
     }
+});
+
+$(document).ready(function() {
+
+    // Captura o clique no Parcelas Reajustar
+    $("#importar_pmcg").click(function(event) {
+        event.preventDefault();
+
+        // Obtenha os valores dos checkboxes selecionados
+        var checkboxesSelecionados = [];
+
+        $("input[name='checkboxes[]']:checked").each(function() {
+            checkboxesSelecionados.push($(this).val());
+        });
+
+        // Crie a URL com os valores dos checkboxes como parâmetros de consulta
+        var url = "{{ route('cadastrar_scraping_empreendimento', ['usuario_id' => Auth::user()->id]) }}&checkboxes=" + checkboxesSelecionados.join(',');
+
+        // Redirecione para a URL com os parâmetros
+        window.location.href = url;
+    });
+
 });
 </script>
 

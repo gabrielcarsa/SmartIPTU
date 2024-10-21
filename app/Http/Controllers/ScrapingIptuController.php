@@ -452,24 +452,24 @@ class ScrapingIptuController extends Controller
         //instanciando controller
         $scrapingController = new ScrapingIptuController();
 
-        $empreendimento_id = $request->get('id');
         $usuario_id = $request->get('usuario_id');
 
-        $quadras = Quadra::where('empreendimento_id', $empreendimento_id)->get();
+        // Recuperando os valores dos checkboxes da consulta da URL
+        $checkboxesSelecionados = $request->input('checkboxes');
 
-        foreach($quadras as $quadra){
+        // Converta os valores dos checkboxes em um array
+        $idsLotes = explode(',', $checkboxesSelecionados); 
 
-            $lotes = Lote::where('quadra_id', $quadra->id)->get();
+        //Percorrendo IDs lotes
+        foreach($idsLotes as $lote_id){
 
-            foreach($lotes as $lote){
+            $lote = Lote::find($lote_id);
 
-                try {
-                    $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
-                } catch (\Exception $e) {
-                    \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
-                    return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
-                }
-        
+            try {
+                $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
+            } catch (\Exception $e) {
+                \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
             }
 
         }
