@@ -449,19 +449,22 @@ class ScrapingIptuController extends Controller
     //ADICIONAR TODOS DEBITOS DO RANCHO
     public function cadastrar_scraping_empreendimento(Request $request){
 
-        //instanciando controller
-        $scrapingController = new ScrapingIptuController();
+        if ($request->has('checkboxes') && $request->filled('checkboxes')) {
+            //instanciando controller
+            $scrapingController = new ScrapingIptuController();
 
-        $empreendimento_id = $request->get('id');
-        $usuario_id = $request->get('usuario_id');
+            $usuario_id = $request->get('usuario_id');
 
-        $quadras = Quadra::where('empreendimento_id', $empreendimento_id)->get();
+            // Recuperando os valores dos checkboxes da consulta da URL
+            $checkboxesSelecionados = $request->input('checkboxes');
 
-        foreach($quadras as $quadra){
+            // Converta os valores dos checkboxes em um array
+            $idsLotes = explode(',', $checkboxesSelecionados); 
 
-            $lotes = Lote::where('quadra_id', $quadra->id)->get();
+            //Percorrendo IDs lotes
+            foreach($idsLotes as $lote_id){
 
-            foreach($lotes as $lote){
+                $lote = Lote::find($lote_id);
 
                 try {
                     $scrapingController->iptuCampoGrandeAdicionarDireto($lote->inscricao_municipal, $lote->id, 1, $usuario_id);
@@ -469,11 +472,12 @@ class ScrapingIptuController extends Controller
                     \Log::error('Erro ao cadastrar débitos: ' . $e->getMessage());
                     return redirect()->back()->with('error', 'Erro ao cadastrar débitos.');
                 }
-        
+
             }
 
+            return redirect()->back()->with('success', 'Débitos cadastrados com sucesso');
+        }else{
+            return redirect()->back()->with('error', 'Selecione os lotes para importar dados.');
         }
-
-        return redirect()->back()->with('success', 'Débitos cadastrados com sucesso');
     }
 }
