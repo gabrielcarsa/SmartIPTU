@@ -284,6 +284,7 @@ class ScrapingIptuController extends Controller
             //separando variaveis conforme resultado
             $resultadoParcela = $resultadoScraping['resultadoParcela'];
             $resultadoLote = $resultadoScraping['resultadoLote'];
+
         } catch (\Exception $e) {
             // Tratando exceção de redirecionamento
             if ($e instanceof \Illuminate\Http\RedirectResponse) {
@@ -374,7 +375,7 @@ class ScrapingIptuController extends Controller
         $debito->lote_id = $lote_id;
         $debito->titular_conta_id = 1;
         $debito->data_vencimento  = Carbon::createFromFormat('d/m/Y', $resultadoParcela[0]['parcelas'][0]['vencimento'])->format('Y-m-d');
-        
+     
         //Verificando se é parcelamento
         if($resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_parcelamento'] == ""){
             $valor_parcela = str_replace(',', '.', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos']);
@@ -382,6 +383,9 @@ class ScrapingIptuController extends Controller
         }else if($resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos'] == "0,00"){
             $valor_parcela = str_replace(',', '.', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_parcelamento']);
             $debito->quantidade_parcela = count($resultadoParcela[$i-1]['parcelas']);
+        }else{//Parcela única, quando só sobrou uma parcela do parcelamento
+            $valor_parcela = str_replace(',', '.', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos']);
+            $debito->quantidade_parcela = 1;
         }
 
         $valor_corrigido_parcela = str_replace(',', '.', $valor_parcela);
@@ -438,7 +442,12 @@ class ScrapingIptuController extends Controller
             $valorAux = str_replace('.', '', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_parcelamento']);
             $parcela->valor_parcela = str_replace(',', '.', $valorAux);
             $parcela->numero_parcela = $j;
+        }else{//Parcela única, quando só sobrou uma parcela do parcelamento
+            $valorAux = str_replace('.', '', $resultadoParcela[$i-1]['parcelas'][$j-1]['valor_total_debitos']);
+            $parcela->valor_parcela = str_replace(',', '.', $valorAux);
+            $parcela->numero_parcela = $j;
         }
+
         $parcela->cadastrado_usuario_id = $usuario_id;
         $parcela->situacao = 0;
         $parcela->data_vencimento = Carbon::createFromFormat('d/m/Y', $resultadoParcela[$i-1]['parcelas'][$j-1]['vencimento'])->format('Y-m-d');
