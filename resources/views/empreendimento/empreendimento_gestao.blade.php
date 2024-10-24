@@ -246,7 +246,7 @@
                     <td>
                         {{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                     </td>
-                    <td>{{$lote->tel1}}, {{$lote->tel2}}</td>
+                    <td>{{$lote->cliente->telefone1}}, {{$lote->cliente->telefone2}}</td>
                     <td>
                         <div class="dropdown">
                             <a href="../../lote/gestao/{{$lote->id}}" class="btn-acao-listagem">Parcelas</a>
