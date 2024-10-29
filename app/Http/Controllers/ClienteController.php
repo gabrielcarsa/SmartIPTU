@@ -88,8 +88,8 @@ class ClienteController extends Controller
                 'numero_end' => 'required|numeric',
                 'cidade_end' => 'required',
                 'estado_end' => 'required',
-                'cep_end' => 'required|numeric',
-                'email' => 'required|email',
+                'cep_end' => 'required|string',
+                'email' => 'nullable|email',
                 'data_nascimento' => 'nullable|date',
             ]);
 
@@ -113,8 +113,8 @@ class ClienteController extends Controller
                 'numero_end' => 'required|numeric',
                 'cidade_end' => 'required',
                 'estado_end' => 'required',
-                'cep_end' => 'required|numeric',
-                'email' => 'required|email',
+                'cep_end' => 'required|string',
+                'email' => 'nullable|email',
                 'data_nascimento' => 'nullable|date',
             ]);
 
