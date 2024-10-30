@@ -16,4 +16,11 @@ class CategoriaPagar extends Model
         return $this->hasMany(MovimentacaoFinanceira::class);
     }
 
+    public function conta_pagar(){
+        return $this->hasMany(ContaPagar::class);
+    }
+
+    public function conta_receber(){
+        return $this->hasMany(ContaReceber::class);
+    }
 }

@@ -20,4 +20,14 @@ class ParcelaContaReceber extends Model
     {
         return $this->belongsTo(MovimentacaoFinanceira::class);
     }
+
+    public function conta_receber()
+    {
+        return $this->belongsTo(ContaReceber::class);
+    }
+
+    public function descricao_debito()
+    {
+        return $this->belongsTo(DescricaoDebito::class);
+    }
 }

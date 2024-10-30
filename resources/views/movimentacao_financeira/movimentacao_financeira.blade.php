@@ -2,6 +2,54 @@
 
 @section('conteudo')
 
+<!-- MODAL PARCELAS ATRASO -->
+<div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="modal-title fs-5 fw-semibold" id="exampleModalLabel">
+                    Lembrete parcelas em aberto
+                </p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="p-3">
+                <p>
+                    Há <span class="fw-semibold">parcelas de conta fixa</span> que estão em aberto há mais de 20 dias.
+                </p>
+                <p>
+                    Algumas dessas já foram pagas? Se houver lance a baixa.
+                </p>
+                <ul class="list-group">
+                    @if($data['contas_pagar_atrasadas'] != null)
+                    @foreach($data['contas_pagar_atrasadas'] as $parcela)
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="m-0">
+                            {{$parcela->numero_parcela}}/{{$parcela->conta_pagar->quantidade_parcela}}
+                        </p>
+                        <p class="m-0">
+                            {{$parcela->conta_pagar->categoria_pagar->descricao}}
+                        </p>
+                        <p class="m-0">
+                            {{\Carbon\Carbon::parse($parcela->data_vencimento)->format('d/m/Y')}}
+                        </p>
+                        <p class="m-0">
+                            R$ {{number_format($parcela->valor_parcela, 2, ',', '.')}}
+                        </p>
+                        <a href="{{ route('contas_pagar.listar', ['titular_conta_id' => 0, 'idParcela' => $parcela->id, 'referenteOutros' => true] ) }}" class="btn btn-primary">
+                            Baixar
+                        </a>
+                    </li>
+                    @endforeach
+                    @endif
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h2>Movimentação Financeira</h2>
 
 <div class="row">
@@ -176,12 +224,14 @@
                     @else
                     <td class="align-middle">{{$mov->cliente->razao_social}}</td>
                     @endif
-          
+
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber->descricao : $mov->tipo_debito->descricao}}
+                    <td class="align-middle">
+                        {{$mov->tipo_debito == null ? $mov->categoria_receber->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @else
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar->descricao : $mov->tipo_debito->descricao}}
+                    <td class="align-middle">
+                        {{$mov->tipo_debito == null ? $mov->categoria_pagar->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @endif
 
@@ -238,6 +288,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+$(document).ready(function() {
+    $('#parcelasEmAberto').modal('show'); // Exibe o modal automaticamente
+});
+
 $(document).ready(function() {
     // Quando o valor do input de ordem é alterado
     $('input[name^="movimentacoes"]').change(function() {

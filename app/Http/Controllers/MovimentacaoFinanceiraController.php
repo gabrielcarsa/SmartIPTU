@@ -20,6 +20,7 @@ class MovimentacaoFinanceiraController extends Controller
 {
     function movimentacao_financeira(){
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
+        $dataVinteDiasAtras = now()->subDays(20)->toDateString();
 
         //Soma das entradas do dia atual
         $entradas = MovimentacaoFinanceira::whereDate('data_movimentacao', $hoje)
@@ -34,10 +35,16 @@ class MovimentacaoFinanceiraController extends Controller
         //Selecionar Titulares de Conta
         $titulares_conta = TitularConta::with('cliente')->get();
 
+        $contas_pagar_atrasadas = ParcelaContaPagar::where('conta_pagar_id', '!=', null)
+        ->where('data_vencimento', '<', $dataVinteDiasAtras)
+        ->where('situacao', 0)
+        ->get();
+
         $data = [
             'titulares_conta' => $titulares_conta,
             'entradas' => $entradas,
-            'saidas' => $saidas
+            'saidas' => $saidas, 
+            'contas_pagar_atrasadas' => $contas_pagar_atrasadas,
         ];
 
         return view('movimentacao_financeira/movimentacao_financeira', compact('data'));
