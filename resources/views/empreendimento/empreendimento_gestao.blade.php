@@ -208,7 +208,7 @@
                         @if($debito != null)
                         @foreach($debito as $d)
 
-                        @foreach($d->parcelaContaReceber as $parcela)
+                        @foreach($d->parcela_conta_receber as $parcela)
 
                         @php
                         $valorTotalCliente += $parcela->valor_parcela;
@@ -230,7 +230,7 @@
                         @if($debito != null)
                         @foreach($debito as $d)
 
-                        @foreach($d->parcelaContaPagar as $parcela)
+                        @foreach($d->parcela_conta_pagar as $parcela)
 
                         @php
                         $valorTotalEmpresa += $parcela->valor_parcela;
