@@ -2,6 +2,7 @@
 
 @section('conteudo')
 
+@if(!$data['contas_pagar_atrasadas']->isEmpty())
 <!-- MODAL PARCELAS ATRASO -->
 <div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -20,7 +21,7 @@
                     Algumas dessas já foram pagas? Se houver lance a baixa.
                 </p>
                 <ul class="list-group">
-                    @if($data['contas_pagar_atrasadas'] != null)
+                    
                     @foreach($data['contas_pagar_atrasadas'] as $parcela)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <p class="m-0">
@@ -40,7 +41,6 @@
                         </a>
                     </li>
                     @endforeach
-                    @endif
                 </ul>
             </div>
             <div class="modal-footer">
@@ -49,6 +49,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <h2>Movimentação Financeira</h2>
 
