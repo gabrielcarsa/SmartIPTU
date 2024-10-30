@@ -43,6 +43,11 @@ class MovimentacaoFinanceira extends Model
 
     public function titular_conta()
     {
-        return $this->belongsTo(TitularConta::class);
+        return $this->belongsTo(TitularConta::class, 'titular_conta_id');
+    }
+
+    public function conta_corrente()
+    {
+        return $this->belongsTo(ContaCorrente::class);
     }
 }
