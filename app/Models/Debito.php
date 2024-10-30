@@ -21,12 +21,12 @@ class Debito extends Model
         return $this->belongsTo(TipoDebito::class);
     }
 
-    public function parcelaContaPagar()
+    public function parcela_conta_pagar()
     {
         return $this->hasMany(ParcelaContaPagar::class);
     }
 
-    public function parcelaContaReceber()
+    public function parcela_conta_receber()
     {
         return $this->hasMany(ParcelaContaReceber::class);
     }

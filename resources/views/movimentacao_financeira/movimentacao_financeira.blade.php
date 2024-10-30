@@ -171,17 +171,17 @@
                 @endphp
                 <tr>
                     <th scope="row">{{$mov->id}}</th>
-                    @if($mov->tipo_cadastro == 0)
-                    <td class="align-middle">{{$mov->nome}}</td>
+                    @if($mov->cliente->tipo_cadastro == 0)
+                    <td class="align-middle">{{$mov->cliente->nome}}</td>
                     @else
-                    <td class="align-middle">{{$mov->razao_social}}</td>
+                    <td class="align-middle">{{$mov->cliente->razao_social}}</td>
                     @endif
-
+          
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @else
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @endif
 
@@ -204,7 +204,7 @@
 
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
-                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_receber->id}}&{{$mov->parcela_conta_receber->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
                             class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
@@ -213,7 +213,7 @@
                     </td>
                     @else
                     <td class="d-flex align-items-center">
-                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_pagar}}&{{$mov->parcela_pagar_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_pagar->id}}&{{$mov->parcela_conta_pagar->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
                             class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility

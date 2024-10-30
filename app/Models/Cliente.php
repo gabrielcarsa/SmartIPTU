@@ -20,4 +20,9 @@ class Cliente extends Model
     {
         return $this->hasOne(TitularConta::class);
     }
+
+    public function movimentacao_financeira()
+    {
+        return $this->hasMany(MovimentacaoFinanceira::class);
+    }
 }

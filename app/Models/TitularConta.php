@@ -14,4 +14,9 @@ class TitularConta extends Model
     public function cliente(){
         return $this->belongsTo(Cliente::Class);
     }
+
+    public function movimentacao_financeira()
+    {
+        return $this->hasMany(MovimentacaoFinanceira::class);
+    }
 }

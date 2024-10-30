@@ -15,4 +15,9 @@ class ParcelaContaPagar extends Model
     {
         return $this->belongsTo(Debito::class);
     }
+
+    public function movimentacao_financeira()
+    {
+        return $this->belongsTo(MovimentacaoFinanceira::class);
+    }
 }

@@ -15,4 +15,9 @@ class TipoDebito extends Model
     {
         return $this->hasMany(Debito::class);
     }
+
+    public function movimentacao_financeira()
+    {
+        return $this->hasMany(MovimentacaoFinanceira::class);
+    }
 }
