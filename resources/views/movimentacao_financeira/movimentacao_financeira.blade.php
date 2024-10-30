@@ -2,6 +2,55 @@
 
 @section('conteudo')
 
+@if(!$data['contas_pagar_atrasadas']->isEmpty())
+<!-- MODAL PARCELAS ATRASO -->
+<div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="modal-title fs-5 fw-semibold" id="exampleModalLabel">
+                    Lembrete parcelas em aberto
+                </p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="p-3">
+                <p>
+                    Há <span class="fw-semibold">parcelas de conta fixa</span> que estão em aberto há mais de 20 dias.
+                </p>
+                <p>
+                    Algumas dessas já foram pagas? Se houver lance a baixa.
+                </p>
+                <ul class="list-group">
+                    
+                    @foreach($data['contas_pagar_atrasadas'] as $parcela)
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="m-0">
+                            {{$parcela->numero_parcela}}/{{$parcela->conta_pagar->quantidade_parcela}}
+                        </p>
+                        <p class="m-0">
+                            {{$parcela->conta_pagar->categoria_pagar->descricao}}
+                        </p>
+                        <p class="m-0">
+                            {{\Carbon\Carbon::parse($parcela->data_vencimento)->format('d/m/Y')}}
+                        </p>
+                        <p class="m-0">
+                            R$ {{number_format($parcela->valor_parcela, 2, ',', '.')}}
+                        </p>
+                        <a href="{{ route('contas_pagar.listar', ['titular_conta_id' => 0, 'idParcela' => $parcela->id, 'referenteOutros' => true] ) }}" class="btn btn-primary">
+                            Baixar
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <h2>Movimentação Financeira</h2>
 
 <div class="row">
@@ -80,10 +129,10 @@
                     @foreach ($data['titulares_conta'] as $titular)
                     <option value="{{ $titular->id }}"
                         {{ request('titulares_conta') == $titular->id ? 'selected' : '' }}>
-                        @if(empty($titular->nome))
-                        {{$titular->razao_social}}
+                        @if(empty($titular->cliente->nome))
+                        {{$titular->cliente->razao_social}}
                         @else
-                        {{$titular->nome}}
+                        {{$titular->cliente->nome}}
                         @endif
                     </option>
                     @endforeach
@@ -171,17 +220,19 @@
                 @endphp
                 <tr>
                     <th scope="row">{{$mov->id}}</th>
-                    @if($mov->tipo_cadastro == 0)
-                    <td class="align-middle">{{$mov->nome}}</td>
+                    @if($mov->cliente->tipo_cadastro == 0)
+                    <td class="align-middle">{{$mov->cliente->nome}}</td>
                     @else
-                    <td class="align-middle">{{$mov->razao_social}}</td>
+                    <td class="align-middle">{{$mov->cliente->razao_social}}</td>
                     @endif
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}
+                    <td class="align-middle">
+                        {{$mov->tipo_debito == null ? $mov->categoria_receber->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @else
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}
+                    <td class="align-middle">
+                        {{$mov->tipo_debito == null ? $mov->categoria_pagar->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @endif
 
@@ -204,7 +255,7 @@
 
                     @if($mov->tipo_movimentacao == 0)
                     <td class="d-flex align-items-center">
-                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_receber}}&{{$mov->parcela_receber_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                        <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_receber->id}}&{{$mov->parcela_conta_receber->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
                             class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
@@ -213,7 +264,7 @@
                     </td>
                     @else
                     <td class="d-flex align-items-center">
-                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->id_parcela_pagar}}&{{$mov->parcela_pagar_debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
+                        <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_pagar->id}}&{{$mov->parcela_conta_pagar->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
                             class="btn-icone-listagem">
                             <span class="material-symbols-outlined">
                                 visibility
@@ -238,6 +289,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+$(document).ready(function() {
+    $('#parcelasEmAberto').modal('show'); // Exibe o modal automaticamente
+});
+
 $(document).ready(function() {
     // Quando o valor do input de ordem é alterado
     $('input[name^="movimentacoes"]').change(function() {

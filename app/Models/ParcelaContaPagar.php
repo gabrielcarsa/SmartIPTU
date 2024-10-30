@@ -15,4 +15,19 @@ class ParcelaContaPagar extends Model
     {
         return $this->belongsTo(Debito::class);
     }
+
+    public function movimentacao_financeira()
+    {
+        return $this->belongsTo(MovimentacaoFinanceira::class);
+    }
+
+    public function conta_pagar()
+    {
+        return $this->belongsTo(ContaPagar::class);
+    }
+
+    public function descricao_debito()
+    {
+        return $this->belongsTo(DescricaoDebito::class);
+    }
 }

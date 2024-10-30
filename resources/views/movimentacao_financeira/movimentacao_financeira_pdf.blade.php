@@ -69,12 +69,12 @@
             Movimentações do dia {{\Carbon\Carbon::parse($data['data'])->format('d/m/Y')}} -
             {{\Carbon\Carbon::parse($data['data_fim'])->format('d/m/Y')}}
         </h4>
-        @if($movimentacao[0]->nome_titular != null)
-        <p style="font-size: 10px;">{{$movimentacao[0]->nome_titular}}</p>
+        @if($movimentacao[0]->titular_conta->cliente->nome != null)
+        <p style="font-size: 10px;">{{$movimentacao[0]->titular_conta->cliente->nome}}</p>
         @else
-        <p style="font-size: 10px">{{$movimentacao[0]->razao_social_titular}}</p>
+        <p style="font-size: 10px">{{$movimentacao[0]->titular_conta->cliente->razao_social}}</p>
         @endif
-        <p style="font-size: 10px;">{{$movimentacao[0]->conta_corrente}}</p>
+        <p style="font-size: 10px;">{{$movimentacao[0]->conta_corrente->apelido}}</p>
 
         <table class="table table-striped text-center">
             <thead>
@@ -104,17 +104,17 @@
 
                 <tr>
                     <td>{{\Carbon\Carbon::parse($mov->data_movimentacao)->format('d/m/Y')}}</td>
-                    @if($mov->tipo_cadastro == 0)
-                    <td class="align-middle">{{$mov->nome}}</td>
+                    @if($mov->cliente->tipo_cadastro == 0)
+                    <td class="align-middle">{{$mov->cliente->nome}}</td>
                     @else
-                    <td class="align-middle">{{$mov->razao_social}}</td>
+                    <td class="align-middle">{{$mov->cliente->razao_social}}</td>
                     @endif
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber : $mov->tipo_debito}}
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_receber->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @else
-                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar : $mov->tipo_debito}}
+                    <td class="align-middle">{{$mov->tipo_debito == null ? $mov->categoria_pagar->descricao : $mov->tipo_debito->descricao}}
                     </td>
                     @endif
 
@@ -134,11 +134,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td></td>
-                    <td></td>
                     <td><strong>Valor Total</strong></td>
-                    <td><strong>{{number_format($data['valorEntradas'], 2, ',', '.')}}</strong></td>
-                    <td><strong>{{number_format($data['valorSaidas'], 2, ',', '.')}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{number_format($data['valorEntradas'] - $data['valorSaidas'], 2, ',', '.')}}</strong></td>
                     <td><strong>{{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</strong></td>
 
                 </tr>

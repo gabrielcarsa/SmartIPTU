@@ -10,4 +10,8 @@ class ContaCorrente extends Model
     use HasFactory;
     protected $table = 'conta_corrente';
     public $timestamps = false;
+
+    public function movimentacao_financeira(){
+        return $this->hasMany(MovimentacaoFinanceira::class);
+    }
 }
