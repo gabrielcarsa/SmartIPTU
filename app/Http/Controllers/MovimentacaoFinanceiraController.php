@@ -22,26 +22,17 @@ class MovimentacaoFinanceiraController extends Controller
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
         //Soma das entradas do dia atual
-        $entradas = DB::table('movimentacao_financeira')
-            ->whereDate('data_movimentacao', $hoje)
-            ->where('tipo_movimentacao', 0)
-            ->sum('valor');
+        $entradas = MovimentacaoFinanceira::whereDate('data_movimentacao', $hoje)
+        ->where('tipo_movimentacao', 0)
+        ->sum('valor');
 
         //Soma das saidas do dia atual
-        $saidas = DB::table('movimentacao_financeira')
-            ->whereDate('data_movimentacao', $hoje)
+        $saidas = MovimentacaoFinanceira::whereDate('data_movimentacao', $hoje)
             ->where('tipo_movimentacao', 1)
             ->sum('valor');
 
         //Selecionar Titulares de Conta
-        $titulares_conta = DB::table('titular_conta as tc')
-        ->select(
-            'tc.*',
-            'c.nome as nome',
-            'c.razao_social as razao_social'
-        )
-        ->join('cliente as c', 'tc.cliente_id', '=', 'c.id')
-        ->get();
+        $titulares_conta = TitularConta::with('cliente')->get();
 
         $data = [
             'titulares_conta' => $titulares_conta,

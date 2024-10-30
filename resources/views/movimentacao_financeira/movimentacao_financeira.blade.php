@@ -80,10 +80,10 @@
                     @foreach ($data['titulares_conta'] as $titular)
                     <option value="{{ $titular->id }}"
                         {{ request('titulares_conta') == $titular->id ? 'selected' : '' }}>
-                        @if(empty($titular->nome))
-                        {{$titular->razao_social}}
+                        @if(empty($titular->cliente->nome))
+                        {{$titular->cliente->razao_social}}
                         @else
-                        {{$titular->nome}}
+                        {{$titular->cliente->nome}}
                         @endif
                     </option>
                     @endforeach

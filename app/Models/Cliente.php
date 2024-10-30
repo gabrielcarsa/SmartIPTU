@@ -15,4 +15,9 @@ class Cliente extends Model
     {
         return $this->hasMany(Lote::class);
     }
+
+    public function titular_conta()
+    {
+        return $this->hasOne(TitularConta::class);
+    }
 }
