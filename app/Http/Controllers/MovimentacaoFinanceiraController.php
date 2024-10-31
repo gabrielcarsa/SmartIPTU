@@ -115,7 +115,6 @@ class MovimentacaoFinanceiraController extends Controller
         //Selecionar Titulares de Conta
         $titulares_conta = TitularConta::with('cliente')->get();
 
-        $contas_pagar_atrasadas = null;
 
         $data = [
             'titulares_conta' => $titulares_conta,
@@ -124,7 +123,6 @@ class MovimentacaoFinanceiraController extends Controller
             'total_movimentacao' => $total_movimentacao,
             'entradas' => $entradas,
             'saidas' => $saidas,
-            'contas_pagar_atrasadas' => $contas_pagar_atrasadas,
         ];
 
         return view('movimentacao_financeira/movimentacao_financeira', compact('movimentacao', 'data'));
