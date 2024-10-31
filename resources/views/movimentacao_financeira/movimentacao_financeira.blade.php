@@ -2,7 +2,7 @@
 
 @section('conteudo')
 
-@if($data['contas_pagar_atrasadas'] && !$data['contas_pagar_atrasadas']->isEmpty())
+@if(isset($data['contas_pagar_atrasadas']) && !$data['contas_pagar_atrasadas']->isEmpty())
 <!-- MODAL PARCELAS ATRASO -->
 <div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
