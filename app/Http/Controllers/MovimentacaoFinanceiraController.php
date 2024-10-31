@@ -115,7 +115,7 @@ class MovimentacaoFinanceiraController extends Controller
         //Selecionar Titulares de Conta
         $titulares_conta = TitularConta::with('cliente')->get();
 
-        $contas_pagar_atrasadas = [];
+        $contas_pagar_atrasadas = null;
 
         $data = [
             'titulares_conta' => $titulares_conta,
