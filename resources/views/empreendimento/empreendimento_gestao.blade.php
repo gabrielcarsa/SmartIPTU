@@ -130,7 +130,12 @@
             </span>
             Telefone verificado
         </p>
-
+        <p>
+            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+                ESCR
+            </span>
+            Lote escriturado
+        </p>
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>

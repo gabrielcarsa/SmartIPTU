@@ -106,7 +106,8 @@ class EmpreendimentoController extends Controller
         ->whereDate('parcela_conta_pagar.data_vencimento', '<', $hoje)
         ->where('parcela_conta_pagar.situacao', 0)
         ->where('parcela_conta_pagar.debito_id', '!=', null)
-        ->where('empreendimento.id', $empreendimento->id) 
+        ->where('empreendimento.id', $empreendimento->id)
+        ->where('lote.is_escriturado', '!=', true) 
         ->sum('parcela_conta_pagar.valor_parcela');
     
         $debitosReceberAtrasados =  DB::table('parcela_conta_receber')
@@ -118,6 +119,7 @@ class EmpreendimentoController extends Controller
         ->where('parcela_conta_receber.situacao', 0)
         ->where('parcela_conta_receber.debito_id', '!=', null)
         ->where('empreendimento.id', $empreendimento->id) 
+        ->where('lote.is_escriturado', '!=', true) 
         ->sum('parcela_conta_receber.valor_parcela');
 
         $data = [
