@@ -130,7 +130,12 @@
             </span>
             Telefone verificado
         </p>
-
+        <p>
+            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+                ESCR
+            </span>
+            Lote escriturado
+        </p>
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
@@ -168,6 +173,11 @@
                             call
                         </span>
                         @endif
+                        @if($lote->is_escriturado == true)
+                        <span class="bg-success p-1 text-white rounded fw-bold">
+                            ESCR
+                        </span>
+                        @endif
                     </td>
                     @else
                     <td class="">
@@ -175,6 +185,11 @@
                         @if($lote->cliente->is_contato_verificado == true)
                         <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
                             call
+                        </span>
+                        @endif
+                        @if($lote->is_escriturado == true)
+                        <span class="bg-success p-1 text-white rounded fw-bold">
+                            ESCR
                         </span>
                         @endif
                     </td>

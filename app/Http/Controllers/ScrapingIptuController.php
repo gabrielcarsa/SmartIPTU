@@ -301,6 +301,9 @@ class ScrapingIptuController extends Controller
         $aux_debito_receber = 0;
         $aux_debito_pagar = 0;    
 
+        $lote->is_escriturado = $resultadoLote['responsabilidade'] == 'AMBIENTE EMPREENDIMENTOS IMOBILIARIOS LT' ? false : true;
+        $lote->save();
+
         //Definindo data para cadastrar
         date_default_timezone_set('America/Cuiaba');  
         
