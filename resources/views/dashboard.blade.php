@@ -1,7 +1,7 @@
 @extends('layouts/app')
 @section('conteudo')
 
-<div class="row">
+<div class="row g-3">
     <div class="col-md-3">
         <div class="p-3 shadow-md rounded d-flex align-items-center bg-white">
             <div class="row">
@@ -14,7 +14,9 @@
                     <h3 class="fs-4">
                         A pagar de hoje
                     </h3>
-                    <p>R$ {{number_format($data['pagarHoje'], 2, ',', '.')}}</p>
+                    <p class="m-0">
+                        R$ {{number_format($data['pagarHoje'], 2, ',', '.')}}
+                    </p>
                 </div>
             </div>
         </div>
@@ -31,7 +33,9 @@
                     <h3 class="fs-4">
                         A Receber Hoje
                     </h3>
-                    <p>R$ {{number_format($data['receberHoje'], 2, ',', '.')}}</p>
+                    <p class="m-0">
+                        R$ {{number_format($data['receberHoje'], 2, ',', '.')}}
+                    </p>
                 </div>
             </div>
         </div>
@@ -48,7 +52,9 @@
                     <h3 class="fs-4">
                         Contas atrasadas
                     </h3>
-                    <p>R$ {{number_format($data['pagamentosAtrasadosOutros'], 2, ',', '.')}}</p>
+                    <p class="m-0">
+                        R$ {{number_format($data['pagamentosAtrasadosOutros'], 2, ',', '.')}}
+                    </p>
                 </div>
             </div>
         </div>
@@ -65,14 +71,68 @@
                     <h3 class="fs-4">
                         IPTU em atraso total
                     </h3>
-                    <p>R$ {{number_format($data['totalDebitos'], 2, ',', '.')}}</p>
+                    <p class="m-0">
+                        R$ {{number_format($data['totalDebitos'], 2, ',', '.')}}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-3">
+<div class="row my-3 g-3">
+    <div class="col-md-2">
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold text-primary">
+                    {{$data['lotesTotal']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Lotes<br>cadastrados
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold">
+                    {{$data['lotesEmpresa']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Lotes<br>Empresa
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold">
+                    {{$data['lotesClientes']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Lotes<br>Clientes
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="bg-white rounded p-3 shadow-md">
+            <p class="m-0 text-secondary">
+                Bem-vindo novamente,
+            </p>
+            <p class="my-0 fs-5">
+                {{Auth::guard()->user()->name}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3 g-3">
     <div class="col-md-6">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="text-center">
@@ -84,7 +144,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="col-md-6">
@@ -129,7 +188,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
-
 // Obtém os dados do PHP e armazena em variáveis JavaScript
 const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
 const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};

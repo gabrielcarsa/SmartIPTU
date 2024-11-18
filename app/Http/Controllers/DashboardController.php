@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cliente;
 use App\Models\TitularConta;
+use App\Models\Lote;
 use App\Models\Empreendimento;
 use App\Models\TipoDebito;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -75,7 +76,16 @@ class DashboardController extends Controller
             $totalSaidas += $saida->total;
         }
 
-      
+        //Total lotes
+        $lotesTotal = Lote::all();
+        $lotesTotal = $lotesTotal->count();
+
+        //Lotes Empresa
+        $lotesEmpresa = Lote::where('cliente_id', 1)->count();
+
+        //Lotes Clientes
+        $lotesClientes = Lote::where('cliente_id', '!=', 1)->count();
+
         $data = [
             'pagarHoje' => $pagarHoje,
             'receberHoje' => $receberHoje,
@@ -85,11 +95,11 @@ class DashboardController extends Controller
             'debitosReceberAtrasados' => $debitosReceberAtrasados,
             'rankingSaidas' => $rankingSaidas,
             'totalSaidas' => $totalSaidas,
+            'lotesTotal' => $lotesTotal,
+            'lotesClientes' => $lotesClientes,
+            'lotesEmpresa' => $lotesEmpresa,
         ];
 
         return view('dashboard', compact('data'));
-
-
-
     }
 }
