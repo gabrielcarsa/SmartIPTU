@@ -3,92 +3,114 @@
 
 <div class="row">
     <div class="col-md-3">
-        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(255, 179, 0);">
+        <div class="p-3 shadow-md rounded d-flex align-items-center bg-white">
             <div class="row">
                 <div class="col-md-4">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined bg-fundo text-danger p-3 fs-1 rounded">
                         money_off
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Contas a Pagar Hoje</h3>
+                    <h3 class="fs-4">
+                        A pagar de hoje
+                    </h3>
                     <p>R$ {{number_format($data['pagarHoje'], 2, ',', '.')}}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(148, 216, 45);">
+        <div class="p-3 shadow-md rounded d-flex align-items-center bg-white">
             <div class="row">
                 <div class="col-md-4">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined bg-fundo text-success p-3 fs-1 rounded">
                         attach_money
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Contas a Receber Hoje</h3>
+                    <h3 class="fs-4">
+                        A Receber Hoje
+                    </h3>
                     <p>R$ {{number_format($data['receberHoje'], 2, ',', '.')}}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(250, 82, 82);">
+        <div class="p-3 shadow-md rounded d-flex align-items-center bg-white">
             <div class="row">
                 <div class="col-md-4">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined bg-fundo text-danger p-3 fs-1 rounded">
                         trending_down
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Total Débitos Empresa</h3>
-                    <p>R$ {{number_format($data['pagamentosAtrasados'], 2, ',', '.')}}</p>
+                    <h3 class="fs-4">
+                        Contas atrasadas
+                    </h3>
+                    <p>R$ {{number_format($data['pagamentosAtrasadosOutros'], 2, ',', '.')}}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card-dashboard d-flex align-items-center" style="background-color:RGB(255, 248, 91);">
+        <div class="p-3 shadow-md rounded d-flex align-items-center bg-white">
             <div class="row">
                 <div class="col-md-4">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined bg-fundo text-danger p-3 fs-1 rounded">
                         gavel
                     </span>
                 </div>
                 <div class="col-md-8 align-self-center">
-                    <h3>Total de Débitos</h3>
-                    <p>R$ {{number_format($data['totalDividaDebitos'], 2, ',', '.')}}</p>
+                    <h3 class="fs-4">
+                        IPTU em atraso total
+                    </h3>
+                    <p>R$ {{number_format($data['totalDebitos'], 2, ',', '.')}}</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<div class="row mt-3">
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-ranking text-center">
-                <h4>Débitos em atraso - EMPRESA X CLIENTES</h5>
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="text-center">
+                <h4 class="fs-4">
+                    IPTU débitos em atraso
+                </h4>
                 <div class="card-body">
                     <canvas id="graficoDividaClienteEmpresa"></canvas>
                 </div>
             </div>
         </div>
-            
+
     </div>
 
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-ranking">
-                <h4>Ranking Maiores Saídas por Categoria - 30 dias</h4>
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="c">
+                <h4 class="fs-4 m-0">
+                    Saídas por categoria
+                </h4>
+                <p class="text-secondary">
+                    Últimos 30 dias
+                </p>
                 <div>
                     @if(isset($data['rankingSaidas']))
                     @foreach($data['rankingSaidas'] as $categorias)
-                    <div class="linha-ranking">
-                        <p>{{$categorias->categoria}}</p>
-                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{($categorias->total*100)/$data['totalSaidas']}}"
-                            aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{($categorias->total*100)/$data['totalSaidas']}}%">R$ {{number_format($categorias->total, 2, ',', '.')}}</div>
+                    <div class="my-3 border p-3 rounded">
+                        <p class="m-0 fw-semibold">
+                            {{$categorias->categoria}}
+                        </p>
+                        <p class="m-0">
+                            R$ {{number_format($categorias->total, 2, ',', '.')}}
+                        </p>
+                        <div class="progress" role="progressbar" aria-label="Basic example"
+                            aria-valuenow="{{($categorias->total*100)/$data['totalSaidas']}}" aria-valuemin="0"
+                            aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{($categorias->total*100)/$data['totalSaidas']}}%">
+                            </div>
                         </div>
                     </div>
                     @endforeach
@@ -107,10 +129,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
+
 // Obtém os dados do PHP e armazena em variáveis JavaScript
 const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
 const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
-
 
 new Chart(graficoDividaClienteEmpresa, {
     type: 'pie',
@@ -121,7 +143,7 @@ new Chart(graficoDividaClienteEmpresa, {
         ],
         datasets: [{
             label: 'R$ Débitos',
-            data: [debitosPagarAtrasados,debitosReceberAtrasados],
+            data: [debitosPagarAtrasados, debitosReceberAtrasados],
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
@@ -134,7 +156,6 @@ new Chart(graficoDividaClienteEmpresa, {
         maintainAspectRatio: false,
     }
 });
-
 </script>
 
 @endsection

@@ -26,7 +26,7 @@
     @livewireStyles
 </head>
 
-<body class="">
+<body class="bg-fundo">
 
     @livewire('navigation-menu')
 
@@ -129,9 +129,7 @@
     {{$slot}}
     @endif
 
-    <main class="content">
-
-        </script>
+    <main class="p-3" style="margin-top: 80px">
         @yield('conteudo')
     </main>
 
