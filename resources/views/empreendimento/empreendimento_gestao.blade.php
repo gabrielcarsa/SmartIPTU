@@ -131,7 +131,7 @@
             Telefone verificado
         </p>
         <p>
-            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+            <span class="bg-primary p-1 text-white rounded fw-bold mr-2">
                 ESCR
             </span>
             Lote escriturado
@@ -172,9 +172,13 @@
                         <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
                             call
                         </span>
+                        @else
+                        <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6">
+                            phone_disabled
+                        </span>
                         @endif
                         @if($lote->is_escriturado == true)
-                        <span class="bg-success p-1 text-white rounded fw-bold">
+                        <span class="bg-primary p-1 text-white rounded fw-bold">
                             ESCR
                         </span>
                         @endif
@@ -186,9 +190,13 @@
                         <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
                             call
                         </span>
+                        @else
+                        <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6">
+                            phone_disabled
+                        </span>
                         @endif
                         @if($lote->is_escriturado == true)
-                        <span class="bg-success p-1 text-white rounded fw-bold">
+                        <span class="bg-primary p-1 text-white rounded fw-bold">
                             ESCR
                         </span>
                         @endif
