@@ -86,6 +86,19 @@ class DashboardController extends Controller
         //Lotes Clientes
         $lotesClientes = Lote::where('cliente_id', '!=', 1)->count();
 
+        //Lotes Escriturados
+        $lotesEscriturados = Lote::where('is_escriturado', 1)->count();
+
+        //Clientes sem número
+        $clientesSemNumero = Cliente::where(function($query) {
+            $query->where('is_contato_verificado', '!=', 1)
+                  ->orWhereNull('is_contato_verificado')
+                  ->orWhere('is_contato_verificado', 0);
+        })->count();
+
+        //Clientes com número
+        $clientesComNumero = Cliente::where('is_contato_verificado', 1)->count();
+
         $data = [
             'pagarHoje' => $pagarHoje,
             'receberHoje' => $receberHoje,
@@ -98,6 +111,9 @@ class DashboardController extends Controller
             'lotesTotal' => $lotesTotal,
             'lotesClientes' => $lotesClientes,
             'lotesEmpresa' => $lotesEmpresa,
+            'lotesEscriturados' => $lotesEscriturados,
+            'clientesSemNumero' => $clientesSemNumero,
+            'clientesComNumero' => $clientesComNumero,
         ];
 
         return view('dashboard', compact('data'));

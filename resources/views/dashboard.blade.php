@@ -120,14 +120,42 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
-            <p class="m-0 text-secondary">
-                Bem-vindo novamente,
-            </p>
-            <p class="my-0 fs-5">
-                {{Auth::guard()->user()->name}}
-            </p>
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold">
+                    {{$data['lotesEscriturados']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Lotes<br>Escriturados
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold text-danger">
+                    {{$data['clientesSemNumero']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Clientes sem contato
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="bg-white rounded p-3 shadow-md">
+            <div class="d-flex">
+                <p class="m-0 fs-1 fw-semibold text-success">
+                    {{$data['clientesComNumero']}}
+                </p>
+                <p class="my-0 mx-3 fs-5">
+                    Clientes com contato
+                </p>
+            </div>
         </div>
     </div>
 </div>
