@@ -84,10 +84,10 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold text-primary">
+                <p class="m-0 fs-2 fw-semibold text-primary">
                     {{$data['lotesTotal']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
+                <p class="my-0 mx-3 fs-6">
                     Lotes<br>cadastrados
                 </p>
             </div>
@@ -97,10 +97,10 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold">
+                <p class="m-0 fs-2 fw-semibold">
                     {{$data['lotesEmpresa']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
+                <p class="my-0 mx-3 fs-6">
                     Lotes<br>Empresa
                 </p>
             </div>
@@ -110,10 +110,10 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold">
+                <p class="m-0 fs-2 fw-semibold">
                     {{$data['lotesClientes']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
+                <p class="my-0 mx-3 fs-6">
                     Lotes<br>Clientes
                 </p>
             </div>
@@ -123,10 +123,10 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold">
+                <p class="m-0 fs-2 fw-semibold">
                     {{$data['lotesEscriturados']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
+                <p class="my-0 mx-3 fs-6">
                     Lotes<br>Escriturados
                 </p>
             </div>
@@ -136,11 +136,11 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold text-danger">
+                <p class="m-0 fs-2 fw-semibold text-danger">
                     {{$data['clientesSemNumero']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
-                    Clientes sem contato
+                <p class="my-0 mx-3 fs-6">
+                    Clientes sem<br>contato
                 </p>
             </div>
         </div>
@@ -149,11 +149,11 @@
     <div class="col-md-2">
         <div class="bg-white rounded p-3 shadow-md">
             <div class="d-flex">
-                <p class="m-0 fs-1 fw-semibold text-success">
+                <p class="m-0 fs-2 fw-semibold text-success">
                     {{$data['clientesComNumero']}}
                 </p>
-                <p class="my-0 mx-3 fs-5">
-                    Clientes com contato
+                <p class="my-0 mx-3 fs-6">
+                    Clientes com<br>contato
                 </p>
             </div>
         </div>
