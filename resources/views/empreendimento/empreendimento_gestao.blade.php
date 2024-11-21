@@ -191,7 +191,7 @@
     </div>
     @endif
     <div class="my-3">
-        <table class="table table-striped table-bordered text-center">
+        <table class="table table-striped table-bordered text-center align-middle">
             <thead>
                 <tr>
                     <th></th>
@@ -223,50 +223,57 @@
                     @if($lote->cliente)
                     <td class="d-flex align-items-center justify-content-center">
 
-                        <p class="text-truncate m-0" style="max-width: 50%">
+                        <p class="text-truncate m-0" style="max-width: 200px">
                             @if(empty($lote->cliente->nome))
                             {{$lote->cliente->razao_social}}
                             @else
                             {{$lote->cliente->nome}}
                             @endif
                             <br>
+                            @if($lote->data_venda != null)
                             <span class="text-secondary">
-                                {{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
+                                {{\Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
                             </span>
+                            <br>
+                            @endif
+                            @if($lote->cliente->is_contato_verificado == true)
+                            <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
+                                call
+                            </span>
+                            @else
+                            <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6">
+                                phone_disabled
+                            </span>
+                            @endif
+                            @if($lote->is_escriturado == true)
+                            <span class="bg-primary p-1 text-white rounded fw-bold">
+                                ESCR
+                            </span>
+                            @endif
                         </p>
-                        @if($lote->cliente->is_contato_verificado == true)
-                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
-                            call
-                        </span>
-                        @else
-                        <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6">
-                            phone_disabled
-                        </span>
-                        @endif
-                        @if($lote->is_escriturado == true)
-                        <span class="bg-primary p-1 text-white rounded fw-bold">
-                            ESCR
-                        </span>
-                        @endif
                     </td>
                     @endif
 
-                    <td>{{ $lote->inscricao_municipal }}
-                        @if($lote->negativar == true)
-                        <span class="bg-danger p-1 text-white rounded fw-bold">
-                            N
-                        </span>
-                        @endif
-                        @if($lote->is_acordo_parcial == true)
-                        <span class="bg-warning p-1 text-white rounded fw-bold">
-                            AC PAR
-                        </span>
-                        @endif
-                        @if($lote->is_acordo_total == true)
-                        <span class="bg-success p-1 text-white rounded fw-bold">
-                            AC
-                        </span>
-                        @endif
+                    <td>
+                        <p class="m-0">
+                            {{ $lote->inscricao_municipal }}
+                            <br>
+                            @if($lote->negativar == true)
+                            <span class="bg-danger p-1 text-white rounded fw-bold">
+                                N
+                            </span>
+                            @endif
+                            @if($lote->is_acordo_parcial == true)
+                            <span class="bg-warning p-1 text-white rounded fw-bold">
+                                AC PAR
+                            </span>
+                            @endif
+                            @if($lote->is_acordo_total == true)
+                            <span class="bg-success p-1 text-white rounded fw-bold">
+                                AC
+                            </span>
+                            @endif
+                        </p>
                     </td>
                     <td class="text-danger fw-semibold">
                         @php
