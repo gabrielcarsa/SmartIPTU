@@ -217,7 +217,9 @@
                     Titular
                 </p>
                 <p class="m-0 text-truncate" style="max-width: 50%">
+                    @if(isset($data['movimentacao'][0]))
                     {{$movimentacao[0]->titular_conta->cliente->nome ?? $movimentacao[0]->titular_conta->cliente->razao_social}}
+                    @endif
                 </p>
             </div>
         </div>
@@ -232,7 +234,9 @@
                     Conta Corrente
                 </p>
                 <p class="m-0">
+                    @if(isset($data['movimentacao'][0]))
                     {{$movimentacao[0]->conta_corrente->apelido}}
+                    @endif
                 </p>
             </div>
         </div>
@@ -323,7 +327,7 @@
                     <td class="">
                         <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_receber->id}}&{{$mov->parcela_conta_receber->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
                             class="text-decoration-none">
-                           Ver
+                            Ver
                         </a>
                     </td>
                     @else

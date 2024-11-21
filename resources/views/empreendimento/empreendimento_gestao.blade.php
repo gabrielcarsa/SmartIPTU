@@ -202,13 +202,15 @@
                     <th scope="col">Inscrição Municipal</th>
                     <th scope="col">R$ Cliente</th>
                     <th scope="col">R$ Empresa</th>
-                    <th scope="col">Data da Venda</th>
                     <th scope="col">Telefones</th>
                     <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 @if(isset($resultado))
+                @php
+                $hoje = \Carbon\Carbon::today()->toDateString();
+                @endphp
                 @foreach ($resultado as $lote)
                 <tr>
                     <td>
@@ -219,10 +221,19 @@
                     <td scope="row">{{$lote->lote}}</td>
 
                     @if($lote->cliente)
+                    <td class="d-flex align-items-center justify-content-center">
 
-                    @if(empty($lote->cliente->nome))
-                    <td class="d-flex align-items-center">
-                        {{$lote->cliente->razao_social}}
+                        <p class="text-truncate m-0" style="max-width: 50%">
+                            @if(empty($lote->cliente->nome))
+                            {{$lote->cliente->razao_social}}
+                            @else
+                            {{$lote->cliente->nome}}
+                            @endif
+                            <br>
+                            <span class="text-secondary">
+                                {{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
+                            </span>
+                        </p>
                         @if($lote->cliente->is_contato_verificado == true)
                         <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
                             call
@@ -238,26 +249,6 @@
                         </span>
                         @endif
                     </td>
-                    @else
-                    <td class="">
-                        {{$lote->cliente->nome}}
-                        @if($lote->cliente->is_contato_verificado == true)
-                        <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6">
-                            call
-                        </span>
-                        @else
-                        <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6">
-                            phone_disabled
-                        </span>
-                        @endif
-                        @if($lote->is_escriturado == true)
-                        <span class="bg-primary p-1 text-white rounded fw-bold">
-                            ESCR
-                        </span>
-                        @endif
-                    </td>
-                    @endif
-
                     @endif
 
                     <td>{{ $lote->inscricao_municipal }}
@@ -289,15 +280,15 @@
                         @foreach($d->parcela_conta_receber as $parcela)
 
                         @php
-                        $valorTotalCliente += $parcela->valor_parcela;
-                        @endphp
+                        $valorTotalCliente += $parcela->data_vencimento < $hoje ? $parcela->valor_parcela : 0;
+                            @endphp
 
-                        @endforeach
+                            @endforeach
 
-                        @endforeach
-                        @endif
+                            @endforeach
+                            @endif
 
-                        R$ {{number_format($valorTotalCliente, 2, ',', '.')}}
+                            R$ {{number_format($valorTotalCliente, 2, ',', '.')}}
                     </td>
                     <td>
                         @php
@@ -311,18 +302,15 @@
                         @foreach($d->parcela_conta_pagar as $parcela)
 
                         @php
-                        $valorTotalEmpresa += $parcela->valor_parcela;
-                        @endphp
+                        $valorTotalEmpresa += $parcela->data_vencimento < $hoje ? $parcela->valor_parcela : 0;
+                            @endphp
 
-                        @endforeach
+                            @endforeach
 
-                        @endforeach
-                        @endif
+                            @endforeach
+                            @endif
 
-                        R$ {{number_format($valorTotalEmpresa, 2, ',', '.')}}
-                    </td>
-                    <td>
-                        {{$lote->data_venda == null ? '' : \Carbon\Carbon::parse($lote->data_venda)->format('d/m/Y')}}
+                            R$ {{number_format($valorTotalEmpresa, 2, ',', '.')}}
                     </td>
                     <td>{{$lote->cliente->telefone1}}, {{$lote->cliente->telefone2}}</td>
                     <td>
