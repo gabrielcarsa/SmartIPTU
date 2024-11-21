@@ -5,6 +5,8 @@ use App\Models\Empreendimento;
 use App\Models\User;
 use App\Models\Quadra;
 use App\Models\Lote;
+use App\Models\ParcelaContaPagar;
+use App\Models\ParcelaContaReceber;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmpreendimentoRequest;
 use Illuminate\Support\Facades\DB;
@@ -97,31 +99,30 @@ class EmpreendimentoController extends Controller
         $empreendimento = Empreendimento::find($id);
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
-        $debitosPagarAtrasados =  DB::table('parcela_conta_pagar')
-        ->join('debito', 'parcela_conta_pagar.debito_id', '=', 'debito.id')
-        ->join('lote', 'debito.lote_id', '=', 'lote.id')
-        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
-        ->join('empreendimento', 'quadra.empreendimento_id', '=', 'empreendimento.id')
-        ->whereDate('parcela_conta_pagar.data_vencimento', '<', $hoje)
-        ->where('parcela_conta_pagar.situacao', 0)
-        ->where('parcela_conta_pagar.debito_id', '!=', null)
-        ->where('empreendimento.id', $empreendimento->id)
-        ->where('lote.is_escriturado', '!=', true) 
-        ->sum('parcela_conta_pagar.valor_parcela');
+        $debitosPagarAtrasados = ParcelaContaPagar::with('debito')
+        ->whereDate('data_vencimento', '<', $hoje)
+        ->where('situacao', 0)
+        ->where('debito_id', '!=', null)
+        ->whereHas('debito.lote.quadra.empreendimento', function ($query) use ($empreendimento) {
+            $query->where('id', $empreendimento->id);
+        })
+        ->whereHas('debito.lote', function ($query) use ($id) {
+            $query->where('is_escriturado', '!=', true);
+        })
+        ->sum('valor_parcela');
     
-        $debitosReceberAtrasados =  DB::table('parcela_conta_receber')
-        ->join('debito', 'parcela_conta_receber.debito_id', '=', 'debito.id')
-        ->join('lote', 'debito.lote_id', '=', 'lote.id')
-        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
-        ->join('empreendimento', 'quadra.empreendimento_id', '=', 'empreendimento.id')
-        ->whereDate('parcela_conta_receber.data_vencimento', '<', $hoje)
-        ->where('parcela_conta_receber.situacao', 0)
-        ->where('parcela_conta_receber.debito_id', '!=', null)
-        ->where('empreendimento.id', $empreendimento->id) 
-        ->where('lote.is_escriturado', '!=', true) 
-        ->sum('parcela_conta_receber.valor_parcela');
+        $debitosReceberAtrasados = ParcelaContaReceber::with('debito')
+        ->whereDate('data_vencimento', '<', $hoje)
+        ->where('situacao', 0)
+        ->where('debito_id', '!=', null)
+        ->whereHas('debito.lote.quadra.empreendimento', function ($query) use ($empreendimento) {
+            $query->where('id', $empreendimento->id);
+        })
+        ->whereHas('debito.lote', function ($query) use ($id) {
+            $query->where('is_escriturado', '!=', true);
+        })
+        ->sum('valor_parcela');
 
-        
         $resultado = Lote::with('quadra', 'cliente', 'debito')
         ->whereHas('quadra', function ($query) use ($id) {
             $query->where('empreendimento_id', $id);
