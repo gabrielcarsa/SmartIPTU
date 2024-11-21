@@ -4,7 +4,8 @@
 
 @if(isset($data['contas_pagar_atrasadas']) && !$data['contas_pagar_atrasadas']->isEmpty())
 <!-- MODAL PARCELAS ATRASO -->
-<div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="parcelasEmAberto" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-warning">
@@ -21,7 +22,7 @@
                     Algumas dessas já foram pagas? Se houver lance a baixa.
                 </p>
                 <ul class="list-group">
-                    
+
                     @foreach($data['contas_pagar_atrasadas'] as $parcela)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <p class="m-0">
@@ -36,7 +37,8 @@
                         <p class="m-0">
                             R$ {{number_format($parcela->valor_parcela, 2, ',', '.')}}
                         </p>
-                        <a href="{{ route('contas_pagar.listar', ['titular_conta_id' => 0, 'idParcela' => $parcela->id, 'referenteOutros' => true] ) }}" class="btn btn-primary">
+                        <a href="{{ route('contas_pagar.listar', ['titular_conta_id' => 0, 'idParcela' => $parcela->id, 'referenteOutros' => true] ) }}"
+                            class="btn btn-primary">
                             Baixar
                         </a>
                     </li>
@@ -53,38 +55,39 @@
 
 <h2>Movimentação Financeira</h2>
 
-<div class="row">
+<div class="row g-3 mb-3">
     <div class="col-md-3">
-        <div class="card-movimentacao d-flex align-items-center" style="background-color:RGB(0, 218, 255);">
-            <div class="row">
-                <div class="col-md-4">
-                    <span class="material-symbols-outlined">
-                        attach_money
-                    </span>
-                </div>
-                <div class="col-md-8 align-self-center">
-                    <h3>Entradas de Hoje</h3>
-                    <p>R$ {{isset($data['entradas']) ? number_format($data['entradas'], 2, ',', '.') : '0'}}</p>
-                </div>
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-success bg-gray-100">
+                trending_up
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Entradas de hoje
+                </p>
+                <p class="m-0">
+                    R$ {{isset($data['entradas']) ? number_format($data['entradas'], 2, ',', '.') : '0'}}
+                </p>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card-movimentacao d-flex align-items-center" style="background-color:RGB(250, 82, 82);">
-            <div class="row">
-                <div class="col-md-4">
-                    <span class="material-symbols-outlined">
-                        money_off
-                    </span>
-                </div>
-                <div class="col-md-8 align-self-center">
-                    <h3>Saídas de Hoje</h3>
-                    <p>R$ {{isset($data['saidas']) ? number_format($data['saidas'], 2, ',', '.') : '0'}}</p>
-                </div>
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-danger bg-gray-100">
+                trending_down
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Saídas de hoje
+                </p>
+                <p class="m-0">
+                    R$ {{isset($data['saidas']) ? number_format($data['saidas'], 2, ',', '.') : '0'}}
+                </p>
             </div>
         </div>
     </div>
 </div>
+
 
 @if(session('success'))
 <div class="alert alert-success">
@@ -106,9 +109,14 @@
 </div>
 @endif
 
-<div class="card">
-    <h5 class="card-header">Filtros para buscar</h5>
-    <div class="card-body">
+<div class="bg-white p-3 rounded shadow-sm my-3">
+    <h5 class="d-flex align-items-center">
+        <span class="material-symbols-outlined mr-1">
+            filter_alt
+        </span>
+        Filtros para buscar
+    </h5>
+    <div class="mt-3">
         <form class="row g-3" action="/movimentacao_financeira/listar" method="get" autocomplete="off">
             @csrf
             <div class="col-md-2">
@@ -156,38 +164,97 @@
     </div>
 </div>
 
+@if(isset($movimentacao))
 
-
-<div class="card">
-    @if(isset($movimentacao))
-    <h5 class="card-header">
-        Movimentação Financeira{!! isset($data['saldo_atual'][0]) ? " do dia <strong>" .
-            \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
-    </h5>
-    <div class="card-footer">
-        <a class="btn btn-add"
-            href="../movimentacao_financeira/relatorio_pdf?data={{request('data')}}&data_fim={{request('data_fim')}}&titular={{request('titulares_conta')}}&conta_corrente={{request('conta_corrente')}}">PDF</a>
-        <a class="btn btn-add" href="">Excel</a>
-    </div>
-    <div class="card-saldo">
-        <div class="row">
-            <div class="col">
-                @if(isset($data['saldo_anterior'][0]))
-                <p>Saldo Inicial:
-                    <span id="saldo">R$ {{number_format($data['saldo_anterior'][0]->saldo, 2, ',', '.')}}</span>
+<!-- SALDOS -->
+<div class="row g-3 mb-3">
+    <div class="col-md-3">
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-primary bg-gray-100">
+                date_range
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Saldo anterior
+                    {{isset($dados['saldo_anterior'][0]) ? \Carbon\Carbon::parse($dados['saldo_anterior'][0]->data)->format('d/m/Y') : ''}}
                 </p>
-                @endif
-            </div>
-            <div class="col text-right">
-                @if(isset($data['saldo_atual'][0]))
-                <p>Saldo em Banco:
-                    <span id="saldo">R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}</span>
+                <p class="m-0">
+                    @if(isset($data['saldo_anterior'][0]))
+                    R$ {{number_format($data['saldo_anterior'][0]->saldo, 2, ',', '.')}}
+                    @else
+                    Não encontrado
+                    @endif
                 </p>
-                @endif
             </div>
         </div>
     </div>
-    @endif
+    <div class="col-md-3">
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-primary bg-gray-100">
+                attach_money
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Saldo atual
+                </p>
+                <p class="m-0">
+                    @if(isset($data['saldo_atual'][0]))
+                    R$ {{number_format($data['saldo_atual'][0]->saldo, 2, ',', '.')}}
+                    @else
+                    Não encontrado
+                    @endif
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-primary bg-gray-100">
+                storefront
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Titular
+                </p>
+                <p class="m-0 text-truncate" style="max-width: 50%">
+                    {{$movimentacao[0]->titular_conta->cliente->nome ?? $movimentacao[0]->titular_conta->cliente->razao_social}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex bg-white align-items-center p-3 shadow-sm rounded">
+            <span class="material-symbols-outlined bg-light p-2 rounded fs-3 text-primary bg-gray-100">
+                attach_money
+            </span>
+            <div class="ml-3">
+                <p class="m-0 fw-semibold">
+                    Conta Corrente
+                </p>
+                <p class="m-0">
+                    {{$movimentacao[0]->conta_corrente->apelido}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FIM SALDOS -->
+
+<div class="bg-white p-3 rounded shadow-sm">
+    <h5 class="">
+        Movimentação Financeira{!! isset($data['saldo_atual'][0]) ? " do dia <strong>" .
+            \Carbon\Carbon::parse($data['saldo_atual'][0]->data)->format('d/m/Y') . "</strong>" : "" !!}
+    </h5>
+    <div class="my-3">
+        <a class="btn btn-add"
+            href="../movimentacao_financeira/relatorio_pdf?data={{request('data')}}&data_fim={{request('data_fim')}}&titular={{request('titulares_conta')}}&conta_corrente={{request('conta_corrente')}}">
+            PDF
+        </a>
+        <a class="btn btn-add" href="">
+            Excel
+        </a>
+    </div>
+
     <div class="card-body">
         <table class="table table-striped table-bordered text-center">
             <thead>
@@ -208,7 +275,6 @@
             @endphp
 
             <tbody>
-                @if(isset($movimentacao))
                 @foreach ($movimentacao as $mov)
                 <!-- Calcula o saldo atual com base na movimentação e no saldo anterior -->
                 @php
@@ -239,12 +305,12 @@
                     <td class="align-middle">{{$mov->descricao}}</td>
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="align-middle entradaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle text-success fw-bold">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle"></td>
                     <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @else
                     <td class="align-middle"></td>
-                    <td class="align-middle saidaMovimentacao">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
+                    <td class="align-middle text-danger fw-bold">R$ {{number_format($mov->valor, 2, ',', '.')}}</td>
                     <td class="align-middle">R$ {{number_format($saldoAtual, 2, ',', '.')}}</td>
                     @endif
 
@@ -254,37 +320,31 @@
                     </td>
 
                     @if($mov->tipo_movimentacao == 0)
-                    <td class="d-flex align-items-center">
+                    <td class="">
                         <a href="/contas_receber/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_receber->id}}&{{$mov->parcela_conta_receber->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
-                            class="btn-icone-listagem">
-                            <span class="material-symbols-outlined">
-                                visibility
-                            </span>
+                            class="text-decoration-none">
+                           Ver
                         </a>
                     </td>
                     @else
-                    <td class="d-flex align-items-center">
+                    <td class="">
                         <a href="/contas_pagar/listar?titular_conta_id=0&idParcela={{$mov->parcela_conta_pagar->id}}&{{$mov->parcela_conta_pagar->debito == null ? 'referenteOutros=on' : 'referenteLotes=on'}}"
-                            class="btn-icone-listagem">
-                            <span class="material-symbols-outlined">
-                                visibility
-                            </span>
+                            class="text-decoration-none">
+                            Ver
                         </a>
                     </td>
                     @endif
                 </tr>
                 @endforeach
-                @endif
             </tbody>
         </table>
-        @if(isset($movimentacao))
         <div class="card-footer">
             <p>Exibindo {{$movimentacao->count()}} de {{ $data['total_movimentacao'] }} registros</p>
         </div>
-        @endif
 
     </div>
 </div>
+@endif
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

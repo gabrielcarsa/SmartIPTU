@@ -2,14 +2,22 @@
 
 @section('conteudo')
 
-<!-- TITULO -->
-<h2>
-    Nova Movimentação
-</h2>
-<!-- FIM TITULO -->
+<!-- BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
+<div class="mb-3 d-flex justify-content-end">
+    <div class="adicionar-conta-fixa">
+        <a href="" class="btn btn-primary m-1" id="adicionarMovimentacaoContaFixaPagar">+ Conta Fixa Pagar</a>
+    </div>
+    <div class="adicionar-linha">
+        <a href="" class="btn btn-primary m-1" id="adicionarMovimentacao">+ Nova linha</a>
+    </div>
+    <div class="remover-linha">
+        <a href="" class="btn btn-danger m-1" id="removerMovimentacao">- Remover linha</a>
+    </div>
+</div>
+<!-- FIM BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
 
 <!-- CARD -->
-<div class="card">
+<div class="bg-white rounded shadow-sm p-3">
 
     <!-- MENSAGENS -->
     @if(session('success'))
@@ -29,27 +37,15 @@
     <!-- FIM MENSAGENS -->
 
     <!-- CARD HEADER -->
-    <div class="card-header">
-        <h5 class="">Preencha os campos requisitados*</h5>
+    <div class="">
+        <h3 class="mb-3">
+            Nova movimentação
+        </h3>
     </div>
     <!-- FIM CARD HEADER -->
 
     <!-- CARD BODY -->
     <div class="card-body">
-
-        <!-- BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
-        <div class="d-flex justify-content-end bg-white">
-            <div class="adicionar-conta-fixa">
-                <a href="" class="btn btn-primary m-1" id="adicionarMovimentacaoContaFixaPagar">+ Conta Fixa Pagar</a>
-            </div>
-            <div class="adicionar-linha">
-                <a href="" class="btn btn-primary m-1" id="adicionarMovimentacao">+ Nova linha</a>
-            </div>
-            <div class="remover-linha">
-                <a href="" class="btn btn-danger m-1" id="removerMovimentacao">- Remover linha</a>
-            </div>
-        </div>
-        <!-- FIM BOTÕES AÇÕES PARA ADD E EXCLUIR LINHA DE MOVIMENTAÇÃO -->
 
         <!-- FORM -->
         <form class="" action="{{ '/movimentacao_financeira/cadastrar/' . Auth::user()->id }}" method="post"
@@ -68,7 +64,7 @@
 
             <p class="fw-semibold fs-5">Movimentações variáveis</p>
 
-            <div class="bg-light p-3 m-3 rounded border d-flex" style="width: 400px">
+            <div class="bg-light p-3 my-3 rounded border d-flex" style="width: 400px">
                 <span class="material-symbols-outlined">
                     lightbulb
                 </span>
@@ -139,7 +135,7 @@
 
             <p class="fw-semibold fs-5">Contas a Pagar Fixas</p>
 
-            <div class="bg-light p-3 m-3 rounded border d-flex" style="width: 400px">
+            <div class="bg-light p-3 my-3 rounded border d-flex" style="width: 400px">
                 <span class="material-symbols-outlined">
                     lightbulb
                 </span>
@@ -291,7 +287,8 @@ $(document).ready(function() {
 
         // Incrementa os índices dos campos clonados para garantir que o Laravel os interprete como um array
         novaMovimentacaoContaFixa.find('[name^="parcela_conta_fixa_pagar"]').each(function() {
-            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $('.conta-fixa-movimentacao')
+            var newName = $(this).attr('name').replace(/\[\d+\]/, '[' + $(
+                    '.conta-fixa-movimentacao')
                 .length + ']');
             $(this).attr('name', newName);
         });

@@ -305,31 +305,3 @@ CALENDARIO
 #data_vencimento_modal{
     font-weight: 700;
 }
-
-/*-----
-MOVIMENTAÇÃO
------*/
-.card-movimentacao{
-    margin: 0 0 30px 0;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-radius: 0.5em;
-    padding: 20px;
-}
-.card-movimentacao span{
-    font-size: 80px;
-}
-.card-movimentacao h3{
-    font-weight: 500;
-    font-size: 18px;
-    color: #000;
-}
-.entradaMovimentacao{
-    background-color: #66a80f !important;
-    font-weight: 700 !important;
-    color: #fff !important;
-}
-.saidaMovimentacao{
-    background-color: #e03131 !important;
-    font-weight: 700 !important;
-    color: #fff !important;
-}

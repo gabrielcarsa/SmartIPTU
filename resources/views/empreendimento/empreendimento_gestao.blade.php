@@ -66,76 +66,131 @@
     </div>
 </div>
 
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-ranking text-center">
-            <h4>Débitos em atraso - EMPRESA X CLIENTES</h5>
-                <div class="card-body">
-                    <canvas id="graficoDividaClienteEmpresa"></canvas>
-                </div>
+<div class="row mb-3 g-3">
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Total lotes
+            </p>
+            <p class="fw-semibold fs-4 m-0 text-primary">
+                {{$total_lotes}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes empresa
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesEmpresa']}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes clientes
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesClientes']}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes escriturados
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesEscriturados']}}
+            </p>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <h5 class="card-header">Filtros para buscar</h5>
-    <div class="card-body">
-        <form class="row g-3" action="/lotes" method="get" autocomplete="off">
-            @csrf
-            <div class="col-md-6">
-                <label for="inputQuadra" class="form-label">Quadra</label>
-                <input type="text" name="quadra" value="{{request('quadra')}}" class="form-control" id="inputQuadra">
+<div class="row g-3 mb-3">
+    <div class="col-md-6">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <div class="">
+                <h3 class="fs-5 mb-3">
+                    Débitos em atraso
+                </h3>
+                <div class="card-body">
+                    <canvas id="graficoDividaClienteEmpresa"></canvas>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="inputLote" class="form-label">Lote</label>
-                <input type="text" name="lote" value="{{request('lote')}}" class="form-control" id="inputLote">
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn-submit">Consultar</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div class="card">
-    <h5 class="card-header">Lista de cadastros</h5>
+<div class="bg-white rounded p-3 shadow-sm my-3">
+    <h5 class="">
+        Legenda
+    </h5>
+    <div class="row mt-3">
+        <div class="col-sm-2">
+            <p>
+                <span class="bg-danger p-1 text-white rounded fw-bold mr-2">
+                    N
+                </span>
+                Negativado
+            </p>
+        </div>
+        <div class="col-sm-2">
+            <p>
+                <span class="bg-warning p-1 text-white rounded fw-bold mr-2">
+                    AC PAR
+                </span>
+                Acordo parcial feito
+            </p>
+        </div>
+        <div class="col-sm-2">
+            <p>
+                <span class="bg-success p-1 text-white rounded fw-bold mr-2">
+                    AC
+                </span>
+                Acordo total feito
+            </p>
+        </div>
+        <div class="col-sm-2">
+            <p>
+                <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6 mr-2">
+                    call
+                </span>
+                Telefone verificado
+            </p>
+        </div>
+        <div class="col-sm-2">
+            <p>
+                <span class="material-symbols-outlined bg-danger rounded-circle text-white p-1 fs-6 mr-2">
+                    phone_disabled
+                </span>
+                Telefone não verificado
+            </p>
+        </div>
+        <div class="col-sm-2">
+            <p>
+                <span class="bg-primary p-1 text-white rounded fw-bold mr-2">
+                    ESCR
+                </span>
+                Lote escriturado
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded p-3 shadow-sm">
+    <h5 class="">
+        Lista de cadastros
+    </h5>
     @if(isset($resultado))
     <div class="card-footer">
         <a class="btn btn-add" href="">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
     @endif
-    <div class="card-body">
-        <p>
-            <span class="bg-danger p-1 text-white rounded fw-bold mr-2">
-                N
-            </span>
-            Negativado
-        </p>
-        <p>
-            <span class="bg-warning p-1 text-white rounded fw-bold mr-2">
-                AC PAR
-            </span>
-            Acordo parcial feito
-        </p>
-        <p>
-            <span class="bg-success p-1 text-white rounded fw-bold mr-2">
-                AC
-            </span>
-            Acordo total feito
-        </p>
-        <p>
-            <span class="material-symbols-outlined bg-success rounded-circle text-white p-1 fs-6 mr-2">
-                call
-            </span>
-            Telefone verificado
-        </p>
-        <p>
-            <span class="bg-primary p-1 text-white rounded fw-bold mr-2">
-                ESCR
-            </span>
-            Lote escriturado
-        </p>
+    <div class="my-3">
         <table class="table table-striped table-bordered text-center">
             <thead>
                 <tr>
@@ -382,7 +437,9 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('cadastrar_scraping_empreendimento', ['usuario_id' => Auth::user()->id]) }}&checkboxes=" + checkboxesSelecionados.join(',');
+        var url =
+            "{{ route('cadastrar_scraping_empreendimento', ['usuario_id' => Auth::user()->id]) }}&checkboxes=" +
+            checkboxesSelecionados.join(',');
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;
