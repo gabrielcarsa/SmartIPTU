@@ -66,16 +66,64 @@
     </div>
 </div>
 
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-ranking text-center">
-            <h4>Débitos em atraso - EMPRESA X CLIENTES</h5>
-                <div class="card-body">
-                    <canvas id="graficoDividaClienteEmpresa"></canvas>
-                </div>
+<div class="row mb-3 g-3">
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Total lotes
+            </p>
+            <p class="fw-semibold fs-4 m-0 text-primary">
+                {{$total_lotes}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes empresa
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesEmpresa']}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes clientes
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesClientes']}}
+            </p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <p class="text-secondary m-0">
+                Lotes escriturados
+            </p>
+            <p class="fw-semibold fs-4 m-0">
+                {{$data['lotesEscriturados']}}
+            </p>
         </div>
     </div>
 </div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-6">
+        <div class="bg-white rounded p-3 shadow-sm">
+            <div class="">
+                <h3 class="fs-5 mb-3">
+                    Débitos em atraso
+                </h3>
+                <div class="card-body">
+                    <canvas id="graficoDividaClienteEmpresa"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="card">
     <h5 class="card-header">Filtros para buscar</h5>
@@ -382,7 +430,9 @@ $(document).ready(function() {
         });
 
         // Crie a URL com os valores dos checkboxes como parâmetros de consulta
-        var url = "{{ route('cadastrar_scraping_empreendimento', ['usuario_id' => Auth::user()->id]) }}&checkboxes=" + checkboxesSelecionados.join(',');
+        var url =
+            "{{ route('cadastrar_scraping_empreendimento', ['usuario_id' => Auth::user()->id]) }}&checkboxes=" +
+            checkboxesSelecionados.join(',');
 
         // Redirecione para a URL com os parâmetros
         window.location.href = url;

@@ -94,7 +94,6 @@ class EmpreendimentoController extends Controller
      // GESTÃO EMPREENDIMENTO
      function gestao($id, Request $request){
 
-
         $empreendimento = Empreendimento::find($id);
         $hoje = now()->toDateString(); // Obtém a data de hoje no formato 'YYYY-MM-DD'
 
@@ -122,11 +121,6 @@ class EmpreendimentoController extends Controller
         ->where('lote.is_escriturado', '!=', true) 
         ->sum('parcela_conta_receber.valor_parcela');
 
-        $data = [
-            'debitosPagarAtrasados' => $debitosPagarAtrasados,
-            'debitosReceberAtrasados' => $debitosReceberAtrasados,
-            'empreendimento' => $empreendimento
-        ];
         
         $resultado = Lote::with('quadra', 'cliente', 'debito')
         ->whereHas('quadra', function ($query) use ($id) {
@@ -138,9 +132,34 @@ class EmpreendimentoController extends Controller
         ->orderByRaw('CAST(lote.lote AS UNSIGNED)')
         ->get();
 
-        //->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED), CAST(lote.lote AS UNSIGNED)')
+        //Lotes Empresa
+        $lotesEmpresa = Lote::where('cliente_id', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
+
+        //Lotes Clientes
+        $lotesClientes = Lote::where('cliente_id', '!=', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
+
+        //Lotes Escriturados
+        $lotesEscriturados = Lote::where('is_escriturado', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
 
         $total_lotes = $resultado->count();
+
+        $data = [
+            'debitosPagarAtrasados' => $debitosPagarAtrasados,
+            'debitosReceberAtrasados' => $debitosReceberAtrasados,
+            'empreendimento' => $empreendimento,
+            'lotesEmpresa' => $lotesEmpresa,
+            'lotesClientes' => $lotesClientes,
+            'lotesEscriturados' => $lotesEscriturados,
+        ];
 
         return view('empreendimento/empreendimento_gestao', compact('resultado', 'total_lotes'), compact('data') );
     }
