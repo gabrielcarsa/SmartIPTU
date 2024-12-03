@@ -469,6 +469,6 @@ class LoteController extends Controller
 
         }
 
-        return view('lote.inscricao_processo', compact('dados'));
+        return view('lote.inscricao_processo', compact('dados', 'lotesNaoEntrados'));
     }
 }

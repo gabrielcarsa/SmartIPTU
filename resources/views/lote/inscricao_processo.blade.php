@@ -44,6 +44,13 @@
         </div>
     </div>
     @if(isset($dados))
+    <p>
+        @foreach($lotesNaoEntrados as $lote)
+            <p>
+                {{$lote}}
+            </p>
+        @endforeach
+    </p>
     <table>
         <table class="table">
             <thead>
