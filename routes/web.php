@@ -215,4 +215,9 @@ Route::middleware([
         // ROTAS PARA COBRANÇA
         Route::get('/cobranca',[CobrancaController::class, 'gestao_cobranca'])->name('cobranca');
 
+        //INSCRIÇÕES PROCESSO
+        Route::get('/inscricao-processo', [LoteController::class, 'getInscricaoProcesso'])->name('lote.getInscricaoProcesso');
+        Route::post('/inscricao-processo-salvar', [LoteController::class, 'postInscricaoProcesso'])->name('lote.postInscricaoProcesso');
+        Route::post('/processarPDF', [LoteController::class, 'processarPDF'])->name('lote.processarPDF');
+
     });

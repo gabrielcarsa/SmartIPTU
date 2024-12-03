@@ -119,6 +119,14 @@
 
                     </ul>
                 </li>
+                <li>
+                    <a href="{{ route('lote.getInscricaoProcesso') }}">
+                        <span class="material-symbols-outlined">
+                            call_quality
+                        </span>
+                        Inscrições
+                    </a>
+                </li>
 
             </ul>
         </div>

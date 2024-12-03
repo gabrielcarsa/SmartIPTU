@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-production',
-        'version' => 'dev-production',
-        'reference' => '06e22b52d026888b799b4941a6e43332ba3e0c77',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '7b85687da7263e54c269fe07b774a6335e99e313',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -434,9 +434,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-production',
-            'version' => 'dev-production',
-            'reference' => '06e22b52d026888b799b4941a6e43332ba3e0c77',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '7b85687da7263e54c269fe07b774a6335e99e313',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1090,6 +1090,15 @@
             'install_path' => __DIR__ . '/../sebastian/version',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'smalot/pdfparser' => array(
+            'pretty_version' => 'v2.11.0',
+            'version' => '2.11.0.0',
+            'reference' => 'ac8e6678b0940e4b2ccd5caadd3fb18e68093be6',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../smalot/pdfparser',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'spatie/backtrace' => array(
             'pretty_version' => '1.5.3',
