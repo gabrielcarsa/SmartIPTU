@@ -422,7 +422,6 @@ class LoteController extends Controller
 
             //Lote
             $lote = Lote::where('inscricao_municipal', $inscricaoSemHifen)->first();
-            $lote_id = $lote->id;
 
             if ($lote) { // Verifica se o lote foi encontrado
                 $lote_id = $lote->id;
@@ -473,6 +472,6 @@ class LoteController extends Controller
 
         }
 
-        return view('lote.inscricao_processo', compact('dados'));
+        return view('lote.inscricao_processo', compact('dados', 'lotesNaoEntrados'));
     }
 }
