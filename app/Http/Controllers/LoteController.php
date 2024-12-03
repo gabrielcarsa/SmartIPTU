@@ -12,7 +12,7 @@ use App\Models\Cliente;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Smalot\PdfParser\Parser;
 
 class LoteController extends Controller
 {
@@ -370,5 +370,38 @@ class LoteController extends Controller
         $lote->save();
 
         return redirect()->back()->with('success', 'Operação realizada com sucesso');
+    }
+
+    private function extrairInscricoes($filePath) {
+        $parser = new Parser();
+        $pdf = $parser->parseFile($filePath);
+        $text = $pdf->getText();
+    
+        // Expressão regular para inscrições imobiliárias
+        $pattern = '/\b\d{10}-\d\b/';
+        preg_match_all($pattern, $text, $matches);
+    
+        return $matches[0]; // Array de inscrições encontradas
+    }
+
+    public function processarPDF(Request $request) {
+        $request->validate([
+            'arquivo' => 'required|file|mimes:pdf', // Máximo de 10MB
+        ]);
+    
+        $loteController = new LoteController();
+
+        $filePath = $request->file('arquivo')->store('temp');
+        $inscricoes = $loteController->extrairInscricoes(storage_path("app/$filePath"));
+    
+        return response()->json($inscricoes);
+    }
+
+    public function getInscricaoProcesso(){
+        return view('lote.inscricao_processo');
+    }
+
+    public function postInscricaoProcesso(Request $request){
+
     }
 }
