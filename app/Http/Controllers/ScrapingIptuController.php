@@ -103,7 +103,6 @@ class ScrapingIptuController extends Controller
                     
                     //Preencher tipo de Débito conforme o nome
                     if (
-                        $auxTitulo == "Pagamento Parcelado (2023)" ||
                         $auxTitulo == "Débitos Protestados" ||
                         $auxTitulo == "Débitos Negativados" ||
                         $auxTitulo == "Débitos Inscritos em Dívida Ativa" ||
@@ -112,8 +111,9 @@ class ScrapingIptuController extends Controller
                         $auxTitulo == "Débitos Anteriores" ||
                         $auxTitulo == "Débitos a Vencer" ||
                         $auxTitulo == "Inscrição sem débitos para o ano de 2024" ||
-                        $auxTitulo == "Pagamento à Vista (2024)" 
-                        
+                        $auxTitulo == "Pagamento à Vista (2025)" ||
+                        $auxTitulo == "Pagamento Parcelado (2025)"
+                
                     ) {
                         $titulo[$i] = $auxTitulo;
                     }
