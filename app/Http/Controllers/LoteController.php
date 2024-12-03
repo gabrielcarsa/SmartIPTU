@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Debito;
 use App\Models\TitularConta;
 use App\Models\Cliente;
+use App\Models\ParcelaContaPagar;
+use App\Models\ParcelaContaReceber;
 use App\Http\Requests\LoteRequest;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -386,7 +388,7 @@ class LoteController extends Controller
 
     public function processarPDF(Request $request) {
         $request->validate([
-            'arquivo' => 'required|file|mimes:pdf', // Máximo de 10MB
+            'arquivo' => 'required|file|mimes:pdf', 
         ]);
     
         $loteController = new LoteController();
@@ -402,6 +404,72 @@ class LoteController extends Controller
     }
 
     public function postInscricaoProcesso(Request $request){
+        $inscricoesJson = $request->input('inscricoes');
 
+        $inscricoes = json_decode($inscricoesJson, true);
+
+        $dados = [];
+        $lotesNaoEntrados = [];
+       
+
+        foreach($inscricoes as $inscricao){
+
+            // Remove o hífen
+            $inscricaoSemHifen = ltrim(str_replace('-', '', $inscricao), '0');
+
+            //Lote
+            $lote = Lote::where('inscricao_municipal', $inscricaoSemHifen)->first();
+            $lote_id = $lote->id;
+
+            if ($lote) { // Verifica se o lote foi encontrado
+                $lote_id = $lote->id;
+            
+                // Verificar 2018 EMPRESA
+                $debitoEmpresa2018 = ParcelaContaPagar::with('debito')
+                    ->whereBetween('data_vencimento', ['2018-01-01', '2018-12-31'])
+                    ->whereHas('debito', function ($query) use ($lote_id) {
+                        $query->where('lote_id', $lote_id);
+                    })
+                    ->get();
+            
+                // Verificar 2019 EMPRESA
+                $debitoEmpresa2019 = ParcelaContaPagar::with('debito')
+                    ->whereBetween('data_vencimento', ['2019-01-01', '2019-12-31'])
+                    ->whereHas('debito', function ($query) use ($lote_id) {
+                        $query->where('lote_id', $lote_id);
+                    })
+                    ->get();
+            
+                // Verificar 2018 CLIENTE
+                $debitoCliente2018 = ParcelaContaReceber::with('debito')
+                    ->whereBetween('data_vencimento', ['2018-01-01', '2018-12-31'])
+                    ->whereHas('debito', function ($query) use ($lote_id) {
+                        $query->where('lote_id', $lote_id);
+                    })
+                    ->get();
+            
+                // Verificar 2019 CLIENTE
+                $debitoCliente2019 = ParcelaContaReceber::with('debito')
+                    ->whereBetween('data_vencimento', ['2019-01-01', '2019-12-31'])
+                    ->whereHas('debito', function ($query) use ($lote_id) {
+                        $query->where('lote_id', $lote_id);
+                    })
+                    ->get();
+            } else {
+                $lotesNaoEntrados[] = $inscricaoSemHifen; // Salva o lote não encontrado
+            }            
+                       
+
+            $dados[] = [
+                'lote' => $lote,
+                'debitoEmpresa2018' => $debitoEmpresa2018,
+                'debitoEmpresa2019' => $debitoEmpresa2019,
+                'debitoCliente2018' => $debitoCliente2018,
+                'debitoCliente2019' => $debitoCliente2019,
+            ];
+
+        }
+
+        return view('lote.inscricao_processo', compact('dados'));
     }
 }
