@@ -65,8 +65,11 @@
             <tbody>
                 @foreach($dados as $dado)
      
+                @if($dado['lote'] != null)
                 <tr>
-                    <td>{{$dado['lote']->quadra->empreendimento->nome}} / {{$dado['lote']->quadra->nome ?? ''}} / {{$dado['lote']->lote}}</td>
+                    <td>
+                        {{$dado['lote']->quadra->empreendimento->nome}} / {{$dado['lote']->quadra->nome ?? ''}} / {{$dado['lote']->lote}}
+                    </td>
                     <td>{{$dado['lote']->inscricao_municipal}}</td>
                     <td>{{\Carbon\Carbon::parse($dado['lote']->data_venda)->format('d/m/Y')}}</td>
                     <td>
@@ -128,6 +131,8 @@
                         @endif
                     </td>
                 </tr>
+                @endif   
+                  
                 @endforeach
             </tbody>
         </table>
