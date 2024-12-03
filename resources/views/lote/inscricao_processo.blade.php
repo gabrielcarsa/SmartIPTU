@@ -58,10 +58,11 @@
                     <th scope="col">R / Q / L</th>
                     <th scope="col">Inscrição</th>
                     <th scope="col">Data Venda</th>
-                    <th scope="col">2018</th>
-                    <th scope="col">R$ 2018</th>
-                    <th scope="col">2019</th>
-                    <th scope="col">R$ 2019</th>
+                    <th scope="col">Empresa 2018</th>
+                    <th scope="col">Cliente 2018</th>
+                    <th scope="col">Empresa 2019</th>
+                    <th scope="col">Cliente 2019</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -75,89 +76,70 @@
                     </td>
                     <td>{{$dado['lote']->inscricao_municipal}}</td>
                     <td>{{\Carbon\Carbon::parse($dado['lote']->data_venda)->format('d/m/Y')}}</td>
-
-                    @if($dado['debitoEmpresa2018']->isNotEmpty())
-                    @php
-                    $total = 0;
-                    @endphp
-
-                    @foreach($dado['debitoEmpresa2018'] as $parcela)
-                    @php
-                    $total += $parcela->valor_parcela;
-                    @endphp
-                    @endforeach
                     <td>
-                        <span class="text-danger">
-                            Empresa
-                        </span>
-                    </td>
-                    <td>
+                        @if($dado['debitoEmpresa2018']->isNotEmpty())
+                        @php
+                        $total = 0;
+                        @endphp
+
+                        @foreach($dado['debitoEmpresa2018'] as $parcela)
+                        @php
+                        $total += $parcela->valor_parcela;
+                        @endphp
+                        @endforeach
                         <span class="text-danger">
                             R$ {{number_format($total, 2, ',', '.')}}
                         </span>
+                        @endif
                     </td>
-                    @elseif($dado['debitoCliente2018']->isNotEmpty())
-                    @php
-                    $total = 0;
-                    @endphp
+                    <td>
+                        @if($dado['debitoCliente2018']->isNotEmpty())
+                        @php
+                        $total = 0;
+                        @endphp
 
-                    @foreach($dado['debitoCliente2018'] as $parcela)
-                    @php
-                    $total += $parcela->valor_parcela;
-                    @endphp
-                    @endforeach
-                    <td>
-                        <span class="text-dark">
-                            Cliente
-                        </span>
-                    </td>
-                    <td>
+                        @foreach($dado['debitoCliente2018'] as $parcela)
+                        @php
+                        $total += $parcela->valor_parcela;
+                        @endphp
+                        @endforeach
                         <span class="text-dark">
                             R$ {{number_format($total, 2, ',', '.')}}
                         </span>
+                        @endif
                     </td>
-                    @endif
-                    @if($dado['debitoEmpresa2019']->isNotEmpty())
-                    @php
-                    $total = 0;
-                    @endphp
+                    <td>
+                        @if($dado['debitoEmpresa2019']->isNotEmpty())
+                        @php
+                        $total = 0;
+                        @endphp
 
-                    @foreach($dado['debitoEmpresa2019'] as $parcela)
-                    @php
-                    $total += $parcela->valor_parcela;
-                    @endphp
-                    @endforeach
-                    <td>
-                        <span class="text-danger">
-                            Empresa
-                        </span>
-                    </td>
-                    <td>
+                        @foreach($dado['debitoEmpresa2019'] as $parcela)
+                        @php
+                        $total += $parcela->valor_parcela;
+                        @endphp
+                        @endforeach
                         <span class="text-danger">
                             R$ {{number_format($total, 2, ',', '.')}}
                         </span>
+                        @endif
                     </td>
-                    @elseif($dado['debitoCliente2019']->isNotEmpty())
-                    @php
-                    $total = 0;
-                    @endphp
+                    <td>
+                        @if($dado['debitoCliente2019']->isNotEmpty())
+                        @php
+                        $total = 0;
+                        @endphp
 
-                    @foreach($dado['debitoCliente2019'] as $parcela)
-                    @php
-                    $total += $parcela->valor_parcela;
-                    @endphp
-                    @endforeach
-                    <td>
-                        <span class="text-dark">
-                            Cliente
-                        </span>
-                    </td>
-                    <td>
+                        @foreach($dado['debitoCliente2019'] as $parcela)
+                        @php
+                        $total += $parcela->valor_parcela;
+                        @endphp
+                        @endforeach
                         <span class="text-dark">
                             R$ {{number_format($total, 2, ',', '.')}}
                         </span>
+                        @endif
                     </td>
-                    @endif
                 </tr>
                 @endif
 
