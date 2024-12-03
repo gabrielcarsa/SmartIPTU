@@ -66,7 +66,7 @@
                 @foreach($dados as $dado)
      
                 <tr>
-                    <td>{{$dado['lote']->quadra->empreendimento->nome}} / {{$dado['lote']->quadra->nome}} / {{$dado['lote']->lote}}</td>
+                    <td>{{$dado['lote']->quadra->empreendimento->nome}} / {{$dado['lote']->quadra->nome ?? ''}} / {{$dado['lote']->lote}}</td>
                     <td>{{$dado['lote']->inscricao_municipal}}</td>
                     <td>{{\Carbon\Carbon::parse($dado['lote']->data_venda)->format('d/m/Y')}}</td>
                     <td>
