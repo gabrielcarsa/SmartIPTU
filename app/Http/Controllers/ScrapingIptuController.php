@@ -100,7 +100,7 @@ class ScrapingIptuController extends Controller
                 // Iterar sobre todas as linhas encontradas
                 $rows->each(function ($row) use (&$resultadoParcela, &$parcelas, &$i, &$titulo) {
                     $auxTitulo = $row->filter('tr')->eq(0)->text();
-                    
+                                     
                     //Preencher tipo de Débito conforme o nome
                     if (
                         $auxTitulo == "Débitos Protestados" ||
