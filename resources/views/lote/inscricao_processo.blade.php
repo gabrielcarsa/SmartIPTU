@@ -42,6 +42,18 @@
                 </button>
             </form>
         </div>
+        <div class="col">
+            <p>
+                Subir PDF para extrair CDAs
+            </p>
+            <form action="{{ route('lote.processarPDFcomCDA') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name="arquivo" id="" class="form-control @error('arquivo') is-invalid @enderror">
+                <button class="btn btn-primary" type="submit">
+                    Salvar
+                </button>
+            </form>
+        </div>
     </div>
     @if(isset($dados))
     <p>

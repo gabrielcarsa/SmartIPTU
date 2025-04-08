@@ -386,6 +386,18 @@ class LoteController extends Controller
         return $matches[0]; // Array de inscrições encontradas
     }
 
+    private function extrairCDAs($filePath) {
+        $parser = new Parser();
+        $pdf = $parser->parseFile($filePath);
+        $text = $pdf->getText();
+    
+        // Expressão regular para CDAs
+        $pattern = '/\b\d{6}\/\d{2}-\d{2}\b/';
+        preg_match_all($pattern, $text, $matches);
+    
+        return $matches[0];
+    }
+
     public function processarPDF(Request $request) {
         $request->validate([
             'arquivo' => 'required|file|mimes:pdf', 
@@ -397,6 +409,19 @@ class LoteController extends Controller
         $inscricoes = $loteController->extrairInscricoes(storage_path("app/$filePath"));
     
         return response()->json($inscricoes);
+    }
+
+    public function processarPDFcomCDA(Request $request) {
+        $request->validate([
+            'arquivo' => 'required|file|mimes:pdf', 
+        ]);
+    
+        $loteController = new LoteController();
+
+        $filePath = $request->file('arquivo')->store('temp');
+        $cdas = $loteController->extrairCDAs(storage_path("app/$filePath"));
+    
+        return response()->json($cdas);
     }
 
     public function getInscricaoProcesso(){

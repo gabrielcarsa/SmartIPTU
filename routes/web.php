@@ -219,5 +219,6 @@ Route::middleware([
         Route::get('/inscricao-processo', [LoteController::class, 'getInscricaoProcesso'])->name('lote.getInscricaoProcesso');
         Route::post('/inscricao-processo-salvar', [LoteController::class, 'postInscricaoProcesso'])->name('lote.postInscricaoProcesso');
         Route::post('/processarPDF', [LoteController::class, 'processarPDF'])->name('lote.processarPDF');
+        Route::post('/processar-pdf-cda', [LoteController::class, 'processarPDFcomCDA'])->name('lote.processarPDFcomCDA');
 
     });
