@@ -186,7 +186,8 @@
     </h5>
     @if(isset($resultado))
     <div class="card-footer">
-        <a class="btn btn-add" href="">PDF</a>
+        <a class="btn btn-add"
+            href="{{ route('empreendimento.relatorio', ['id' => $data['empreendimento']->id]) }}">PDF</a>
         <a class="btn btn-add" href="">Excel</a>
     </div>
     @endif
@@ -391,8 +392,12 @@
 
 <script>
 // Obtém os dados do PHP e armazena em variáveis JavaScript
-const debitosPagarAtrasados = {!!json_encode($data['debitosPagarAtrasados']) !!};
-const debitosReceberAtrasados = {!!json_encode($data['debitosReceberAtrasados']) !!};
+const debitosPagarAtrasados = {
+    !!json_encode($data['debitosPagarAtrasados']) !!
+};
+const debitosReceberAtrasados = {
+    !!json_encode($data['debitosReceberAtrasados']) !!
+};
 
 
 new Chart(graficoDividaClienteEmpresa, {

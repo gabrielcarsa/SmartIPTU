@@ -88,6 +88,7 @@ Route::middleware([
         Route::post('/empreendimento/alterar/{id}/{usuario}',[EmpreendimentoController::class, 'alterar']);
         Route::get('/empreendimento/excluir/{id}',[EmpreendimentoController::class, 'excluir']);
         Route::get('/empreendimento/gestao/{id}',[EmpreendimentoController::class, 'gestao']);
+        Route::get('/empreendimento/relatorio/{id}', [EmpreendimentoController::class, 'relatorio'])->name('empreendimento.relatorio');
 
         //ROTAS QUADRA
         Route::get('/quadra/novo/{empreendimento_id}',[QuadraController::class, 'novo']);

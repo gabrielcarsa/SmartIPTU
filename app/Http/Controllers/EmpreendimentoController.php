@@ -164,4 +164,48 @@ class EmpreendimentoController extends Controller
 
         return view('empreendimento/empreendimento_gestao', compact('resultado', 'total_lotes'), compact('data') );
     }
+
+    function relatorio($id, Request $request){
+        $empreendimento = Empreendimento::find($id);
+
+        $resultado = Lote::with('quadra', 'cliente', 'debito')
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })
+        ->select('lote.*', 'quadra.nome as quadra_nome') 
+        ->join('quadra', 'lote.quadra_id', '=', 'quadra.id')
+        ->orderByRaw('CAST(SUBSTRING_INDEX(quadra.nome, " ", -1) AS UNSIGNED)')
+        ->orderByRaw('CAST(lote.lote AS UNSIGNED)')
+        ->get();
+
+        //Lotes Empresa
+        $lotesEmpresa = Lote::where('cliente_id', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
+
+        //Lotes Clientes
+        $lotesClientes = Lote::where('cliente_id', '!=', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
+
+        //Lotes Escriturados
+        $lotesEscriturados = Lote::where('is_escriturado', 1)
+        ->whereHas('quadra', function ($query) use ($id) {
+            $query->where('empreendimento_id', $id);
+        })->count();
+
+        $total_lotes = $resultado->count();
+
+        $data = [
+            'empreendimento' => $empreendimento,
+            'lotesEmpresa' => $lotesEmpresa,
+            'lotesClientes' => $lotesClientes,
+            'lotesEscriturados' => $lotesEscriturados,
+            'resultado' => $resultado,
+        ];
+
+        return view('empreendimento/relatorio', compact('data'));
+    }
 }
